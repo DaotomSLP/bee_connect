@@ -1,0 +1,279 @@
+@extends('layout')
+
+@section('body')
+    <!-- End Navbar -->
+    <div class="content">
+        <div class="container-fluid">
+
+            @if (session()->get('error') == 'not_insert')
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <span>
+                        <b> Danger - </b>ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່</span>
+                </div>
+            @elseif(session()->get( 'error' )=='insert_success')
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <span>
+                        <b> Success - </b>ບັນທຶກຂໍ້ມູນສຳເລັດ</span>
+                </div>
+            @endif
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-primary">
+                            <h5 class="card-title">ເພີ່ມຜູ້ໃຊ້</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="/addUser">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ຊື່</label>
+                                            <input type="text" name="name" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ນາມສະກຸນ</label>
+                                            <input type="text" name="last_name" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ສາຂາ</label>
+                                            <select class="form-control" id="select_branch" name="branch_id" required>
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                @foreach ($branchs as $branch)
+                                                    <option value="{{ $branch->id }}">
+                                                        {{ $branch->branch_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">Username</label>
+                                            <input type="text" name="email" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ລະຫັດຜ່ານ</label>
+                                            <input type="password" name="password" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ເບີໂທ</label>
+                                            <input type="text" name="phone_no" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary px-5">ເພີ່ມ</button>
+                                <div class="clearfix"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header card-header-primary">
+                            <h5 class="card-title">ຄົ້ນຫາ</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="GET" action="/users">
+                                {{-- @csrf --}}
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ຊື່</label>
+                                            <input class="form-control" value="{{ Request::input('name') }}" name="name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ສາຂາ</label>
+                                            <select class="form-control" id="select_branch" name="branch_id">
+                                                <option value="">
+                                                    ທັງໝົດ
+                                                </option>
+                                                @foreach ($branchs as $branch)
+                                                    <option {{ Request::input('branch') == $branch->id ? 'selected' : '' }}
+                                                        value="{{ $branch->id }}">
+                                                        {{ $branch->branch_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ສະຖານະ</label>
+                                            <select class="form-control" name="enabled">
+                                                <option value="">
+                                                    ທັງໝົດ
+                                                </option>
+                                                <option {{ Request::input('enabled') == '1' ? 'selected' : '' }} value="1">
+                                                    ເປີດໃຊ້ງານ
+                                                </option>
+                                                <option {{ Request::input('enabled') == '0' ? 'selected' : '' }} value="0">
+                                                    ປິດໃຊ້ງານ
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ອີເມວ</label>
+                                            <input class="form-control" type="email" value="{{ Request::input('email') }}"
+                                                name="email">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary pull-right px-5">ຄົ້ນຫາ</button>
+                                <div class="clearfix"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header card-header-primary">
+                            <h5 class="card-title ">ຊື່ຜູ້ໃຊ້ທັງໝົດ</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class=" text-primary">
+                                        <th>
+                                            ຊື່ ແລະ ນາມສະກຸນ
+                                        </th>
+                                        <th>
+                                            ອີເມວ
+                                        </th>
+                                        <th>
+                                            ເບີໂທ
+                                        </th>
+                                        <th>
+                                            ສາຂາ
+                                        </th>
+                                        <th>
+
+                                        </th>
+                                        <th>
+
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($users as $user)
+                                            <tr>
+                                                <td>
+                                                    {{ $user->name }} {{ $user->last_name }}
+                                                </td>
+                                                <td>
+                                                    {{ $user->email }}
+                                                </td>
+                                                <td>
+                                                    {{ $user->phone_no }}
+                                                </td>
+                                                <td>
+                                                    {{ $user->branch_name }}
+                                                </td>
+                                                <td>
+                                                    <a href="/editUser/{{ $user->id }}">
+                                                        <i class="material-icons">create</i>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/deleteUser/{{ $user->id }}">
+                                                        {{ $user->enabled == '1' ? 'ປິດໃຊ້ງານ' : 'ເປີດໃຊ້ງານ' }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item {{ $pagination['offset'] == 1 ? 'disabled' : '' }}">
+                        <a class="page-link"
+                            href="{{ Request::route()->getName() }}?name={{ Request::input('name') }}&enabled={{ Request::input('enabled') }}&branch_id={{ Request::input('branch_id') }}&email={{ Request::input('email') }}&page={{ $pagination['offset'] - 1 }}"
+                            aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <li class="page-item {{ $pagination['offset'] == '1' ? 'active' : '' }}">
+                        <a class="page-link"
+                            href="{{ Request::route()->getName() }}?name={{ Request::input('name') }}&enabled={{ Request::input('enabled') }}&branch_id={{ Request::input('branch_id') }}&email={{ Request::input('email') }}&page=1">1</a>
+                    </li>
+                    @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?name={{ Request::input('name') }}&enabled={{ Request::input('enabled') }}&branch_id={{ Request::input('branch_id') }}&email={{ Request::input('email') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+
+                        @endif
+                    @endfor
+                    @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
+                        @if ($i > 1 && $i <= $pagination['all'])
+                            <li class="page-item {{ $pagination['offset'] == $i ? 'active' : '' }}">
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?name={{ Request::input('name') }}&enabled={{ Request::input('enabled') }}&branch_id={{ Request::input('branch_id') }}&email={{ Request::input('email') }}&page={{ $i }}">{{ $i }}</a>
+                            </li>
+                        @else
+
+                        @endif
+                    @endfor
+                    @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?name={{ Request::input('name') }}&enabled={{ Request::input('enabled') }}&branch_id={{ Request::input('branch_id') }}&email={{ Request::input('email') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+
+                        @endif
+                    @endfor
+                    <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
+                        <a class="page-link"
+                            href="{{ Request::route()->getName() }}?name={{ Request::input('name') }}&enabled={{ Request::input('enabled') }}&branch_id={{ Request::input('branch_id') }}&email={{ Request::input('email') }}&page={{ $pagination['offset'] + 1 }}"
+                            aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+@endsection

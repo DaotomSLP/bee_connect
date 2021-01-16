@@ -1,0 +1,8 @@
+@font-face {
+  font-family: NotoSansLao;
+  src: url('fonts/DefagoNotoSansLaoBold.ttf');
+}
+
+body {
+  font-family: 'NotoSansLao !important;';
+}
