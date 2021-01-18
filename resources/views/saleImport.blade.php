@@ -33,6 +33,9 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
+                                        <div class="spinner-border d-none" id="loading" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
                                         <input class="form-control" id="product_id">
                                     </div>
                                 </div>
@@ -67,8 +70,30 @@
 
                                         </tbody>
                                     </table>
+                                    <hr>
+                                    <div class="row my-3">
+                                        <div class="col-6">
+                                            <label class="bmd-label-floating">ສ່ວນຫຼຸດ</label>
+                                            <div class="form-group"><input type="number"
+                                                    class="form-control form-control-sm" name="discount" id="discount_input"
+                                                    onkeypress="disableSubmit()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row my-3">
+                                        <div class="col">
+                                            <p class="d-inline pr-3 h5">ລວມເປັນເງິນ : </p>
+                                            <p class="d-inline h5" id="total">0 ກີບ</p>
+                                        </div>
+                                    </div>
+
                                     <div>
-                                        <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
+                                        <button type="button" onclick="calcurateTotal()"
+                                            class="btn btn-primary pull-left px-5 mr-3">ຄິດໄລ່ເງິນ</button>
+                                    </div>
+                                    <div>
+                                        <button type="submit" id="submitBtn" disabled
+                                            class="btn btn-primary px-5">ບັນທຶກ</button>
                                         <div class="clearfix"></div>
                                     </div>
                                 </div>
@@ -84,15 +109,20 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
+
+            $("#product_id").focus();
+
             var product_id =
                 "<?php echo session()->get('id') ? session()->get('id') : 'no_id'; ?>";
 
             if (product_id != 'no_id') {
-                window.open(`importpdf/${product_id}`);
+                window.open(`salepdf/${product_id}`);
             }
+
         });
 
         var codes = [];
+        var items = [];
         $('#product_id').keypress(function(event) {
             if (event.keyCode == 13) {
                 let code = $('#product_id').val();
@@ -103,18 +133,21 @@
                         alert("ລະຫັດຊ້ຳ");
                         $('#product_id').val('');
                     } else {
-                        generateItem(code);
-                        codes.push(code);
+                        $("#product_id").prop('disabled', true);
+                        $("#loading").removeClass('d-none');
+                        checkItem(code);
                         $('#product_id').val('');
                     }
                 }
             }
         });
 
+        var total = 0;
+
         var gram_price = <?php echo isset($sale_price_gram) ? $sale_price_gram['price'] :
         0; ?> ;;
         var m_price = <?php echo isset($sale_price_m) ? $sale_price_m['price'] : 0; ?>;
-        function generateItem(code) {
+        function checkItem(code) {
 
             $.ajax({
                 type: 'POST',
@@ -124,11 +157,19 @@
                     '_token': $('meta[name=csrf-token]').attr('content')
                 },
                 success: function(data) {
-
+                    $("#product_id").prop('disabled', false);
+                    $("#loading").addClass('d-none');
+                    $("#product_id").focus();
                     if (!data.error && data.status == 'received') {
-                        $('#product_item_table').append(
-                            `<tr><td class="py-0"><div class="form-group"><input value='${code}' class="form-control form-control-sm" name="item_id[]" required></div></td> <td class="py-0"><div class="form-group"><input type="number" step="0.001" class="form-control form-control-sm" name="weight[]" value='${data.weight_type === "m" ? data.weight : ''}' ${data.weight_type === "m" ?'readonly':''} required></div></td> <td class="py-0"><div class="form-group"><input class="form-control form-control-sm"  value='${data.weight_type === "m" ? m_price : gram_price}' name="sale_price[]" required></div></td></tr>`
-                        )
+                        codes.push(code);
+                        items.push({
+                            code: code,
+                            weight_type: data.weight_type,
+                            weight: data.weight,
+                            price: data.weight_type === 'm' ? m_price : gram_price,
+                            amount: data.weight * (data.weight_type === 'm' ? m_price : gram_price)
+                        })
+                        generateItem();
                     } else if (!data.error && data.status == 'sending') {
                         alert("ສິນຄ້ານີ້ຍັງບໍ່ທັນໄດ້ຮັບ!!!");
                     } else if (!data.error && data.status == 'success') {
@@ -139,10 +180,71 @@
 
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    $("#product_id").prop('disabled', false);
+                    $("#loading").addClass('d-none');
+                    $("#product_id").focus();
                     alert("ບໍ່ມີສິນຄ້ານີ້!!!");
                 }
 
             });
+        }
+
+        function generateItem() {
+            var html_table = '';
+            items.slice().reverse().forEach(item => {
+
+                html_table +=
+                    `<tr><td class="py-0"><div class="form-group"><input value='${item.code}' class="form-control form-control-sm" name="item_id[]" required></div></td> <td class="py-0"><div class="form-group"><input type="number" step="0.001" class="form-control form-control-sm weight" name="weight[]" value='${item.weight}' ${item.weight_type === "m" ?'readonly':''} onchange=changeWeight(this.value,'${item.code}','${item.weight_type}') onkeypress="disableSubmit()" required></div></td> <td class="py-0"><div class="form-group"><input class="form-control form-control-sm"  value='${item.price}' name="sale_price[]" onchange=changePrice(this.value,'${item.code}','${item.weight_type}') onkeypress="disableSubmit()" required></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteItem("${item.code}")> <i class="material-icons">clear</i></a></div></td></tr>`;
+
+            })
+            $('#product_item_table').html(html_table)
+        }
+
+        function changeWeight(weight, code, weight_type) {
+            old_item = items.filter(item => item.code === code);
+            var o_index = items.findIndex(item => item.code === code);
+            items = items.filter(item => item.code !== code);
+            items.splice(o_index, 0, {
+                code: code,
+                weight: weight,
+                weight_type: weight_type,
+                price: old_item[0].price,
+                amount: weight * old_item[0].price
+            });
+        }
+
+        function changePrice(price, code, weight_type) {
+            old_item = items.filter(item => item.code === code);
+            var o_index = items.findIndex(item => item.code === code);
+            items = items.filter(item => item.code != code);
+            items.splice(o_index, 0, {
+                code: code,
+                weight: old_item[0].weight,
+                weight_type: weight_type,
+                price: price,
+                amount: old_item[0].weight * price
+            });
+
+        }
+
+        function deleteItem(id) {
+            codes = codes.filter(code => code !== id);
+            items = items.filter(item => item.code !== id);
+
+            $('#product_item_table').html('');
+            generateItem();
+            disableSubmit()
+        }
+
+        function calcurateTotal() {
+            total = items.reduce((total, amount) => (typeof total === 'object' ? total.amount : total) + amount.amount);
+            var grandTotal = (typeof total === 'object' ? total.amount : total) - $("#discount_input").val();
+            $("#total").html(`${grandTotal} ກີບ`)
+            $("#submitBtn").prop('disabled', false);
+        }
+
+        function disableSubmit() {
+            $("#submitBtn").prop('disabled', true);
         }
 
     </script>

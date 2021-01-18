@@ -26,7 +26,7 @@ class SendController extends Controller
     {
         $provinces = Provinces::all();
         $districts = Districts::all();
-        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->get();
+        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
         $result = Product::query();
 

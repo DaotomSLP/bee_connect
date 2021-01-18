@@ -4,6 +4,97 @@
     <!-- End Navbar -->
     <div class="content">
         <div class="container-fluid">
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="new_price_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="POST" action="/deleteImportItem">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">ໃສ່ນ້ຳໜັກກ່ອນລົບ</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ນ້ຳໜັກ/ຂະໜາດ</label>
+                                            <input type="hidden" id="lot_item_id" name="lot_item_id">
+                                            <input type="hidden" id="lot_id" name="lot_id">
+                                            <input type="hidden" id="real_price" name="real_price">
+                                            <input type="hidden" id="base_price" name="base_price">
+                                            <input type="number" id="weight" class="form-control" name="weight" step="0.001"
+                                                required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ລົບຂໍ້ມູນ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="new_weight_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="POST" action="/changeImportItemWeight">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">ແກ້ໄຂນ້ຳໜັກ</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ຂະໜາດ</label>
+                                            <input type="hidden" id="lot_item_id_in_weight" name="lot_item_id_in_weight">
+                                            <input type="hidden" id="lot_id_in_weight" name="lot_id_in_weight">
+                                            <input type="hidden" id="real_price_in_weight" name="real_price_in_weight">
+                                            <input type="hidden" id="base_price_in_weight" name="base_price_in_weight">
+                                            <input type="hidden" id="base_price_in_weight" name="old_weight_in_weight">
+                                            <input type="number" id="weight_in_weight" step="0.001" class="form-control"
+                                                name="weight_in_weight" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ບັນທຶກ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @if (session()->get('error') == 'not_insert')
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <span>
+                        <b> Danger - </b>ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່</span>
+                </div>
+            @elseif(session()->get( 'error' )=='insert_success')
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <span>
+                        <b> Success - </b>ບັນທຶກຂໍ້ມູນສຳເລັດ</span>
+                </div>
+            @endif
+
             <div class="row">
                 <div class="col">
                     <div class="card">
@@ -11,7 +102,8 @@
                             <h5 class="card-title">ຄົ້ນຫາ</h5>
                         </div>
                         <div class="card-body">
-                            <form method="GET" action="/{{ Auth::user()->is_admin == 1 ? 'importProductTrack' : 'importProductTrackForUser' }}?id=25">
+                            <form method="GET"
+                                action="/{{ Auth::user()->is_admin == 1 ? 'importProductTrack' : 'importProductTrackForUser' }}?id=25">
                                 {{-- @csrf --}}
                                 <input type="hidden" value="{{ Request::input('id') }}" name="id">
                                 <div class="row">
@@ -98,6 +190,9 @@
                                             ຮັບມາວັນທີ່
                                         </th>
                                         <th>
+                                            ສົ່ງໄປສາຂາ
+                                        </th>
+                                        <th>
                                             ຂາຍວັນທີ່
                                         </th>
                                         <th>
@@ -112,6 +207,9 @@
                                         <th>
                                             ລາຄາຂາຍ
                                         </th>
+                                        <th>
+
+                                        </th>
                                     </thead>
                                     <tbody>
                                         @foreach ($import_products as $key => $import_product)
@@ -123,7 +221,10 @@
                                                     {{ $import_product->code }}
                                                 </td>
                                                 <td>
-                                                    {{ date('d-m-Y', strtotime($import_product->received_at)) }}
+                                                    {{ $import_product->created_at ? date('d-m-Y', strtotime($import_product->created_at)) : '' }}
+                                                </td>
+                                                <td>
+                                                    {{ $import_product->branch_name }}
                                                 </td>
                                                 <td>
                                                     {{ $import_product->success_at }}
@@ -140,6 +241,24 @@
                                                 </td> --}}
                                                 <td>
                                                     {{ number_format($import_product->total_sale_price) }}
+                                                </td>
+                                                <td>
+                                                    @if ($import_product->status != 'success')
+                                                        @if ($import_product->status != 'success')
+                                                            <a type="button"
+                                                                onclick="change_price({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->base_price . ',' . $import_product->real_price . ',' . $import_product->weight }})"
+                                                                data-toggle="modal" data-target="#new_price_modal">
+                                                                <i class="material-icons">delete_forever</i>
+                                                            </a>
+                                                        @endif
+                                                        @if ($import_product->weight_type == 'm' && $import_product->status != 'success')
+                                                            <a type="button"
+                                                                onclick="change_weight({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->base_price . ',' . $import_product->real_price . ',' . $import_product->weight }})"
+                                                                data-toggle="modal" data-target="#new_weight_modal">
+                                                                <i class="material-icons">create</i>
+                                                            </a>
+                                                        @endif
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -210,67 +329,23 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        var district_lists = < ? php echo json_encode($districts); ?> ;;
-        var branch_lists = < ? php echo json_encode($branchs); ?> ;;
-        $("#select_province").on("change", function() {
-            let province_id = this.value;
-            let district_options = "<option value=''>ເລືອກ</option>";
-            district_lists
-                .filter(district => district.prov_id === province_id)
-                .forEach(district => {
-                    district_options +=
-                        `<option value="${district.id}">${district.dist_name}</option>`
-                });
-            $("#select_district").html(district_options)
-            $("#select_district").attr("disabled", false);
-            $("#select_branch").val("");
-            $("#select_branch").attr("disabled", true);
-        });
+        function change_price(id, lot_id, base_price, real_price, weight) {
+            $("#lot_item_id").val(id);
+            $("#lot_id").val(lot_id);
+            $("#base_price").val(base_price);
+            $("#real_price").val(real_price);
+            $("#weight").val(weight);
+        }
 
-        $("#select_district").on("change", function() {
-            let district_id = this.value;
-            let branch_options = "<option value=''>ເລືອກ</option>";
-            branch_lists
-                .filter(branch => branch.district_id === district_id)
-                .forEach(branch => {
-                    branch_options +=
-                        `<option value="${branch.id}">${branch.branch_name}</option>`
-                });
-            $("#select_branch").html(branch_options)
-            $("#select_branch").attr("disabled", false);
-        });
+        function change_weight(id, lot_id, base_price, real_price, old_weight) {
+            $("#lot_item_id_in_weight").val(id);
+            $("#lot_id_in_weight").val(lot_id);
+            $("#base_price_in_weight").val(base_price);
+            $("#real_price_in_weight").val(real_price);
+            $("#old_weight_in_weight").val(old_weight);
+            $("#weight_in_weight").val(old_weight);
 
-        $(document).ready(function() {
-            var product_id =
-                "<?php echo session()->get('id') ? session()->get('id') : 'no_id'; ?>";
 
-            if (product_id != 'no_id') {
-                window.open(`importpdf/${product_id}`);
-            }
-        });
-
-        var codes = [];
-        $('#product_id').keypress(function(event) {
-            if (event.keyCode == 13) {
-                let code = $('#product_id').val();
-                if (code == '') {
-                    alert("empty!!!");
-                } else {
-                    if (codes.includes(code)) {
-                        alert("ລະຫັດຊ້ຳ");
-                    } else {
-                        generateItem(code);
-                        codes.push(code);
-                        $('#product_id').val('');
-                    }
-                }
-            }
-        });
-
-        function generateItem(code) {
-            $('#product_item_table').append(
-                `<tr><td class="py-0"><div class="form-group"><input value='${code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><input type="number" value=0 min="0"class="form-control form-control-sm" name="weight[]" required></div></td><td class="py-0"><div class="form-group"><select class="form-control form-control-sm" name="weight_type[]"required><option value="gram">ກິໂລກຼາມ</option> <option value="m">ແມັດກ້ອນ</option></select></div></td><td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="base_price[]"> </div></td> <td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="real_price[]"></div></td></tr>`
-            )
         }
 
     </script>

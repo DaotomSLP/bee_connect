@@ -101,10 +101,10 @@
                                                     {{ $import_product->code }}
                                                 </td>
                                                 <td>
-                                                    {{ date('d-m-Y', strtotime($import_product->received_at)) }}
+                                                    {{ $import_product->received_at ? date('d-m-Y', strtotime($import_product->received_at)) : '' }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->success_at }}
+                                                    {{ $import_product->success_at ? date('d-m-Y', strtotime($import_product->success_at)) : '' }}
                                                 </td>
                                                 <td>
                                                     {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}

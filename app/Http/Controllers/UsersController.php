@@ -96,7 +96,8 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::where('id', $id)->first();
-        $branchs = Branchs::all();
+        $branchs = Branchs::where('branchs.enabled', '1')->get();
+
         return view('editUser', compact('user', 'branchs'));
     }
 

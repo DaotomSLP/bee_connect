@@ -88,7 +88,13 @@ Route::post('/addProduct', [ProductController::class, 'insert'])->middleware('au
 
 Route::post('/importProduct', [ImportProductsController::class, 'insertImport'])->middleware('auth')->name('importProduct');
 
+Route::get('/deleteLot', [ImportProductsController::class, 'deleteLot'])->middleware('auth')->name('deleteLot');
+
+Route::get('/paidLot', [ImportProductsController::class, 'paidLot'])->middleware('auth')->name('paidLot');
+
 Route::post('/deleteImportItem', [ImportProductsController::class, 'deleteImportItem'])->middleware('auth')->name('deleteImportItem');
+
+Route::post('/changeImportItemWeight', [ImportProductsController::class, 'changeImportItemWeight'])->middleware('auth')->name('changeImportItemWeight');
 
 Route::post('/importProductForUser', [ImportProductsController::class, 'insertImportForUser'])->middleware('auth')->name('importProductForUser');
 

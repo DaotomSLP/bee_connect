@@ -31,7 +31,8 @@ class Lots extends Model
         'total_base_price',
         'total_price',
         'total_sale_price',
-        'status'
+        'status',
+        'payment_status'
     ];
 
     /**

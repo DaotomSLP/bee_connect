@@ -2,24 +2,41 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+        @page {
+            margin: 20px;
+        }
+
+        p {
+            margin: 5px
+        }
+
+    </style>
 </head>
 
 <body>
-    <p style="text-align: center;font-weight: bold;">ໃບນຳສົ່ງສິນຄ້າ</p>
+    <p style="text-align: center;font-weight: bold;font-size: 13pt;">ໃບນຳສົ່ງສິນຄ້າ</p>
 
-    <p style="font-size: 12pt;">ເລກບິນ :
-        <?php echo $id; ?>
+    <p style="font-size: 12pt;font-weight: bold;">ເລກບິນ :
+        {{ $id }}
     </p>
 
-    <p style="font-size: 12pt;">ເຖິງສາຂາ :
-        <?php echo $to; ?>
+    <p style="font-size: 11pt;">ວັນທີ :
+        {{ $date }}
     </p>
 
+    <p style="font-size: 11pt;">ເຖິງສາຂາ :
+        {{ $to }}
+    </p>
+
+    <p style="font-size: 11pt;">ນ້ຳໜັກລວມ :
+        {{ $weight_kg }} kg
+    </p>
+
+    <hr>
     <p style="font-size: 12pt;">ລວມເປັນເງິນ :
-        <?php echo $price; ?> ກີບ
+        {{ $price }} ກີບ
     </p>
-
-    <barcode code="{{ $id }}" type="C128B" height="1" text="2" />
 
 </body>
 

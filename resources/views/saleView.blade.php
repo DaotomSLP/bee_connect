@@ -59,10 +59,15 @@
                                         <th>
                                             ຂາຍວັນທີ່
                                         </th>
-
+                                        <th>
+                                            ລວມ
+                                        </th>
+                                        <th>
+                                            ສ່ວນຫຼຸດ
+                                        </th>
                                         @if (Auth::user()->is_admin != 1)
                                             <th>
-                                                ລວມຂາຍໄດ້
+                                                ລວມເປັນເງິນທັງໝົດ
                                             </th>
                                         @endif
 
@@ -86,7 +91,12 @@
                                                 <td>
                                                     {{ date('d-m-Y', strtotime($sale_import->created_at)) }}
                                                 </td>
-
+                                                <td>
+                                                    {{ number_format($sale_import->subtotal) }} ກີບ
+                                                </td>
+                                                <td>
+                                                    {{ number_format($sale_import->discount) }} ກີບ
+                                                </td>
                                                 <td>
                                                     {{ number_format($sale_import->total) }} ກີບ
                                                 </td>

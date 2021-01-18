@@ -19,7 +19,7 @@ class SuccessController extends Controller
      */
     public function index(Request $request)
     {
-        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->get();
+        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
         $result = Product::query();
 
@@ -65,7 +65,7 @@ class SuccessController extends Controller
 
     public function successImport(Request $request)
     {
-        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->get();
+        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
         $result = Import_products::query();
 

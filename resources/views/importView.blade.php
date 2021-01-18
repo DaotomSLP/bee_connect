@@ -42,6 +42,26 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
+                                            <label class="bmd-label-floating">ສະຖານະການຈ່າຍເງິນ</label>
+                                            <select class="form-control form-control-sm" id="select_status"
+                                                name="payment_status">
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                <option
+                                                    {{ Request::input('payment_status') == 'not_paid' ? 'selected' : '' }}
+                                                    value="not_paid">
+                                                    ຍັງບໍ່ຈ່າຍ
+                                                </option>
+                                                <option {{ Request::input('payment_status') == 'paid' ? 'selected' : '' }}
+                                                    value="paid">
+                                                    ຈ່າຍແລ້ວ
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
                                             <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
                                             <select class="form-control form-control-sm" id="select_branch"
                                                 name="receive_branch">
@@ -98,13 +118,16 @@
                                         <th>
                                             ຮັບມາວັນທີ່
                                         </th>
+                                        <th>
+                                            kg
+                                        </th>
                                         @if (Auth::user()->is_admin == 1)
                                             <th>
                                                 ລວມຕົ້ນທຶນ
                                             </th>
                                         @endif
                                         <th>
-                                            {{ Auth::user()->is_admin != 1 ? 'ຕົ້ນທຶນ' : 'ລວມປ່ອຍອອກ' }}
+                                            {{ Auth::user()->is_admin != 1 ? 'ຕົ້ນທຶນ' : 'ລວມລາຄາຂາຍ' }}
                                         </th>
                                         @if (Auth::user()->is_admin != 1)
                                             <th>
@@ -116,6 +139,9 @@
                                         </th>
                                         <th>
                                             ສະຖານະ
+                                        </th>
+                                        <th>
+                                            ສະຖານະຈ່າຍເງິນ
                                         </th>
                                         <th>
 
@@ -138,8 +164,12 @@
                                                         {{ $lot->receiver_branch_name }}
                                                     </td>
                                                 @endif
+
                                                 <td>
                                                     {{ date('d-m-Y', strtotime($lot->created_at)) }}
+                                                </td>
+                                                <td>
+                                                    {{ $lot->weight_kg }}
                                                 </td>
                                                 @if (Auth::user()->is_admin == 1)
                                                     <td>
@@ -168,10 +198,27 @@
                                                     {{ $lot->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($lot->status == 'received' ? 'ຄົບແລ້ວ' : ($lot->status == 'not_full' ? 'ຍັງບໍ່ຄົບ' : 'ສຳເລັດ')) }}
                                                 </td>
                                                 <td>
+                                                    {{ $lot->payment_status == 'not_paid' ? 'ຍັງບໍ່ຈ່າຍ' : 'ຈ່າຍແລ້ວ' }}
+                                                </td>
+                                                <td>
                                                     <a
                                                         href="/{{ Auth::user()->is_admin == 1 ? 'importDetail' : 'importDetailForUser' }}?id={{ $lot->id }}">
                                                         ລາຍລະອຽດ
                                                     </a>
+                                                    @if ($lot->status != 'success' && Auth::user()->is_admin == 1)
+
+                                                        <a href="/deleteLot?id={{ $lot->id }}">
+                                                            <i class="material-icons">delete_forever</i>
+                                                        </a>
+
+                                                    @endif
+                                                    @if ($lot->payment_status == 'not_paid' && Auth::user()->is_admin == 1)
+
+                                                        <a href="/paidLot?id={{ $lot->id }}">
+                                                            ຈ່າຍແລ້ວ
+                                                        </a>
+
+                                                    @endif
                                                 </td>
                                                 {{-- <td>
                                                     @if (!$lot->received_at)
@@ -249,38 +296,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        $(document).ready(function() {
-            var product_id =
-                "<?php echo session()->get('id') ? session()->get('id') : 'no_id'; ?>";
-
-            if (product_id != 'no_id') {
-                window.open(`importpdf/${product_id}`);
-            }
-        });
-
-        var codes = [];
-        $('#product_id').keypress(function(event) {
-            if (event.keyCode == 13) {
-                let code = $('#product_id').val();
-                if (code == '') {
-                    alert("empty!!!");
-                } else {
-                    if (codes.includes(code)) {
-                        alert("ລະຫັດຊ້ຳ");
-                    } else {
-                        generateItem(code);
-                        codes.push(code);
-                        $('#product_id').val('');
-                    }
-                }
-            }
-        });
-
-        function generateItem(code) {
-            $('#product_item_table').append(
-                `<tr><td class="py-0"><div class="form-group"><input value='${code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><input type="number" value=0 min="0"class="form-control form-control-sm" name="weight[]" required></div></td><td class="py-0"><div class="form-group"><select class="form-control form-control-sm" name="weight_type[]"required><option value="gram">ກິໂລກຼາມ</option> <option value="m">ແມັດກ້ອນ</option></select></div></td><td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="base_price[]"> </div></td> <td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="real_price[]"></div></td></tr>`
-            )
-        }
 
     </script>
 @endsection
