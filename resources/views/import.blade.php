@@ -2,8 +2,15 @@
 
 @section('body')
     <!-- End Navbar -->
-    <div class="content">
-        <div class="container-fluid">
+    <!-- page content -->
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>ນຳເຂົ້າສິນຄ້າ</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
 
             @if (session()->get('error') == 'not_insert')
                 <div class="alert alert-danger">
@@ -22,17 +29,21 @@
                         <b> Success - </b>ບັນທຶກຂໍ້ມູນສຳເລັດ</span>
                 </div>
             @endif
+
             <div class="row">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title">ສະແກນບາໂຄດ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2>ສະແກນບາໂຄດ</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="x_content">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
+                                        <div class="spinner-border d-none" id="loading" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
                                         <input class="form-control" id="product_id">
                                     </div>
                                 </div>
@@ -41,143 +52,159 @@
                     </div>
                 </div>
             </div>
-            <form method="POST" action="/importProduct">
-                @csrf
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header card-header-primary">
-                                <h5 class="card-title ">ລາຍການ</h5>
+
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col">
+                    <form method="POST" action="/importProductForUser">
+                        @csrf
+                        <div class="row">
+                            <div class="col">
+                                <div class="x_panel">
+                                    <div>
+                                        <h2>ລາຍການ</h2>
+                                    </div>
+                                    <div class="x_content">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead class=" text-primary">
+                                                    <th>
+                                                        ລະຫັດເຄື່ອງ
+                                                    </th>
+                                                    <th>
+                                                        ນ້ຳໜັກ/ຂະໜາດ
+                                                    </th>
+                                                    <th>
+                                                        ຫົວໜ່ວຍ
+                                                    </th>
+                                                </thead>
+                                                <tbody id="product_item_table">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <hr>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ (ກິໂລກຼາມ)</label>
+                                                    <input class="form-control form-control-sm" name="base_price_kg">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ລາຄາ (ກິໂລກຼາມ)</label>
+                                                    <input class="form-control form-control-sm" name="real_price_kg">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ນ້ຳໜັກລວມ (ກິໂລກຼາມ)</label>
+                                                    <input class="form-control form-control-sm" name="weight_kg"
+                                                        required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ (ແມັດກ້ອນ)</label>
+                                                    <input class="form-control form-control-sm" name="base_price_m">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ລາຄາ (ແມັດກ້ອນ)</label>
+                                                    <input class="form-control form-control-sm" name="real_price_m">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button type="submit"
+                                                class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
+                                            <div class="clearfix"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead class=" text-primary">
-                                            <th>
-                                                ລະຫັດເຄື່ອງ
-                                            </th>
-                                            <th>
-                                                ນ້ຳໜັກ/ຂະໜາດ
-                                            </th>
-                                            <th>
-                                                ຫົວໜ່ວຍ
-                                            </th>
-                                        </thead>
-                                        <tbody id="product_item_table">
-
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <hr>
-                                <hr>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ (ກິໂລກຼາມ)</label>
-                                            <input class="form-control form-control-sm" name="base_price_kg">
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ລາຄາ (ກິໂລກຼາມ)</label>
-                                            <input class="form-control form-control-sm" name="real_price_kg">
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ນ້ຳໜັກລວມ (ກິໂລກຼາມ)</label>
-                                            <input class="form-control form-control-sm" name="weight_kg" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ (ແມັດກ້ອນ)</label>
-                                            <input class="form-control form-control-sm" name="base_price_m">
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ລາຄາ (ແມັດກ້ອນ)</label>
-                                            <input class="form-control form-control-sm" name="real_price_m">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
-                    </div>
-                </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header card-header-primary">
-                        <h5 class="card-title">ເລຶອກບ່ອນສົ່ງ</h5>
-                    </div>
-                    <div class="card-body">
+                        <div class="clearfix"></div>
 
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="bmd-label-floating">ແຂວງ</label>
-                                    <select class="form-control form-control-sm" id="select_province" required>
-                                        <option value="">
-                                            ເລືອກ
-                                        </option>
-                                        @foreach ($provinces as $province)
-                                            <option value="{{ $province->id }}">
-                                                {{ $province->prov_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="bmd-label-floating">ເມືອງ</label>
-                                    <select class="form-control form-control-sm" disabled id="select_district" required>
-                                        <option value="">
-                                            ເລືອກ
-                                        </option>
-                                        @foreach ($districts as $district)
-                                            <option value="{{ $district->id }}">
-                                                {{ $district->dist_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="bmd-label-floating">ສາຂາ</label>
-                                    <select class="form-control form-control-sm" disabled id="select_branch"
-                                        name="receiver_branch_id" required>
-                                        <option value="">
-                                            ເລືອກ
-                                        </option>
-                                        @foreach ($branchs as $branch)
-                                            <option value="{{ $branch->id }}">
-                                                {{ $branch->branch_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                            <div class="col">
+                                <div class="x_panel">
+                                    <div>
+                                        <h2>ເລຶອກບ່ອນສົ່ງ</h2>
+                                    </div>
+                                    <div class="x-content">
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ແຂວງ</label>
+                                                    <select class="form-control form-control-sm" id="select_province"
+                                                        required>
+                                                        <option value="">
+                                                            ເລືອກ
+                                                        </option>
+                                                        @foreach ($provinces as $province)
+                                                            <option value="{{ $province->id }}">
+                                                                {{ $province->prov_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ເມືອງ</label>
+                                                    <select class="form-control form-control-sm" disabled
+                                                        id="select_district" required>
+                                                        <option value="">
+                                                            ເລືອກ
+                                                        </option>
+                                                        @foreach ($districts as $district)
+                                                            <option value="{{ $district->id }}">
+                                                                {{ $district->dist_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ສາຂາ</label>
+                                                    <select class="form-control form-control-sm" disabled id="select_branch"
+                                                        name="receiver_branch_id" required>
+                                                        <option value="">
+                                                            ເລືອກ
+                                                        </option>
+                                                        @foreach ($branchs as $branch)
+                                                            <option value="{{ $branch->id }}">
+                                                                {{ $branch->branch_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
+
+                    </form>
+
                 </div>
             </div>
         </div>
-        </form>
-    </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>

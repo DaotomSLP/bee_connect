@@ -2,85 +2,37 @@
 
 @section('body')
     <!-- End Navbar -->
-    <div class="content">
-        <div class="container-fluid">
+    <!-- page content -->
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>ການສົ່ງສິນຄ້າພາຍໃນ</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
 
             <div class="row">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title">ຄົ້ນຫາ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2>ຄົ້ນຫາ</h2>
                         </div>
-                        <div class="card-body">
-                            <form method="GET" action="/import">
+                        <div class="x_content">
+                            <form method="GET" action="/saleView">
                                 {{-- @csrf --}}
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ເລກບິນ</label>
                                             <input class="form-control form-control-sm" value="{{ Request::input('id') }}"
                                                 name="id">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ສະຖານະ</label>
-                                            <select class="form-control form-control-sm" id="select_status" name="status">
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                <option {{ Request::input('status') == 'sending' ? 'selected' : '' }}
-                                                    value="sending">
-                                                    ກຳລັງສົ່ງ
-                                                </option>
-                                                <option {{ Request::input('status') == 'received' ? 'selected' : '' }}
-                                                    value="received">
-                                                    ຮອດແລ້ວ
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ສະຖານະການຈ່າຍເງິນ</label>
-                                            <select class="form-control form-control-sm" id="select_status"
-                                                name="payment_status">
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                <option
-                                                    {{ Request::input('payment_status') == 'not_paid' ? 'selected' : '' }}
-                                                    value="not_paid">
-                                                    ຍັງບໍ່ຈ່າຍ
-                                                </option>
-                                                <option {{ Request::input('payment_status') == 'paid' ? 'selected' : '' }}
-                                                    value="paid">
-                                                    ຈ່າຍແລ້ວ
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
-                                            <select class="form-control form-control-sm" id="select_branch"
-                                                name="receive_branch">
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                @foreach ($branchs as $branch)
-                                                    <option
-                                                        {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
-                                                        value="{{ $branch->id }}">
-                                                        {{ $branch->branch_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ວັນທີສົ່ງ</label>
+                                            <label class="bmd-label-floating">ວັນທີຂາຍ</label>
                                             <input class="form-control form-control-sm" type="date"
                                                 value="{{ Request::input('send_date') }}" name="send_date">
                                         </div>
@@ -94,13 +46,16 @@
                 </div>
             </div>
 
+            <div class="clearfix"></div>
+
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title ">ລາຍການສົ່ງອອກທັງໝົດຂອງສາຂາ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2>ລາຍການສົ່ງອອກທັງໝົດຂອງສາຂາ</h2>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="card-body">
+                        <div class="x_content">
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead class=" text-primary">

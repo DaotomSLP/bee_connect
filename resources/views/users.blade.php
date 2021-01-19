@@ -2,8 +2,15 @@
 
 @section('body')
     <!-- End Navbar -->
-    <div class="content">
-        <div class="container-fluid">
+    <!-- page content -->
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>ຕັ້ງຄ່າລາຄາຄ່າສົ່ງ</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
 
             @if (session()->get('error') == 'not_insert')
                 <div class="alert alert-danger">
@@ -22,14 +29,15 @@
                         <b> Success - </b>ບັນທຶກຂໍ້ມູນສຳເລັດ</span>
                 </div>
             @endif
+            <div class="clearfix"></div>
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title">ເພີ່ມຜູ້ໃຊ້</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2>ເພີ່ມຜູ້ໃຊ້</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="x_content">
                             <form method="POST" action="/addUser">
                                 @csrf
                                 <div class="row">
@@ -92,11 +100,11 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title">ຄົ້ນຫາ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2>ຄົ້ນຫາ</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="x_content">
                             <form method="GET" action="/users">
                                 {{-- @csrf --}}
                                 <div class="row">
@@ -157,11 +165,11 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title ">ຊື່ຜູ້ໃຊ້ທັງໝົດ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2>ຊື່ຜູ້ໃຊ້ທັງໝົດ</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="x_content">
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead class=" text-primary">
@@ -234,15 +242,12 @@
                         <a class="page-link"
                             href="{{ Request::route()->getName() }}?name={{ Request::input('name') }}&enabled={{ Request::input('enabled') }}&branch_id={{ Request::input('branch_id') }}&email={{ Request::input('email') }}&page=1">1</a>
                     </li>
-                    @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                                <a class="page-link"
-                                    href="{{ Request::route()->getName() }}?name={{ Request::input('name') }}&enabled={{ Request::input('enabled') }}&branch_id={{ Request::input('branch_id') }}&email={{ Request::input('email') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else
-
-                        @endif
+                    @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++) @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                        <a class="page-link"
+                        href="{{ Request::route()->getName() }}?name={{ Request::input('name') }}&enabled={{ Request::input('enabled') }}&branch_id={{ Request::input('branch_id') }}&email={{ Request::input('email') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -255,14 +260,12 @@
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                                <a class="page-link"
-                                    href="{{ Request::route()->getName() }}?name={{ Request::input('name') }}&enabled={{ Request::input('enabled') }}&branch_id={{ Request::input('branch_id') }}&email={{ Request::input('email') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else
-
-                        @endif
+                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                        <a class="page-link"
+                        href="{{ Request::route()->getName() }}?name={{ Request::input('name') }}&enabled={{ Request::input('enabled') }}&branch_id={{ Request::input('branch_id') }}&email={{ Request::input('email') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"

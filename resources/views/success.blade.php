@@ -2,8 +2,15 @@
 
 @section('body')
     <!-- End Navbar -->
-    <div class="content">
-        <div class="container-fluid">
+    <!-- page content -->
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>ສົ່ງເຄື່ອງໃຫ້ລູກຄ້າ</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
 
             @if (session()->get('error') == 'not_insert')
                 <div class="alert alert-danger">
@@ -31,38 +38,43 @@
                 </div>
             @endif
 
-            <div class="row">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title">ສົ່ງເຄື່ອງໃຫ້ລູກຄ້າ</h5>
-                        </div>
-                        <div class="card-body">
-                            <form method="POST" action="/successProduct">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
-                                            <input class="form-control" id="input_id" name="id">
+            <div class="clearfix"></div>
+
+            @if (Auth::user()->is_admin != 1)
+                <div class="row">
+                    <div class="col">
+                        <div class="x_panel">
+                            <div>
+                                <h2>ຮັບສິນຄ້າ</h2>
+                            </div>
+                            <div class="x_content">
+                                <form method="POST" action="/successProduct">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
+                                                <input class="form-control" id="input_id" name="id">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary px-5">ບັນທຶກ</button>
-                                <div class="clearfix"></div>
-                            </form>
+                                    <button type="submit" class="btn btn-primary px-5">ບັນທຶກ</button>
+                                    <div class="clearfix"></div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
+            <div class="clearfix"></div>
             <div class="row">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title">ຄົ້ນຫາ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2>ຄົ້ນຫາ</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="x_content">
                             <form method="GET" action="/success">
                                 {{-- @csrf --}}
                                 <div class="row">
@@ -127,85 +139,86 @@
                 </div>
             </div>
 
+            <div class="clearfix"></div>
+
             <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title ">ລາຍການເຄື່ອງເຂົ້າທັງໝົດຂອງສາຂາ</h5>
+                <div class="col">
+                    <div class="x_panel">
+                        <div>
+                            <h2>ລາຍການເຄື່ອງເຂົ້າທັງໝົດຂອງສາຂາ</h2>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead class=" text-primary">
-                                        <th>
-                                            ລ/ດ
-                                        </th>
-                                        <th>
-                                            ລະຫັດເຄື່ອງ
-                                        </th>
-                                        <th>
-                                            ຂະໜາດ
-                                        </th>
-                                        <th>
-                                            ຈາກສາຂາ
-                                        </th>
-                                        <th>
-                                            ສົ່ງວັນທີ
-                                        </th>
-                                        <th>
-                                            ລູກຄ້າຜູ້ສົ່ງ
-                                        </th>
-                                        <th>
-                                            ລູກຄ້າຜູ້ຮັບ
-                                        </th>
-                                        <th>
-                                            ເບີໂທ
-                                        </th>
-                                        <th>
-                                            ສະຖານະ
-                                        </th>
-                                        <th>
-                                            ລາຄາ
-                                        </th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($products as $key => $product)
-                                            <tr>
-                                                <td>
-                                                    {{ $key + 1 }}
-                                                </td>
-                                                <td>
-                                                    {{ $product->id }}
-                                                </td>
-                                                <td>
-                                                    {{ $product->weight }} {{ $product->weight_type }}
-                                                </td>
-                                                <td>
-                                                    {{ $product->branch_name }}
-                                                </td>
-                                                <td>
-                                                    {{ date('d-m-Y', strtotime($product->created_at)) }}
-                                                </td>
-                                                <td>
-                                                    {{ $product->cust_send_name }}
-                                                </td>
-                                                <td>
-                                                    {{ $product->cust_receiver_name }}
-                                                </td>
-                                                <td>
-                                                    {{ $product->cust_receiver_tel }}
-                                                </td>
-                                                <td>
-                                                    {{ $product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
-                                                </td>
-                                                <td>
-                                                    {{ $product->price }} ກີບ
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="x_content">
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th>
+                                        ລ/ດ
+                                    </th>
+                                    <th>
+                                        ລະຫັດເຄື່ອງ
+                                    </th>
+                                    <th>
+                                        ຂະໜາດ
+                                    </th>
+                                    <th>
+                                        ຈາກສາຂາ
+                                    </th>
+                                    <th>
+                                        ສົ່ງວັນທີ
+                                    </th>
+                                    <th>
+                                        ລູກຄ້າຜູ້ສົ່ງ
+                                    </th>
+                                    <th>
+                                        ລູກຄ້າຜູ້ຮັບ
+                                    </th>
+                                    <th>
+                                        ເບີໂທ
+                                    </th>
+                                    <th>
+                                        ສະຖານະ
+                                    </th>
+                                    <th>
+                                        ລາຄາ
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    @foreach ($products as $key => $product)
+                                        <tr>
+                                            <td>
+                                                {{ $key + 1 }}
+                                            </td>
+                                            <td>
+                                                {{ $product->id }}
+                                            </td>
+                                            <td>
+                                                {{ $product->weight }} {{ $product->weight_type }}
+                                            </td>
+                                            <td>
+                                                {{ $product->branch_name }}
+                                            </td>
+                                            <td>
+                                                {{ date('d-m-Y', strtotime($product->created_at)) }}
+                                            </td>
+                                            <td>
+                                                {{ $product->cust_send_name }}
+                                            </td>
+                                            <td>
+                                                {{ $product->cust_receiver_name }}
+                                            </td>
+                                            <td>
+                                                {{ $product->cust_receiver_tel }}
+                                            </td>
+                                            <td>
+                                                {{ $product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
+                                            </td>
+                                            <td>
+                                                {{ $product->price }} ກີບ
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -227,14 +240,12 @@
                             href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&send_branch={{ Request::input('send_branch') }}&receive_date={{ Request::input('receive_date') }}&page=1">1</a>
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                                <a class="page-link"
-                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&send_branch={{ Request::input('send_branch') }}&receive_date={{ Request::input('receive_date') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else
-
-                        @endif
+                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                        <a class="page-link"
+                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&send_branch={{ Request::input('send_branch') }}&receive_date={{ Request::input('receive_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -247,14 +258,12 @@
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                                <a class="page-link"
-                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&send_branch={{ Request::input('send_branch') }}&receive_date={{ Request::input('receive_date') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else
-
-                        @endif
+                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                        <a class="page-link"
+                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&send_branch={{ Request::input('send_branch') }}&receive_date={{ Request::input('receive_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"

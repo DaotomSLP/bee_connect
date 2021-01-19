@@ -2,8 +2,15 @@
 
 @section('body')
     <!-- End Navbar -->
-    <div class="content">
-        <div class="container-fluid">
+    <!-- page content -->
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>ລາຍຈ່າຍ</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
 
             @if (session()->get('error') == 'not_insert')
                 <div class="alert alert-danger">
@@ -26,11 +33,11 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title">ເພິ່ມລາຍຈ່າຍ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2 class="card-title">ເພິ່ມລາຍຈ່າຍ</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="x_content">
                             <form method="POST" action="/addExpenditure">
                                 @csrf
                                 <div class="row">
@@ -88,11 +95,11 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title ">ລາຍການລາຍຈ່າຍ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2 class="card-title ">ລາຍການລາຍຈ່າຍ</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="x_content">
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead class=" text-primary">

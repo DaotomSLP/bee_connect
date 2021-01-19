@@ -136,7 +136,7 @@ class ImportProductsController extends Controller
     $count = 0;
     foreach ($request->item_id as $product_code) {
 
-      $import_product = Import_products::where('code', $product_code)
+      $import_product = Import_products::where('id', $product_code)
         ->orderBy('id', 'DESC')->first();
 
       $new_import_product_update =  [
@@ -180,7 +180,7 @@ class ImportProductsController extends Controller
       $count = 0;
       foreach ($request->item_id as $product_code) {
 
-        $import_product = Import_products::where('code', $product_code)
+        $import_product = Import_products::where('id', $product_code)
           ->orderBy('id', 'DESC')->first();
 
         $lot = Lots::where('id', $import_product->lot_id)
@@ -208,7 +208,7 @@ class ImportProductsController extends Controller
           ];
         }
 
-        if (Import_products::where('code', $product_code)->update($new_import_product_update)) {
+        if (Import_products::where('id', $product_code)->update($new_import_product_update)) {
 
           $import_product = Import_products::where('code', $product_code)
             ->orderBy('id', 'DESC')->first();
@@ -629,7 +629,7 @@ class ImportProductsController extends Controller
   {
 
     $import_product = Import_products::select('import_products.*')->join('lot', 'lot.id', 'import_products.lot_id')->where('code', $request->id)->where('lot.receiver_branch_id', Auth::user()->branch_id)->orderBy('import_products.id', 'desc')->first();
-
+    
     if ($import_product) {
       return response()
         ->json($import_product);

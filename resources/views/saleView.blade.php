@@ -2,16 +2,23 @@
 
 @section('body')
     <!-- End Navbar -->
-    <div class="content">
-        <div class="container-fluid">
+    <!-- page content -->
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>ການສົ່ງສິນຄ້າພາຍໃນ</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
 
             <div class="row">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title">ຄົ້ນຫາ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2>ຄົ້ນຫາ</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="x_content">
                             <form method="GET" action="/saleView">
                                 {{-- @csrf --}}
                                 <div class="row">
@@ -41,11 +48,12 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title ">ລາຍການປະຫວັດການຂາຍ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2>ລາຍການປະຫວັດການຂາຍ</h2>
+                            <div class="clearfix"></div>
                         </div>
-                        <div class="card-body">
+                        <div class="x_content">
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead class=" text-primary">

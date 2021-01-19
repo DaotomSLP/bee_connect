@@ -2,10 +2,17 @@
 
 @section('body')
     <!-- End Navbar -->
-    <div class="content">
-        <div class="container-fluid">
+    <!-- page content -->
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>ການສົ່ງສິນຄ້າພາຍໃນ</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
 
-
+            
             <!-- Modal -->
             <div class="modal fade" id="new_price_modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -77,44 +84,26 @@
                 </div>
             </div>
 
-            @if (session()->get('error') == 'not_insert')
-                <div class="alert alert-danger">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <i class="material-icons">close</i>
-                    </button>
-                    <span>
-                        <b> Danger - </b>ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່</span>
-                </div>
-            @elseif(session()->get( 'error' )=='insert_success')
-                <div class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <i class="material-icons">close</i>
-                    </button>
-                    <span>
-                        <b> Success - </b>ບັນທຶກຂໍ້ມູນສຳເລັດ</span>
-                </div>
-            @endif
+
 
             <div class="row">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title">ຄົ້ນຫາ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2>ຄົ້ນຫາ</h2>
                         </div>
-                        <div class="card-body">
-                            <form method="GET"
-                                action="/{{ Auth::user()->is_admin == 1 ? 'importProductTrack' : 'importProductTrackForUser' }}?id=25">
+                        <div class="x_content">
+                            <form method="GET" action="/importProductTrackForUser">
                                 {{-- @csrf --}}
-                                <input type="hidden" value="{{ Request::input('id') }}" name="id">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
                                             <input class="form-control form-control-sm"
                                                 value="{{ Request::input('product_id') }}" name="product_id">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ສະຖານະ</label>
                                             <select class="form-control form-control-sm" id="select_status" name="status">
@@ -136,25 +125,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
-                                            <select class="form-control form-control-sm" id="select_branch"
-                                                name="receive_branch">
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                @foreach ($branchs as $branch)
-                                                    <option
-                                                        {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
-                                                        value="{{ $branch->id }}">
-                                                        {{ $branch->branch_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ວັນທີຮັບ</label>
                                             <input class="form-control form-control-sm" type="date"
@@ -170,11 +141,12 @@
                 </div>
             </div>
 
+            <div class="clearfix"></div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
-                            <h5 class="card-title ">ລາຍການສິນຄ້າຂອງເລກບິນທີ່ {{ Request::input('id') }}</h5>
+                            <h5 class="card-title ">ລາຍການສົ່ງອອກທັງໝົດຂອງສາຂາ</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -329,23 +301,67 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        function change_price(id, lot_id, base_price, real_price, weight) {
-            $("#lot_item_id").val(id);
-            $("#lot_id").val(lot_id);
-            $("#base_price").val(base_price);
-            $("#real_price").val(real_price);
-            $("#weight").val(weight);
-        }
+        var district_lists = < ? php echo json_encode($districts); ?> ;;
+        var branch_lists = < ? php echo json_encode($branchs); ?> ;;
+        $("#select_province").on("change", function() {
+            let province_id = this.value;
+            let district_options = "<option value=''>ເລືອກ</option>";
+            district_lists
+                .filter(district => district.prov_id === province_id)
+                .forEach(district => {
+                    district_options +=
+                        `<option value="${district.id}">${district.dist_name}</option>`
+                });
+            $("#select_district").html(district_options)
+            $("#select_district").attr("disabled", false);
+            $("#select_branch").val("");
+            $("#select_branch").attr("disabled", true);
+        });
 
-        function change_weight(id, lot_id, base_price, real_price, old_weight) {
-            $("#lot_item_id_in_weight").val(id);
-            $("#lot_id_in_weight").val(lot_id);
-            $("#base_price_in_weight").val(base_price);
-            $("#real_price_in_weight").val(real_price);
-            $("#old_weight_in_weight").val(old_weight);
-            $("#weight_in_weight").val(old_weight);
+        $("#select_district").on("change", function() {
+            let district_id = this.value;
+            let branch_options = "<option value=''>ເລືອກ</option>";
+            branch_lists
+                .filter(branch => branch.district_id === district_id)
+                .forEach(branch => {
+                    branch_options +=
+                        `<option value="${branch.id}">${branch.branch_name}</option>`
+                });
+            $("#select_branch").html(branch_options)
+            $("#select_branch").attr("disabled", false);
+        });
 
+        $(document).ready(function() {
+            var product_id =
+                "<?php echo session()->get('id') ? session()->get('id') : 'no_id'; ?>";
 
+            if (product_id != 'no_id') {
+                window.open(`importpdf/${product_id}`);
+            }
+        });
+
+        var codes = [];
+        $('#product_id').keypress(function(event) {
+            if (event.keyCode == 13) {
+                let code = $('#product_id').val();
+                if (code == '') {
+                    alert("empty!!!");
+                } else {
+                    if (codes.includes(code)) {
+                        alert("ລະຫັດຊ້ຳ");
+                    } else {
+                        generateItem(code);
+                        codes.push(code);
+                        $('#product_id').val('');
+                    }
+                }
+            }
+        });
+
+        function generateItem(code) {
+            $('#product_item_table').append(
+                `<tr><td class="py-0"><div class="form-group"><input value='${code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><input type="number" value=0 min="0"class="form-control form-control-sm" name="weight[]" required></div></td><td class="py-0"><div class="form-group"><select class="form-control form-control-sm" name="weight_type[]"required><option value="gram">ກິໂລກຼາມ</option> <option value="m">ແມັດກ້ອນ</option></select></div></td><td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="base_price[]"> </div></td> <td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="real_price[]"></div></td></tr>`
+            )
         }
 
     </script>

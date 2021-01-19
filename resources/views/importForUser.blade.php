@@ -2,8 +2,15 @@
 
 @section('body')
     <!-- End Navbar -->
-    <div class="content">
-        <div class="container-fluid">
+    <!-- page content -->
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>ນຳເຂົ້າສິນຄ້າ</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
 
             @if (session()->get('error') == 'not_insert')
                 <div class="alert alert-danger">
@@ -22,39 +29,44 @@
                         <b> Success - </b>ບັນທຶກຂໍ້ມູນສຳເລັດ</span>
                 </div>
             @endif
-            <div class="row">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title">ສະແກນບາໂຄດ</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
-                                        <div class="spinner-border d-none" id="loading" role="status">
-                                            <span class="sr-only">Loading...</span>
+            <div class="clearfix"></div>
+
+            @if (Auth::user()->is_admin != 1)
+                <div class="row">
+                    <div class="col">
+                        <div class="x_panel">
+                            <div>
+                                <h2>ຮັບສິນຄ້າ</h2>
+                            </div>
+                            <div class="x_content">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
+                                            <div class="spinner-border d-none" id="loading" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <input class="form-control" id="product_id">
                                         </div>
-                                        <input class="form-control" id="product_id">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
+
             <form method="POST" action="/importProductForUser">
                 @csrf
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header card-header-primary">
-                                <h5 class="card-title ">ລາຍການ</h5>
+                        <div class="x_panel">
+                            <div>
+                                <h2>ລາຍການ</h2>
                             </div>
-                            <div class="card-body">
+                            <div class="x_content">
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table table-hover">
                                         <thead class=" text-primary">
                                             <th>
                                                 ລະຫັດເຄື່ອງ
@@ -124,6 +136,7 @@
         });
 
         var codes = [];
+        var items = [];
         $('#product_id').keypress(function(event) {
             if (event.keyCode == 13) {
                 let code = $('#product_id').val();
@@ -146,6 +159,8 @@
 
         function deleteItem(id) {
             codes = codes.filter(code => code !== id);
+            items = items.filter(item => item !== id);
+
             $('#product_item_table').html('');
             generateItem();
 
@@ -166,6 +181,7 @@
                     $("#product_id").focus();
                     if (!data.error && data.status == 'sending') {
                         codes.push(code);
+                        items.push(data);
                         generateItem();
                     } else if (!data.error && data.status == 'success') {
                         alert("ສິນຄ້ານີ້ຂາຍອອກແລ້ວ!!!");
@@ -187,9 +203,9 @@
 
         function generateItem() {
             var html_table = '';
-            codes.slice().reverse().forEach(code => {
+            items.slice().reverse().forEach(item => {
                 html_table +=
-                    `<tr><td class="py-0"><div class="form-group"><input value='${code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteItem("${code}")> <i class="material-icons">clear</i></a></div></td></tr>`
+                    `<tr><td class="py-0"><div class="form-group"><input value='${item.code}' class="form-control form-control-sm" readonly><input type="hidden" value='${item.id}' name="item_id[]" ></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteItem("${item.code}")> <i class="material-icons">clear</i></a></div></td></tr>`
             })
             $('#product_item_table').html(html_table)
         }

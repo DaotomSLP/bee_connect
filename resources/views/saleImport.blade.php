@@ -2,8 +2,15 @@
 
 @section('body')
     <!-- End Navbar -->
-    <div class="content">
-        <div class="container-fluid">
+    <!-- page content -->
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>ນຳເຂົ້າສິນຄ້າ</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
 
             @if (session()->get('error') == 'not_insert')
                 <div class="alert alert-danger">
@@ -24,11 +31,11 @@
             @endif
             <div class="row">
                 <div class="col">
-                    <div class="card">
-                        <div class="card-header card-header-primary">
-                            <h5 class="card-title">ສະແກນບາໂຄດ</h5>
+                    <div class="x_panel">
+                        <div>
+                            <h2>ສະແກນບາໂຄດ</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="x_content">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -48,11 +55,11 @@
                 @csrf
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header card-header-primary">
-                                <h5 class="card-title ">ລາຍການ</h5>
+                        <div class="x_panel">
+                            <div>
+                                <h2>ລາຍການ</h2>
                             </div>
-                            <div class="card-body">
+                            <div class="x_content">
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead class=" text-primary">
@@ -70,7 +77,8 @@
 
                                         </tbody>
                                     </table>
-                                    <hr>
+                                </div>
+                                <hr>
                                     <div class="row my-3">
                                         <div class="col-6">
                                             <label class="bmd-label-floating">ສ່ວນຫຼຸດ</label>
@@ -96,7 +104,6 @@
                                             class="btn btn-primary px-5">ບັນທຶກ</button>
                                         <div class="clearfix"></div>
                                     </div>
-                                </div>
 
                             </div>
                         </div>
@@ -163,6 +170,7 @@
                     if (!data.error && data.status == 'received') {
                         codes.push(code);
                         items.push({
+                            id: data.id,
                             code: code,
                             weight_type: data.weight_type,
                             weight: data.weight,
@@ -194,17 +202,18 @@
             items.slice().reverse().forEach(item => {
 
                 html_table +=
-                    `<tr><td class="py-0"><div class="form-group"><input value='${item.code}' class="form-control form-control-sm" name="item_id[]" required></div></td> <td class="py-0"><div class="form-group"><input type="number" step="0.001" class="form-control form-control-sm weight" name="weight[]" value='${item.weight}' ${item.weight_type === "m" ?'readonly':''} onchange=changeWeight(this.value,'${item.code}','${item.weight_type}') onkeypress="disableSubmit()" required></div></td> <td class="py-0"><div class="form-group"><input class="form-control form-control-sm"  value='${item.price}' name="sale_price[]" onchange=changePrice(this.value,'${item.code}','${item.weight_type}') onkeypress="disableSubmit()" required></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteItem("${item.code}")> <i class="material-icons">clear</i></a></div></td></tr>`;
+                    `<tr><td class="py-0"><div class="form-group"><input value='${item.code}' class="form-control form-control-sm" readonly><input type="hidden" value='${item.id}' name="item_id[]"></div></td> <td class="py-0"><div class="form-group"><input type="number" step="0.001" class="form-control form-control-sm weight" name="weight[]" value='${item.weight}' ${item.weight_type === "m" ?'readonly':''} onchange=changeWeight(this.value,'${item.code}','${item.weight_type}','${item.id}') onkeypress="disableSubmit()" required></div></td> <td class="py-0"><div class="form-group"><input class="form-control form-control-sm"  value='${item.price}' name="sale_price[]" onchange=changePrice(this.value,'${item.code}','${item.weight_type}','${item.id}') onkeypress="disableSubmit()" required></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteItem("${item.code}")> <i class="material-icons">clear</i></a></div></td></tr>`;
 
             })
             $('#product_item_table').html(html_table)
         }
 
-        function changeWeight(weight, code, weight_type) {
+        function changeWeight(weight, code, weight_type, id) {
             old_item = items.filter(item => item.code === code);
             var o_index = items.findIndex(item => item.code === code);
             items = items.filter(item => item.code !== code);
             items.splice(o_index, 0, {
+                id: id,
                 code: code,
                 weight: weight,
                 weight_type: weight_type,
@@ -213,11 +222,12 @@
             });
         }
 
-        function changePrice(price, code, weight_type) {
+        function changePrice(price, code, weight_type, id) {
             old_item = items.filter(item => item.code === code);
             var o_index = items.findIndex(item => item.code === code);
             items = items.filter(item => item.code != code);
             items.splice(o_index, 0, {
+                id: id,
                 code: code,
                 weight: old_item[0].weight,
                 weight_type: weight_type,
