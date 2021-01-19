@@ -33,6 +33,7 @@
                                             <input type="hidden" id="lot_id" name="lot_id">
                                             <input type="hidden" id="real_price" name="real_price">
                                             <input type="hidden" id="base_price" name="base_price">
+                                            <input type="hidden" id="weight_type" name="weight_type">
                                             <input type="number" id="weight" class="form-control" name="weight" step="0.001"
                                                 required>
                                         </div>
@@ -114,7 +115,7 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ເລກບິນ</label>
+                                            <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
                                             <input class="form-control form-control-sm"
                                                 value="{{ Request::input('product_id') }}" name="product_id">
                                         </div>
@@ -134,24 +135,6 @@
                                                     value="received">
                                                     ຮອດແລ້ວ
                                                 </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
-                                            <select class="form-control form-control-sm" id="select_branch"
-                                                name="receive_branch">
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                @foreach ($branchs as $branch)
-                                                    <option
-                                                        {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
-                                                        value="{{ $branch->id }}">
-                                                        {{ $branch->branch_name }}
-                                                    </option>
-                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -233,7 +216,7 @@
                                                     @if ($import_product->status != 'success')
                                                         @if ($import_product->status != 'success')
                                                             <a type="button"
-                                                                onclick="change_price({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->base_price . ',' . $import_product->real_price . ',' . $import_product->weight }})"
+                                                                onclick="change_price({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->base_price . ',' . $import_product->real_price . ',' . $import_product->weight . ',' }}'{{ $import_product->weight_type }}')"
                                                                 data-toggle="modal" data-target="#new_price_modal">
                                                                 <i class="material-icons">delete_forever</i>
                                                             </a>
@@ -312,12 +295,13 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        function change_price(id, lot_id, base_price, real_price, weight) {
+        function change_price(id, lot_id, base_price, real_price, weight, weight_type) {
             $("#lot_item_id").val(id);
             $("#lot_id").val(lot_id);
             $("#base_price").val(base_price);
             $("#real_price").val(real_price);
             $("#weight").val(weight);
+            $("#weight_type").val(weight_type);
         }
 
         function change_weight(id, lot_id, base_price, real_price, old_weight) {

@@ -171,6 +171,7 @@ class PriceController extends Controller
         $price = new Sale_prices;
         $price->price = $request->price;
         $price->weight_type = $request->weight_type;
+        $price->branch_id = Auth::user()->branch_id;
         if ($price->save()) {
             return redirect('saleImportPrice')->with(['error' => 'insert_success']);
         } else {

@@ -22,15 +22,16 @@
                         <div class="x_content">
                             <form method="GET" action="/importProductTrackForUser">
                                 {{-- @csrf --}}
+                                <input type="hidden" value="{{ Request::input('id') }}" name="id">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
                                             <input class="form-control form-control-sm"
                                                 value="{{ Request::input('product_id') }}" name="product_id">
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ສະຖານະ</label>
                                             <select class="form-control form-control-sm" id="select_status" name="status">
@@ -52,7 +53,25 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
+                                            <select class="form-control form-control-sm" id="select_branch"
+                                                name="receive_branch">
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                @foreach ($branchs as $branch)
+                                                    <option
+                                                        {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
+                                                        value="{{ $branch->id }}">
+                                                        {{ $branch->branch_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ວັນທີຮັບ</label>
                                             <input class="form-control form-control-sm" type="date"
@@ -163,14 +182,12 @@
                             href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page=1">1</a>
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                                <a class="page-link"
-                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else
-
-                        @endif
+                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                        <a class="page-link"
+                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -183,14 +200,12 @@
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                                <a class="page-link"
-                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else
-
-                        @endif
+                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                        <a class="page-link"
+                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"
@@ -207,8 +222,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        var district_lists = < ? php echo json_encode($districts); ?> ;;
-        var branch_lists = < ? php echo json_encode($branchs); ?> ;;
+        var branch_lists = <?php echo json_encode($branchs); ?> ;;
         $("#select_province").on("change", function() {
             let province_id = this.value;
             let district_options = "<option value=''>ເລືອກ</option>";

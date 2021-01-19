@@ -12,6 +12,25 @@
             </div>
             <div class="clearfix"></div>
 
+            @if (session()->get('error') == 'not_insert')
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <span>
+                        <b> Danger - </b>ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່</span>
+                </div>
+            @elseif(session()->get( 'error' )=='insert_success')
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <span>
+                        <b> Success - </b>ບັນທຶກຂໍ້ມູນສຳເລັດ</span>
+                </div>
+            @endif
+
+
             <div class="row">
                 <div class="col">
                     <div class="x_panel">
@@ -19,20 +38,75 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="GET" action="/saleView">
+                            <form method="GET" action="/importView">
                                 {{-- @csrf --}}
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ເລກບິນ</label>
                                             <input class="form-control form-control-sm" value="{{ Request::input('id') }}"
                                                 name="id">
                                         </div>
                                     </div>
-
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ວັນທີຂາຍ</label>
+                                            <label class="bmd-label-floating">ສະຖານະ</label>
+                                            <select class="form-control form-control-sm" id="select_status" name="status">
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                <option {{ Request::input('status') == 'sending' ? 'selected' : '' }}
+                                                    value="sending">
+                                                    ກຳລັງສົ່ງ
+                                                </option>
+                                                <option {{ Request::input('status') == 'received' ? 'selected' : '' }}
+                                                    value="received">
+                                                    ຮອດແລ້ວ
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ສະຖານະການຈ່າຍເງິນ</label>
+                                            <select class="form-control form-control-sm" id="select_status"
+                                                name="payment_status">
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                <option
+                                                    {{ Request::input('payment_status') == 'not_paid' ? 'selected' : '' }}
+                                                    value="not_paid">
+                                                    ຍັງບໍ່ຈ່າຍ
+                                                </option>
+                                                <option {{ Request::input('payment_status') == 'paid' ? 'selected' : '' }}
+                                                    value="paid">
+                                                    ຈ່າຍແລ້ວ
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
+                                            <select class="form-control form-control-sm" id="select_branch"
+                                                name="receive_branch">
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                @foreach ($branchs as $branch)
+                                                    <option
+                                                        {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
+                                                        value="{{ $branch->id }}">
+                                                        {{ $branch->branch_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ວັນທີສົ່ງ</label>
                                             <input class="form-control form-control-sm" type="date"
                                                 value="{{ Request::input('send_date') }}" name="send_date">
                                         </div>
@@ -101,9 +175,12 @@
                                         <th>
 
                                         </th>
-                                        {{-- <th>
+                                        <th>
 
-                                        </th> --}}
+                                        </th>
+                                        <th>
+
+                                        </th>
                                     </thead>
                                     <tbody>
                                         @foreach ($lots as $key => $lot)
@@ -158,8 +235,10 @@
                                                 <td>
                                                     <a
                                                         href="/{{ Auth::user()->is_admin == 1 ? 'importDetail' : 'importDetailForUser' }}?id={{ $lot->id }}">
-                                                        ລາຍລະອຽດ
+                                                        <i class="material-icons">assignment</i>
                                                     </a>
+                                                </td>
+                                                <td>
                                                     @if ($lot->status != 'success' && Auth::user()->is_admin == 1)
 
                                                         <a href="/deleteLot?id={{ $lot->id }}">
@@ -167,10 +246,12 @@
                                                         </a>
 
                                                     @endif
+                                                </td>
+                                                <td>
                                                     @if ($lot->payment_status == 'not_paid' && Auth::user()->is_admin == 1)
 
                                                         <a href="/paidLot?id={{ $lot->id }}">
-                                                            ຈ່າຍແລ້ວ
+                                                            ຈ່າຍເງິນ
                                                         </a>
 
                                                     @endif
@@ -207,14 +288,12 @@
                             href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page=1">1</a>
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                                <a class="page-link"
-                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else
-
-                        @endif
+                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                        <a class="page-link"
+                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -227,14 +306,12 @@
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                                <a class="page-link"
-                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else
-
-                        @endif
+                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                        <a class="page-link"
+                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"

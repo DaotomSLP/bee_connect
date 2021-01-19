@@ -159,7 +159,8 @@
 
         function deleteItem(id) {
             codes = codes.filter(code => code !== id);
-            items = items.filter(item => item !== id);
+            items = items.filter(item => item.code !== id);
+            console.log(items);
 
             $('#product_item_table').html('');
             generateItem();

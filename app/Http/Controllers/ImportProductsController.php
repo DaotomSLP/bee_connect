@@ -42,6 +42,7 @@ class ImportProductsController extends Controller
       ->where('branch_id',  Auth::user()->branch_id)
       ->orderBy('id', 'DESC')->first();
 
+
     $sale_price_m = Sale_prices::where('weight_type', 'm')
       ->where('branch_id',  Auth::user()->branch_id)
       ->orderBy('id', 'DESC')->first();
@@ -53,78 +54,83 @@ class ImportProductsController extends Controller
   public function insertImport(Request $request)
   {
 
-    $sum_price = 0;
-    $sum_m_weight = 0;
-    $count = 0;
-    foreach ($request->weight_type as $weight_type) {
-      if ($weight_type == 'm') {
-        $sum_m_weight += $request->weight[$count];
-      }
+    if ($request->item_id) {
 
-      $count++;
-    }
-
-    $default_price_kg = Price_imports::where('weight_type', 'gram')
-      ->orderBy('id', 'DESC')->first();
-
-    $default_price_m = Price_imports::where('weight_type', 'm')
-      ->orderBy('id', 'DESC')->first();
-
-    $sum_kg_base_price = ($request->base_price_kg == '' ? $default_price_kg->base_price : $request->base_price_kg) * $request->weight_kg;
-    $sum_m_base_price = ($request->base_price_m == '' ? $default_price_m->base_price : $request->base_price_m) * $sum_m_weight;
-    $sum_base_price = $sum_m_base_price + $sum_kg_base_price;
-
-    $sum_kg_price = ($request->real_price_kg == '' ? $default_price_kg->real_price : $request->real_price_kg) * $request->weight_kg;
-    $sum_m_price = ($request->real_price_m == '' ? $default_price_m->real_price : $request->real_price_m) * $sum_m_weight;
-    $sum_price = $sum_m_price + $sum_kg_price;
-
-    $lot = new Lots;
-    $lot->receiver_branch_id = $request->receiver_branch_id;
-    $lot->weight_kg = $request->weight_kg;
-    $lot->total_base_price_kg = $sum_kg_base_price;
-    $lot->total_base_price_m = $sum_m_base_price;
-    $lot->total_base_price = $sum_base_price;
-    $lot->total_price = $sum_price;
-    $lot->total_unit_m = $sum_m_price;
-    $lot->total_unit_kg = $sum_kg_price;
-    $lot->status = 'sending';
-    $lot->payment_status = 'not_paid';
-
-    if ($lot->save()) {
+      $sum_price = 0;
+      $sum_m_weight = 0;
       $count = 0;
-      foreach ($request->item_id as $product_id) {
-        $price = Price_imports::where('weight_type', $request->weight_type[$count])
-          ->orderBy('id', 'DESC')->first();
-
-        $product = new Import_products;
-        $product->code = $product_id;
-
-        if ($request->weight_type[$count] == 'm') {
-          $product->weight = $request->weight[$count];
-          $product->base_price = $request->base_price_m == '' ? $price->base_price : $request->base_price_m;
-          $product->real_price = $request->real_price_m == '' ? $price->real_price : $request->real_price_m;
-          $product->total_base_price = ($request->base_price_m == '' ? $price->base_price : $request->base_price_m) * $request->weight[$count];
-          $product->total_real_price = ($request->real_price_m == '' ? $price->real_price : $request->real_price_m) * $request->weight[$count];
-          $product->total_sale_price = 0;
-        } else {
-          $product->weight = 0;
-          $product->base_price = $request->base_price_kg == '' ? $price->base_price : $request->base_price_kg;
-          $product->real_price = $request->real_price_kg == '' ? $price->real_price : $request->real_price_kg;
-          $product->total_base_price = 0;
-          $product->total_real_price = 0;
-          $product->total_sale_price = 0;
-        }
-
-        $product->weight_type = $request->weight_type[$count];
-        $product->status = 'sending';
-        $product->lot_id = $lot->id;
-
-        if ($product->save()) {
+      foreach ($request->weight_type as $weight_type) {
+        if ($weight_type == 'm') {
+          $sum_m_weight += $request->weight[$count];
         }
 
         $count++;
       }
-      return redirect('import')->with(['error' => 'insert_success', 'id' => $lot->id]);
+
+      $default_price_kg = Price_imports::where('weight_type', 'gram')
+        ->orderBy('id', 'DESC')->first();
+
+      $default_price_m = Price_imports::where('weight_type', 'm')
+        ->orderBy('id', 'DESC')->first();
+
+      $sum_kg_base_price = ($request->base_price_kg == '' ? $default_price_kg->base_price : $request->base_price_kg) * $request->weight_kg;
+      $sum_m_base_price = ($request->base_price_m == '' ? $default_price_m->base_price : $request->base_price_m) * $sum_m_weight;
+      $sum_base_price = $sum_m_base_price + $sum_kg_base_price;
+
+      $sum_kg_price = ($request->real_price_kg == '' ? $default_price_kg->real_price : $request->real_price_kg) * $request->weight_kg;
+      $sum_m_price = ($request->real_price_m == '' ? $default_price_m->real_price : $request->real_price_m) * $sum_m_weight;
+      $sum_price = $sum_m_price + $sum_kg_price;
+
+      $lot = new Lots;
+      $lot->receiver_branch_id = $request->receiver_branch_id;
+      $lot->weight_kg = $request->weight_kg;
+      $lot->total_base_price_kg = $sum_kg_base_price;
+      $lot->total_base_price_m = $sum_m_base_price;
+      $lot->total_base_price = $sum_base_price;
+      $lot->total_price = $sum_price;
+      $lot->total_unit_m = $sum_m_price;
+      $lot->total_unit_kg = $sum_kg_price;
+      $lot->status = 'sending';
+      $lot->payment_status = 'not_paid';
+
+      if ($lot->save()) {
+        $count = 0;
+        foreach ($request->item_id as $product_id) {
+          $price = Price_imports::where('weight_type', $request->weight_type[$count])
+            ->orderBy('id', 'DESC')->first();
+
+          $product = new Import_products;
+          $product->code = $product_id;
+
+          if ($request->weight_type[$count] == 'm') {
+            $product->weight = $request->weight[$count];
+            $product->base_price = $request->base_price_m == '' ? $price->base_price : $request->base_price_m;
+            $product->real_price = $request->real_price_m == '' ? $price->real_price : $request->real_price_m;
+            $product->total_base_price = ($request->base_price_m == '' ? $price->base_price : $request->base_price_m) * $request->weight[$count];
+            $product->total_real_price = ($request->real_price_m == '' ? $price->real_price : $request->real_price_m) * $request->weight[$count];
+            $product->total_sale_price = 0;
+          } else {
+            $product->weight = 0;
+            $product->base_price = $request->base_price_kg == '' ? $price->base_price : $request->base_price_kg;
+            $product->real_price = $request->real_price_kg == '' ? $price->real_price : $request->real_price_kg;
+            $product->total_base_price = 0;
+            $product->total_real_price = 0;
+            $product->total_sale_price = 0;
+          }
+
+          $product->weight_type = $request->weight_type[$count];
+          $product->status = 'sending';
+          $product->lot_id = $lot->id;
+
+          if ($product->save()) {
+          }
+
+          $count++;
+        }
+        return redirect('import')->with(['error' => 'insert_success', 'id' => $lot->id]);
+      } else {
+        return redirect('import')->with(['error' => 'not_insert']);
+      }
     } else {
       return redirect('import')->with(['error' => 'not_insert']);
     }
@@ -132,101 +138,110 @@ class ImportProductsController extends Controller
 
   public function insertImportForUser(Request $request)
   {
+    if ($request->item_id) {
 
-    $count = 0;
-    foreach ($request->item_id as $product_code) {
-
-      $import_product = Import_products::where('id', $product_code)
-        ->orderBy('id', 'DESC')->first();
-
-      $new_import_product_update =  [
-        'received_at' => Carbon::now(),
-        'status' => 'received',
-      ];
-
-      if (Import_products::where('id', $import_product->id)->update($new_import_product_update)) {
-        $count_status = Import_products::where('status', 'sending')->where('lot_id', $import_product->lot_id)->get();
-        if (sizeof($count_status) == 0) {
-          Lots::where('id', $import_product->lot_id)->update(['status' => 'received']);
-        } else {
-          Lots::where('id', $import_product->lot_id)->update(['status' => 'not_full']);
-        }
-      }
-
-      $count++;
-    }
-
-    return redirect('import')->with(['error' => 'insert_success']);
-  }
-
-  public function insertSaleImport(Request $request)
-  {
-
-    $sum_price = 0;
-    $count = 0;
-    foreach ($request->sale_price as $price) {
-      $sum_price += $price * $request->weight[$count];
-      $count++;
-    }
-
-    $sale_import = new Sale_import;
-    $sale_import->branch_id = Auth::user()->branch_id;
-    $sale_import->total = $sum_price - ($request->discount == "" ? 0 : $request->discount);
-    $sale_import->discount = $request->discount == "" ? 0 : $request->discount;
-    $sale_import->subtotal = $sum_price;
-
-
-    if ($sale_import->save()) {
       $count = 0;
       foreach ($request->item_id as $product_code) {
 
         $import_product = Import_products::where('id', $product_code)
           ->orderBy('id', 'DESC')->first();
 
-        $lot = Lots::where('id', $import_product->lot_id)
-          ->orderBy('id', 'DESC')->first();
+        $new_import_product_update =  [
+          'received_at' => Carbon::now(),
+          'status' => 'received',
+        ];
 
-        if ($import_product->weight_type != 'm') {
-          $new_import_product_update =  [
-            'status' => 'success',
-            'success_at' => Carbon::now(),
-            'sale_id' => $sale_import->id,
-            'weight' => $request->weight[$count],
-            'sale_price' => $request->sale_price[$count],
-            'total_base_price' => ($lot->total_base_price_kg / $lot->weight_kg) * $request->weight[$count],
-            'total_real_price' => ($lot->total_unit_kg / $lot->weight_kg) * $request->weight[$count],
-            'total_sale_price' =>  $request->sale_price[$count] * $request->weight[$count]
-          ];
-        } else {
-          $new_import_product_update =  [
-            'status' => 'success',
-            'success_at' => Carbon::now(),
-            'sale_id' => $sale_import->id,
-            'sale_price' => $request->sale_price[$count],
-            'weight' => $request->weight[$count],
-            'total_sale_price' =>  $request->sale_price[$count] * $request->weight[$count]
-          ];
-        }
-
-        if (Import_products::where('id', $product_code)->update($new_import_product_update)) {
-
-          $import_product = Import_products::where('code', $product_code)
-            ->orderBy('id', 'DESC')->first();
-
-          $count_status = Import_products::where('status', 'success')->where('lot_id', $import_product->lot_id)->get();
-          $all = Import_products::where('lot_id', $import_product->lot_id)->get();
-
-          $sum_sale_price = Import_products::where('lot_id', $import_product->lot_id)->where('status', 'success')->sum('total_sale_price');
-          Lots::where('id', $import_product->lot_id)->update(['total_sale_price' => $sum_sale_price]);
-
-          if ($count_status == $all) {
-            Lots::where('id', $import_product->lot_id)->update(['status' => 'success']);
+        if (Import_products::where('id', $import_product->id)->update($new_import_product_update)) {
+          $count_status = Import_products::where('status', 'sending')->where('lot_id', $import_product->lot_id)->count();
+          if ($count_status < 1) {
+            Lots::where('id', $import_product->lot_id)->update(['status' => 'received']);
+          } else {
+            Lots::where('id', $import_product->lot_id)->update(['status' => 'not_full']);
           }
         }
 
         $count++;
       }
-      return redirect('saleImport')->with(['error' => 'insert_success', 'id' => $sale_import->id]);
+
+      return redirect('import')->with(['error' => 'insert_success']);
+    } else {
+      return redirect('import')->with(['error' => 'not_insert']);
+    }
+  }
+
+  public function insertSaleImport(Request $request)
+  {
+
+    if ($request->item_id) {
+
+      $sum_price = 0;
+      $count = 0;
+      foreach ($request->sale_price as $price) {
+        $sum_price += $price * $request->weight[$count];
+        $count++;
+      }
+
+      $sale_import = new Sale_import;
+      $sale_import->branch_id = Auth::user()->branch_id;
+      $sale_import->total = $sum_price - ($request->discount == "" ? 0 : $request->discount);
+      $sale_import->discount = $request->discount == "" ? 0 : $request->discount;
+      $sale_import->subtotal = $sum_price;
+
+
+      if ($sale_import->save()) {
+        $count = 0;
+        foreach ($request->item_id as $product_code) {
+
+          $import_product = Import_products::where('id', $product_code)
+            ->orderBy('id', 'DESC')->first();
+
+          $lot = Lots::where('id', $import_product->lot_id)
+            ->orderBy('id', 'DESC')->first();
+
+          if ($import_product->weight_type != 'm') {
+            $new_import_product_update =  [
+              'status' => 'success',
+              'success_at' => Carbon::now(),
+              'sale_id' => $sale_import->id,
+              'weight' => $request->weight[$count],
+              'sale_price' => $request->sale_price[$count],
+              'total_base_price' => ($lot->total_base_price_kg / $lot->weight_kg) * $request->weight[$count],
+              'total_real_price' => ($lot->total_unit_kg / $lot->weight_kg) * $request->weight[$count],
+              'total_sale_price' =>  $request->sale_price[$count] * $request->weight[$count]
+            ];
+          } else {
+            $new_import_product_update =  [
+              'status' => 'success',
+              'success_at' => Carbon::now(),
+              'sale_id' => $sale_import->id,
+              'sale_price' => $request->sale_price[$count],
+              'weight' => $request->weight[$count],
+              'total_sale_price' =>  $request->sale_price[$count] * $request->weight[$count]
+            ];
+          }
+
+          if (Import_products::where('id', $product_code)->update($new_import_product_update)) {
+
+            $import_product = Import_products::where('id', $product_code)
+              ->orderBy('id', 'DESC')->first();
+
+            $count_status = Import_products::where('status', 'success')->where('lot_id', $import_product->lot_id)->get();
+            $all = Import_products::where('lot_id', $import_product->lot_id)->get();
+
+            $sum_sale_price = Import_products::where('lot_id', $import_product->lot_id)->where('status', 'success')->sum('total_sale_price');
+            Lots::where('id', $import_product->lot_id)->update(['total_sale_price' => $sum_sale_price]);
+
+            if ($count_status == $all) {
+              Lots::where('id', $import_product->lot_id)->update(['status' => 'success']);
+            }
+          }
+
+          $count++;
+        }
+        return redirect('saleImport')->with(['error' => 'insert_success', 'id' => $sale_import->id]);
+      } else {
+        return redirect('saleImport')->with(['error' => 'not_insert']);
+      }
     } else {
       return redirect('saleImport')->with(['error' => 'not_insert']);
     }
@@ -266,7 +281,7 @@ class ImportProductsController extends Controller
     }
 
     $all_lots = $result->orderBy('lot.id', 'desc')
-      ->get();
+      ->count();
 
     if ($request->page != '') {
       $result->offset(($request->page - 1) * 25);
@@ -277,9 +292,9 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil(sizeof($all_lots) / 25),
+      'offsets' =>  ceil($all_lots / 25),
       'offset' => $request->page ? $request->page : 1,
-      'all' => sizeof($all_lots)
+      'all' => $all_lots
     ];
 
     return view('importView', compact('branchs', 'lots', 'pagination'));
@@ -299,7 +314,7 @@ class ImportProductsController extends Controller
     }
 
     $all_sale_imports = $result->orderBy('sale_import.id', 'desc')
-      ->get();
+      ->count();
 
     if ($request->page != '') {
       $result->offset(($request->page - 1) * 25);
@@ -310,9 +325,9 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil(sizeof($all_sale_imports) / 25),
+      'offsets' =>  ceil($all_sale_imports / 25),
       'offset' => $request->page ? $request->page : 1,
-      'all' => sizeof($all_sale_imports)
+      'all' => $all_sale_imports
     ];
 
     return view('saleView', compact('sale_imports', 'pagination'));
@@ -349,7 +364,7 @@ class ImportProductsController extends Controller
     }
 
     $all_lots = $result->orderBy('lot.id', 'desc')
-      ->get();
+      ->count();
 
     if ($request->page != '') {
       $result->offset(($request->page - 1) * 25);
@@ -360,9 +375,9 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil(sizeof($all_lots) / 25),
+      'offsets' =>  ceil($all_lots / 25),
       'offset' => $request->page ? $request->page : 1,
-      'all' => sizeof($all_lots)
+      'all' => $all_lots
     ];
 
     return view('importView', compact('branchs', 'lots', 'pagination'));
@@ -426,7 +441,7 @@ class ImportProductsController extends Controller
     }
 
     $all_import_products = $result->orderBy('import_products.id', 'desc')
-      ->get();
+      ->count();
 
     if ($request->page != '') {
       $result->offset(($request->page - 1) * 25);
@@ -437,12 +452,12 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil(sizeof($all_import_products) / 25),
+      'offsets' =>  ceil($all_import_products / 25),
       'offset' => $request->page ? $request->page : 1,
-      'all' => sizeof($all_import_products)
+      'all' => $all_import_products
     ];
 
-    // echo (sizeof($import_products));
+    // echo ($import_products));
     // exit;
 
     return view('importDetail', compact('branchs', 'import_products', 'pagination'));
@@ -466,7 +481,7 @@ class ImportProductsController extends Controller
     }
 
     $all_import_products = $result->orderBy('sale_import.id', 'desc')
-      ->get();
+      ->count();
 
     if ($request->page != '') {
       $result->offset(($request->page - 1) * 25);
@@ -477,9 +492,9 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil(sizeof($all_import_products) / 25),
+      'offsets' =>  ceil($all_import_products / 25),
       'offset' => $request->page ? $request->page : 1,
-      'all' => sizeof($all_import_products)
+      'all' => $all_import_products
     ];
 
     return view('saleDetail', compact('import_products', 'pagination'));
@@ -506,7 +521,7 @@ class ImportProductsController extends Controller
     }
 
     if ($request->status != '') {
-      $result->where('status', $request->status);
+      $result->where('import_products.status', $request->status);
     }
 
     if ($request->receive_branch != '') {
@@ -514,7 +529,7 @@ class ImportProductsController extends Controller
     }
 
     $all_import_products = $result->orderBy('import_products.id', 'desc')
-      ->get();
+      ->count();
 
     if ($request->page != '') {
       $result->offset(($request->page - 1) * 25);
@@ -525,9 +540,9 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil(sizeof($all_import_products) / 25),
+      'offsets' =>  ceil($all_import_products / 25),
       'offset' => $request->page ? $request->page : 1,
-      'all' => sizeof($all_import_products)
+      'all' => $all_import_products
     ];
 
     return view('importDetailForUser', compact('branchs', 'import_products', 'pagination'));
@@ -561,7 +576,7 @@ class ImportProductsController extends Controller
     }
 
     $all_import_products = $result->orderBy('import_products.id', 'desc')
-      ->get();
+      ->count();
 
     if ($request->page != '') {
       $result->offset(($request->page - 1) * 25);
@@ -572,9 +587,9 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil(sizeof($all_import_products) / 25),
+      'offsets' =>  ceil($all_import_products / 25),
       'offset' => $request->page ? $request->page : 1,
-      'all' => sizeof($all_import_products)
+      'all' => $all_import_products
     ];
 
     return view('allImportDetail', compact('branchs', 'import_products', 'pagination'));
@@ -582,6 +597,8 @@ class ImportProductsController extends Controller
 
   public function importProductTrackForUser(Request $request)
   {
+
+    $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
     $result = Import_products::query();
 
@@ -606,7 +623,7 @@ class ImportProductsController extends Controller
     }
 
     $all_import_products = $result->orderBy('import_products.id', 'desc')
-      ->get();
+      ->count();
 
     if ($request->page != '') {
       $result->offset(($request->page - 1) * 25);
@@ -617,19 +634,19 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil(sizeof($all_import_products) / 25),
+      'offsets' =>  ceil($all_import_products / 25),
       'offset' => $request->page ? $request->page : 1,
-      'all' => sizeof($all_import_products)
+      'all' => $all_import_products
     ];
 
-    return view('allImportDetailForUser', compact('import_products', 'pagination'));
+    return view('allImportDetailForUser', compact('import_products', 'pagination', 'branchs'));
   }
 
   public function getImportProduct(Request $request)
   {
 
     $import_product = Import_products::select('import_products.*')->join('lot', 'lot.id', 'import_products.lot_id')->where('code', $request->id)->where('lot.receiver_branch_id', Auth::user()->branch_id)->orderBy('import_products.id', 'desc')->first();
-    
+
     if ($import_product) {
       return response()
         ->json($import_product);
@@ -641,7 +658,6 @@ class ImportProductsController extends Controller
 
   public function deleteImportItem(Request $request)
   {
-
     $lot = Lots::where('id', $request->lot_id)
       ->orderBy('id', 'DESC')->first();
 
@@ -649,12 +665,17 @@ class ImportProductsController extends Controller
       [
         'total_base_price' => ($lot->total_base_price - ($request->base_price * $request->weight)),
         'total_price' => ($lot->total_price - ($request->real_price * $request->weight)),
-        'weight_kg' => $lot->weight_kg - $request->weight,
+        'weight_kg' => $lot->weight_kg - ($request->weight_type == 'm' ? 0 : $request->weight),
       ]
     );
 
     $import_product = Import_products::where('id', $request->lot_item_id);
     $import_product->delete();
+
+    $count_import_product = Import_products::where('lot_id', $request->lot_id)->count();
+    if ($count_import_product < 1) {
+      $lot->delete();
+    }
 
     return redirect('importDetail?id=' . $request->lot_id)->with(['error' => 'insert_success']);
   }
@@ -687,6 +708,8 @@ class ImportProductsController extends Controller
   {
     $lot = lots::where('id', $request->id);
     $lot->delete();
+    $import_products = Import_products::where('lot_id', $request->id);
+    $import_products->delete();
     return redirect('importView')->with(['error' => 'insert_success']);
   }
 

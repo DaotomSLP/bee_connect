@@ -56,7 +56,7 @@
             <div class="clearfix"></div>
             <div class="row">
                 <div class="col">
-                    <form method="POST" action="/importProductForUser">
+                    <form method="POST" action="/importProduct">
                         @csrf
                         <div class="row">
                             <div class="col">

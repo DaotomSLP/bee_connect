@@ -19,7 +19,7 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="GET" action="/importDetail?id=25">
+                            <form method="GET" action="/importDetailForUser?id=25">
                                 {{-- @csrf --}}
                                 <input type="hidden" value="{{ Request::input('id') }}" name="id">
                                 <div class="row">
@@ -44,6 +44,10 @@
                                                 <option {{ Request::input('status') == 'received' ? 'selected' : '' }}
                                                     value="received">
                                                     ຮອດແລ້ວ
+                                                </option>
+                                                <option {{ Request::input('status') == 'success' ? 'selected' : '' }}
+                                                    value="success">
+                                                    ສຳເລັດ
                                                 </option>
                                             </select>
                                         </div>
