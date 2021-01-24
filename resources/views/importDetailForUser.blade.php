@@ -196,68 +196,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        var district_lists = < ? php echo json_encode($districts); ?> ;;
-        var branch_lists = < ? php echo json_encode($branchs); ?> ;;
-        $("#select_province").on("change", function() {
-            let province_id = this.value;
-            let district_options = "<option value=''>ເລືອກ</option>";
-            district_lists
-                .filter(district => district.prov_id === province_id)
-                .forEach(district => {
-                    district_options +=
-                        `<option value="${district.id}">${district.dist_name}</option>`
-                });
-            $("#select_district").html(district_options)
-            $("#select_district").attr("disabled", false);
-            $("#select_branch").val("");
-            $("#select_branch").attr("disabled", true);
-        });
-
-        $("#select_district").on("change", function() {
-            let district_id = this.value;
-            let branch_options = "<option value=''>ເລືອກ</option>";
-            branch_lists
-                .filter(branch => branch.district_id === district_id)
-                .forEach(branch => {
-                    branch_options +=
-                        `<option value="${branch.id}">${branch.branch_name}</option>`
-                });
-            $("#select_branch").html(branch_options)
-            $("#select_branch").attr("disabled", false);
-        });
-
-        $(document).ready(function() {
-            var product_id =
-                "<?php echo session()->get('id') ? session()->get('id') : 'no_id'; ?>";
-
-            if (product_id != 'no_id') {
-                window.open(`importpdf/${product_id}`);
-            }
-        });
-
-        var codes = [];
-        $('#product_id').keypress(function(event) {
-            if (event.keyCode == 13) {
-                let code = $('#product_id').val();
-                if (code == '') {
-                    alert("empty!!!");
-                } else {
-                    if (codes.includes(code)) {
-                        alert("ລະຫັດຊ້ຳ");
-                    } else {
-                        generateItem(code);
-                        codes.push(code);
-                        $('#product_id').val('');
-                    }
-                }
-            }
-        });
-
-        function generateItem(code) {
-            $('#product_item_table').append(
-                `<tr><td class="py-0"><div class="form-group"><input value='${code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><input type="number" value=0 min="0"class="form-control form-control-sm" name="weight[]" required></div></td><td class="py-0"><div class="form-group"><select class="form-control form-control-sm" name="weight_type[]"required><option value="gram">ກິໂລກຼາມ</option> <option value="m">ແມັດກ້ອນ</option></select></div></td><td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="base_price[]"> </div></td> <td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="real_price[]"></div></td></tr>`
-            )
-        }
 
     </script>
 @endsection
