@@ -29,6 +29,13 @@ class ImportProductsController extends Controller
     $districts = Districts::all();
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
+    // $lots = Lots::all();
+
+    // foreach ($lots as $key => $value) {
+    //   $new_lot = ['total_main_price' => $value->total_price];
+    //   Lots::where('id', $value->id)->update($new_lot);
+    // }
+
     if (Auth::user()->is_admin == 1) {
       return view('import', compact('provinces', 'districts', 'branchs'));
     } else {
@@ -87,11 +94,14 @@ class ImportProductsController extends Controller
       $lot->total_base_price_kg = $sum_kg_base_price;
       $lot->total_base_price_m = $sum_m_base_price;
       $lot->total_base_price = $sum_base_price;
+      $lot->total_main_price = $sum_price + $request->fee + $request->pack_price;
       $lot->total_price = $sum_price;
       $lot->total_unit_m = $sum_m_price;
       $lot->total_unit_kg = $sum_kg_price;
       $lot->status = 'sending';
       $lot->payment_status = 'not_paid';
+      $lot->fee = $request->fee;
+      $lot->pack_price = $request->pack_price;
 
       if ($lot->save()) {
         $count = 0;

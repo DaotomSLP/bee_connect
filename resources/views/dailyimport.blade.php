@@ -39,7 +39,43 @@
             </div>
 
             <hr>
-
+            @if (Auth::user()->is_admin != 1)
+                <div class="row">
+                    <div class="col-12 col-mg-4 col-lg-4">
+                        <div class="x_panel">
+                            <div>
+                                <p class="h4">ຈຳນວນເງິນທີ່ໄດ້ຮັບ</p>
+                            </div>
+                            <hr>
+                            <div class="x_content">
+                                <p class="h2">{{ number_format($sum_real_price) }} ກີບ</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-mg-4 col-lg-4">
+                        <div class="x_panel">
+                            <div>
+                                <p class="h4">ຕົ້ນທຶນ</p>
+                            </div>
+                            <hr>
+                            <div class="x_content">
+                                <p class="h2">{{ number_format($sum_base_price) }} ກີບ</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-mg-4 col-lg-4">
+                        <div class="x_panel">
+                            <div>
+                                <p class="h4">ກຳໄລການຂາຍ</p>
+                            </div>
+                            <hr>
+                            <div class="x_content">
+                                <p class="h2">{{ number_format($sum_sale_profit) }} ກີບ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
             @if (Auth::user()->is_admin == 1)
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
@@ -72,6 +108,31 @@
                             <hr>
                             <div class="x_content">
                                 <p class="h2">{{ number_format($sum_sale_profit) }} ກີບ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-mg-4 col-lg-4">
+                        <div class="x_panel">
+                            <div>
+                                <p class="h4">ລວມຄ່າຂົນສົ່ງ</p>
+                            </div>
+                            <hr>
+                            <div class="x_content">
+                                <p class="h2">{{ number_format($sum_fee_price) }} ກີບ</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-mg-4 col-lg-4">
+                        <div class="x_panel">
+                            <div>
+                                <p class="h4">ລວມຄ່າເປົາ</p>
+                            </div>
+                            <hr>
+                            <div class="x_content">
+                                <p class="h2">{{ number_format($sum_pack_price) }} ກີບ</p>
                             </div>
                         </div>
                     </div>

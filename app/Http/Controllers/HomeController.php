@@ -120,17 +120,6 @@ class HomeController extends Controller
 
         $branch_id = Auth::user()->branch_id;
 
-        $sum_base_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
-            ->sum("total_base_price");
-        $sum_real_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
-            ->sum("total_price");
-        $sum_sale_profit    = $sum_real_price - $sum_base_price;
-
-        $sum_expenditure = Expenditure::whereBetween('created_at', [$date, $to_date])
-            ->sum("price");
-
-        $sum_profit    = $sum_real_price - $sum_base_price - $sum_expenditure;
-
         $result = DB::table('lot')
             ->select(DB::raw('branchs.id as receiver_branch_id, branchs.branch_name as branch_name, sum(lot.total_price) as branch_total_price'))
             // ->join('import_products', 'lot.id', 'import_products.lot_id')
@@ -138,6 +127,44 @@ class HomeController extends Controller
             ->whereBetween('lot.created_at', [$date, $to_date])
             ->groupBy('branchs.id')
             ->groupBy('branchs.branch_name');
+
+        if (Auth::user()->is_admin == 1) {
+
+            $sum_base_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
+                ->sum("total_base_price");
+            $sum_real_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
+                ->sum("total_main_price");
+
+            $sum_fee_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
+                ->sum("fee");
+            $sum_pack_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
+                ->sum("pack_price");
+        } else {
+
+            $result->where('lot.receiver_branch_id', Auth::user()->branch_id);
+
+            $sum_base_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
+                ->where('lot.receiver_branch_id', Auth::user()->branch_id)
+                ->sum("total_main_price");
+            $sum_real_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
+                ->where('lot.receiver_branch_id', Auth::user()->branch_id)
+                ->sum("total_sale_price");
+
+            $sum_fee_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
+                ->where('lot.receiver_branch_id', Auth::user()->branch_id)
+                ->sum("fee");
+            $sum_pack_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
+                ->where('lot.receiver_branch_id', Auth::user()->branch_id)
+                ->sum("pack_price");
+        }
+
+        $sum_sale_profit    = $sum_real_price - $sum_base_price;
+
+        $sum_expenditure = Expenditure::whereBetween('created_at', [$date, $to_date])
+            ->sum("price");
+
+        $sum_profit    = $sum_real_price - $sum_base_price - $sum_expenditure;
+
 
         $all_branch_sale_totals = $result
             ->count();
@@ -164,7 +191,7 @@ class HomeController extends Controller
             ->groupBy('lot.receiver_branch_id')->get();
 
         $result_unpaid = DB::table('lot')
-            ->select(DB::raw('branchs.id as receiver_branch_id, sum(lot.total_price) as branch_total_price'))
+            ->select(DB::raw('branchs.id as receiver_branch_id, sum(lot.total_main_price) as branch_total_price'))
             // ->join('import_products', 'lot.id', 'import_products.lot_id')
             ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
             ->whereBetween('lot.created_at', [$date, $to_date])
@@ -174,7 +201,7 @@ class HomeController extends Controller
             ->get();
 
         $result_paid = DB::table('lot')
-            ->select(DB::raw('branchs.id as receiver_branch_id, sum(lot.total_price) as branch_total_price'))
+            ->select(DB::raw('branchs.id as receiver_branch_id, sum(lot.total_main_price) as branch_total_price'))
             // ->join('import_products', 'lot.id', 'import_products.lot_id')
             ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
             ->whereBetween('lot.created_at', [$date, $to_date])
@@ -187,6 +214,6 @@ class HomeController extends Controller
         // print_r($result_paid);
         // exit;
 
-        return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid'));
+        return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price'));
     }
 }

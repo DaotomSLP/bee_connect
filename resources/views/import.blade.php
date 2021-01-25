@@ -102,8 +102,7 @@
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label class="bmd-label-floating">ນ້ຳໜັກລວມ (ກິໂລກຼາມ)</label>
-                                                    <input class="form-control form-control-sm" name="weight_kg"
-                                                        required>
+                                                    <input class="form-control form-control-sm" name="weight_kg" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -121,11 +120,24 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <button type="submit"
-                                                class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
-                                            <div class="clearfix"></div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ຄ່າຂົນສົ່ງ</label>
+                                                    <input class="form-control form-control-sm" name="fee">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ຄ່າເປົາ</label>
+                                                    <input class="form-control form-control-sm" name="pack_price">
+                                                </div>
+                                            </div>
                                         </div>
+                                        {{-- <div>
+                                            <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
+                                            <div class="clearfix"></div>
+                                        </div> --}}
 
                                     </div>
                                 </div>

@@ -29,10 +29,13 @@ class Lots extends Model
         'total_unit_kg',
         'weight_kg',
         'total_base_price',
+        'total_main_price',
         'total_price',
         'total_sale_price',
         'status',
-        'payment_status'
+        'payment_status',
+        'fee',
+        'pack_price'
     ];
 
     /**

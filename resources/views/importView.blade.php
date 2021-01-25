@@ -154,11 +154,30 @@
                                             <th>
                                                 ລວມຕົ້ນທຶນ
                                             </th>
+                                            <th>
+                                                ລວມລາຄາເຄື່ອງ
+                                            </th>
+                                        @endif
+                                        @if (Auth::user()->is_admin != 1)
+                                            <th>
+                                                ລວມຕົ້ນທຶນຄ່າເຄື່ຶອງ
+                                            </th>
                                         @endif
                                         <th>
-                                            {{ Auth::user()->is_admin != 1 ? 'ຕົ້ນທຶນ' : 'ລວມລາຄາຂາຍ' }}
+                                            ຄ່າຂົນສົ່ງ
                                         </th>
+                                        <th>
+                                            ຄ່າເປົາ
+                                        </th>
+                                        @if (Auth::user()->is_admin == 1)
+                                            <th>
+                                                ລວມເປັນເງິນທັງໝົດ
+                                            </th>
+                                        @endif
                                         @if (Auth::user()->is_admin != 1)
+                                            <th>
+                                                ລວມຕົ້ນທຶນທັງໝົດ
+                                            </th>
                                             <th>
                                                 ລວມຂາຍໄດ້
                                             </th>
@@ -211,7 +230,15 @@
                                                 <td>
                                                     {{ number_format($lot->total_price) }} ກີບ
                                                 </td>
-
+                                                <td>
+                                                    {{ number_format($lot->fee) }} ກີບ
+                                                </td>
+                                                <td>
+                                                    {{ number_format($lot->pack_price) }} ກີບ
+                                                </td>
+                                                <td>
+                                                    {{ number_format($lot->total_main_price) }} ກີບ
+                                                </td>
                                                 @if (Auth::user()->is_admin == 1)
                                                     <td>
                                                         {{ number_format($lot->total_price - $lot->total_base_price) }} ກີບ
