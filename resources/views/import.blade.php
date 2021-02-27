@@ -102,7 +102,8 @@
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label class="bmd-label-floating">ນ້ຳໜັກລວມ (ກິໂລກຼາມ)</label>
-                                                    <input class="form-control form-control-sm" name="weight_kg" required>
+                                                    <input class="form-control form-control-sm" name="weight_kg"
+                                                        id="all_weight_kg" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -274,7 +275,7 @@
                     } else {
                         items.push({
                             code: code,
-                            weight_type: 'kg',
+                            weight_type: 'gram',
                             weight: 0,
                         })
                         codes.push(code);
@@ -322,6 +323,12 @@
                 weight: old_item[0].weight,
                 weight_type: weight_type,
             });
+
+            if (items.filter(filter => filter.weight_type === 'gram').length <= 0) {
+                $("#all_weight_kg").attr("required", false);
+            } else {
+                $("#all_weight_kg").attr("required", true);
+            }
 
         }
 

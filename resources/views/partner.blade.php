@@ -7,7 +7,7 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>ຕັ້ງຄ່າບັນຊີຜູ້ໃຊ້</h3>
+                    <h3>ຕັ້ງຄ່າບັນຊີຫຸ້ນສ່ວນ</h3>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -30,73 +30,66 @@
                 </div>
             @endif
             <div class="clearfix"></div>
+            @if (Auth::user()->is_owner == 1)
 
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ເພີ່ມຜູ້ໃຊ້</h2>
-                        </div>
-                        <div class="x_content">
-                            <form method="POST" action="/addUser">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ຊື່</label>
-                                            <input type="text" name="name" class="form-control">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="x_panel">
+                            <div>
+                                <h2>ເພີ່ມຜູ້ໃຊ້</h2>
+                            </div>
+                            <div class="x_content">
+                                <form method="POST" action="/insertPartner">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ຊື່</label>
+                                                <input type="text" name="name" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ນາມສະກຸນ</label>
+                                                <input type="text" name="last_name" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ສ່ວນແບ່ງ(%)</label>
+                                                <input type="number" name="percent" class="form-control" required>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ນາມສະກຸນ</label>
-                                            <input type="text" name="last_name" class="form-control">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">Username</label>
+                                                <input type="text" name="email" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ລະຫັດຜ່ານ</label>
+                                                <input type="password" name="password" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ເບີໂທ</label>
+                                                <input type="text" name="phone_no" class="form-control" required>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ສາຂາ</label>
-                                            <select class="form-control" id="select_branch" name="branch_id" required>
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                @foreach ($branchs as $branch)
-                                                    <option value="{{ $branch->id }}">
-                                                        {{ $branch->branch_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">Username</label>
-                                            <input type="text" name="email" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ລະຫັດຜ່ານ</label>
-                                            <input type="password" name="password" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ເບີໂທ</label>
-                                            <input type="text" name="phone_no" class="form-control" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary px-5">ເພີ່ມ</button>
-                                <div class="clearfix"></div>
-                            </form>
+                                    <button type="submit" class="btn btn-primary px-5">ເພີ່ມ</button>
+                                    <div class="clearfix"></div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
+            @endif
 
             <div class="row">
                 <div class="col">
@@ -116,31 +109,17 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ສາຂາ</label>
-                                            <select class="form-control" id="select_branch" name="branch_id">
-                                                <option value="">
-                                                    ທັງໝົດ
-                                                </option>
-                                                @foreach ($branchs as $branch)
-                                                    <option {{ Request::input('branch') == $branch->id ? 'selected' : '' }}
-                                                        value="{{ $branch->id }}">
-                                                        {{ $branch->branch_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
                                             <label class="bmd-label-floating">ສະຖານະ</label>
                                             <select class="form-control" name="enabled">
                                                 <option value="">
                                                     ທັງໝົດ
                                                 </option>
-                                                <option {{ Request::input('enabled') == '1' ? 'selected' : '' }} value="1">
+                                                <option {{ Request::input('enabled') == '1' ? 'selected' : '' }}
+                                                    value="1">
                                                     ເປີດໃຊ້ງານ
                                                 </option>
-                                                <option {{ Request::input('enabled') == '0' ? 'selected' : '' }} value="0">
+                                                <option {{ Request::input('enabled') == '0' ? 'selected' : '' }}
+                                                    value="0">
                                                     ປິດໃຊ້ງານ
                                                 </option>
                                             </select>
@@ -183,9 +162,6 @@
                                             ເບີໂທ
                                         </th>
                                         <th>
-                                            ສາຂາ
-                                        </th>
-                                        <th>
 
                                         </th>
                                         <th>
@@ -204,19 +180,18 @@
                                                 <td>
                                                     {{ $user->phone_no }}
                                                 </td>
-                                                <td>
-                                                    {{ $user->branch_name }}
-                                                </td>
-                                                <td>
-                                                    <a href="/editUser/{{ $user->id }}">
-                                                        <i class="material-icons">create</i>
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a href="/deleteUser/{{ $user->id }}">
-                                                        {{ $user->enabled == '1' ? 'ປິດໃຊ້ງານ' : 'ເປີດໃຊ້ງານ' }}
-                                                    </a>
-                                                </td>
+                                                @if (Auth::user()->is_owner == 1)
+                                                    <td>
+                                                        <a href="/editPartner/{{ $user->id }}">
+                                                            <i class="material-icons">create</i>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="/deleteUser/{{ $user->id }}">
+                                                            {{ $user->enabled == '1' ? 'ປິດໃຊ້ງານ' : 'ເປີດໃຊ້ງານ' }}
+                                                        </a>
+                                                    </td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                     </tbody>

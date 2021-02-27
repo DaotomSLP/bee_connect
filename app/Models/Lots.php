@@ -35,7 +35,11 @@ class Lots extends Model
         'status',
         'payment_status',
         'fee',
-        'pack_price'
+        'pack_price',
+        'lot_base_price_kg',
+        'lot_real_price_kg',
+        'lot_base_price_m',
+        'lot_real_price_m'
     ];
 
     /**

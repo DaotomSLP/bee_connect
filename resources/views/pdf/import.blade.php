@@ -33,9 +33,23 @@
         {{ $weight_kg }} kg
     </p>
 
+
+    @if ($fee)
+        <p style="font-size: 11pt;">ຄ່າຂົນສົ່ງ :
+            {{ number_format($fee) }} ກີບ
+        </p>
+    @endif
+    @if ($pack_price)
+        <p style="font-size: 11pt;">ຄ່າເປົາ :
+            {{ number_format($pack_price) }} ກີບ
+        </p>
+    @endif
+
+
+
     <hr>
     <p style="font-size: 12pt;">ລວມເປັນເງິນ :
-        {{ $price }} ກີບ
+        {{ number_format($price) }} ກີບ
     </p>
 
 </body>

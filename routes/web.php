@@ -28,7 +28,7 @@ use App\Models\User;
 */
 
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->middleware('auth')->name('home');
+Route::get('/', [HomeController::class, 'dailyImport'])->middleware('auth')->name('dailyImport');
 
 Auth::routes();
 
@@ -94,6 +94,8 @@ Route::get('/paidLot', [ImportProductsController::class, 'paidLot'])->middleware
 
 Route::post('/deleteImportItem', [ImportProductsController::class, 'deleteImportItem'])->middleware('auth')->name('deleteImportItem');
 
+Route::post('/changeImportWeight', [ImportProductsController::class, 'changeImportWeight'])->middleware('auth')->name('changeImportWeight');
+
 Route::post('/changeImportItemWeight', [ImportProductsController::class, 'changeImportItemWeight'])->middleware('auth')->name('changeImportItemWeight');
 
 Route::post('/importProductForUser', [ImportProductsController::class, 'insertImportForUser'])->middleware('auth')->name('importProductForUser');
@@ -137,3 +139,19 @@ Route::post('/getImportProduct', [ImportProductsController::class, 'getImportPro
 Route::get('/expenditure', [ExpenditureController::class, 'index'])->middleware('auth')->name('expenditure');
 
 Route::post('/addExpenditure', [ExpenditureController::class, 'insert'])->middleware('auth')->name('addExpenditure');
+
+Route::get('/partner', [UsersController::class, 'partner'])->middleware('auth')->name('partner');
+
+Route::post('/insertPartner', [UsersController::class, 'insertPartner'])->middleware('auth')->name('insertPartner');
+
+Route::get('/editPartner/{id}', [UsersController::class, 'editPartner'])->middleware('auth')->name('editPartner');
+
+Route::post('/updatePartner', [UsersController::class, 'updatePartner'])->middleware('auth')->name('updatePartner');
+
+Route::get('/admin', [UsersController::class, 'admin'])->middleware('auth')->name('admin');
+
+Route::post('/insertAdmin', [UsersController::class, 'insertAdmin'])->middleware('auth')->name('insertAdmin');
+
+Route::get('/editAdmin/{id}', [UsersController::class, 'editAdmin'])->middleware('auth')->name('editAdmin');
+
+Route::post('/updateAdmin', [UsersController::class, 'updateAdmin'])->middleware('auth')->name('updateAdmin');

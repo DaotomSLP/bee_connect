@@ -135,4 +135,195 @@ class UsersController extends Controller
             return redirect('users')->with(['error' => 'not_insert']);
         }
     }
+
+    public function partner(Request $request)
+    {
+
+        $result = User::query();
+
+        $result->select('users.*')
+            ->where('branch_id', NULL)
+            ->where('is_owner', 0);
+
+        if ($request->name != '') {
+            $result->where('users.name', $request->name);
+        }
+
+        if ($request->enabled != '') {
+            if ($request->enabled == "1") {
+                $result->where('users.enabled', '1');
+            } else {
+                $result->where('users.enabled', '<>', '1');
+            }
+        }
+
+        if ($request->email != '') {
+            $result->where('email', $request->email);
+        }
+
+        $all_users = $result->orderBy('users.id', 'desc')
+            ->get();
+
+        if ($request->page != '') {
+            $result->offset(($request->page - 1) * 25);
+        }
+
+        $users = $result->orderBy('users.id', 'desc')
+            ->limit(25)
+            ->get();
+
+        $pagination = [
+            'offsets' =>  ceil(sizeof($all_users) / 25),
+            'offset' => $request->page ? $request->page : 1,
+            'all' => sizeof($all_users)
+        ];
+
+        return view('partner', compact('users', 'pagination'));
+    }
+
+
+    public function insertPartner(Request $request)
+    {
+        $user = new User;
+        $user->name = $request->name;
+        $user->last_name = $request->last_name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->is_admin = '0';
+        $user->enabled = '1';
+        $user->phone_no = $request->phone_no;
+        $user->is_owner = '0';
+        $user->percent = $request->percent;
+
+        try {
+            if ($user->save()) {
+                return redirect('partner')->with(['error' => 'insert_success']);
+            } else {
+                return redirect('partner')->with(['error' => 'not_insert']);
+            }
+        } catch (\Throwable $th) {
+            return redirect('partner')->with(['error' => 'not_insert']);
+        }
+    }
+
+    public function editPartner($id)
+    {
+        $user = User::where('id', $id)->first();
+
+        return view('editPartner', compact('user'));
+    }
+
+    public function updatePartner(Request $request)
+    {
+        $user = [
+            'name' => $request->name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'enabled' => '1',
+            'phone_no' => $request->phone_no,
+            'percent' => $request->percent
+        ];
+
+        if (User::where('id', $request->id)->update($user)) {
+            return redirect('partner')->with(['error' => 'insert_success']);
+        } else {
+            return redirect('partner')->with(['error' => 'not_insert']);
+        }
+    }
+
+
+    public function admin(Request $request)
+    {
+
+        $result = User::query();
+
+        $result->select('users.*')
+            ->where('branch_id', NULL)
+            // ->where('is_owner', 0)
+            ->where('percent', NULL);
+
+        if ($request->name != '') {
+            $result->where('users.name', $request->name);
+        }
+
+        if ($request->enabled != '') {
+            if ($request->enabled == "1") {
+                $result->where('users.enabled', '1');
+            } else {
+                $result->where('users.enabled', '<>', '1');
+            }
+        }
+
+        if ($request->email != '') {
+            $result->where('email', $request->email);
+        }
+
+        $all_users = $result->orderBy('users.id', 'desc')
+            ->get();
+
+        if ($request->page != '') {
+            $result->offset(($request->page - 1) * 25);
+        }
+
+        $users = $result->orderBy('users.id', 'desc')
+            ->limit(25)
+            ->get();
+
+        $pagination = [
+            'offsets' =>  ceil(sizeof($all_users) / 25),
+            'offset' => $request->page ? $request->page : 1,
+            'all' => sizeof($all_users)
+        ];
+
+        return view('admin', compact('users', 'pagination'));
+    }
+
+    public function insertAdmin(Request $request)
+    {
+        $user = new User;
+        $user->name = $request->name;
+        $user->last_name = $request->last_name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->is_admin = '1';
+        $user->enabled = '1';
+        $user->phone_no = $request->phone_no;
+        $user->is_owner = '0';
+
+        try {
+            if ($user->save()) {
+                return redirect('admin')->with(['error' => 'insert_success']);
+            } else {
+                return redirect('admin')->with(['error' => 'not_insert']);
+            }
+        } catch (\Throwable $th) {
+            return redirect('admin')->with(['error' => 'not_insert']);
+        }
+    }
+
+    public function editAdmin($id)
+    {
+        $user = User::where('id', $id)->first();
+
+        return view('editAdmin', compact('user'));
+    }
+
+    public function updateAdmin(Request $request)
+    {
+        $user = [
+            'name' => $request->name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'enabled' => '1',
+            'phone_no' => $request->phone_no,
+        ];
+
+        if (User::where('id', $request->id)->update($user)) {
+            return redirect('admin')->with(['error' => 'insert_success']);
+        } else {
+            return redirect('admin')->with(['error' => 'not_insert']);
+        }
+    }
 }

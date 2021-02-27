@@ -213,7 +213,7 @@
                                                     {{ number_format($import_product->total_sale_price) }}
                                                 </td>
                                                 <td>
-                                                    @if ($import_product->status != 'success')
+                                                    @if ($import_product->status != 'success' && Auth::user()->is_owner == 1)
                                                         @if ($import_product->status != 'success')
                                                             <a type="button"
                                                                 onclick="change_price({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->base_price . ',' . $import_product->real_price . ',' . $import_product->weight . ',' }}'{{ $import_product->weight_type }}')"

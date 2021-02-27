@@ -12,6 +12,69 @@
             </div>
             <div class="clearfix"></div>
 
+            <!-- Modal -->
+            <div class="modal fade" id="new_weight_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="POST" action="/changeImportWeight">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title" id="exampleModalLabel">ແກ້ໄຂນ້ຳໜັກລວມ</h2>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ນ້ຳໜັກລວມ</label>
+                                            <input type="hidden" id="lot_id_in_weight" name="lot_id_in_weight">
+                                            <input type="hidden" id="fee" name="fee">
+                                            <input type="hidden" id="pack_price" name="pack_price">
+                                            <input type="number" id="weight_in_weight" class="form-control"
+                                                name="weight_in_weight" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ (kg)</label>
+                                        <input type="number" class="form-control" id="lot_base_price_kg"
+                                            name="lot_base_price_kg" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="bmd-label-floating">ລາຄາຂາຍ (kg)</label>
+                                        <input type="number" class="form-control" id="lot_real_price_kg"
+                                            name="lot_real_price_kg" required>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ (ແມັດກ້ອນ)</label>
+                                        <input type="number" class="form-control" id="lot_base_price_m"
+                                            name="lot_base_price_m" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="bmd-label-floating">ລາຄາຂາຍ (ແມັດກ້ອນ)</label>
+                                        <input type="number" class="form-control" id="lot_real_price_m"
+                                            name="lot_real_price_m" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ບັນທຶກ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             @if (session()->get('error') == 'not_insert')
                 <div class="alert alert-danger">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -200,6 +263,9 @@
                                         <th>
 
                                         </th>
+                                        <th>
+
+                                        </th>
                                     </thead>
                                     <tbody>
                                         @foreach ($lots as $key => $lot)
@@ -241,7 +307,8 @@
                                                 </td>
                                                 @if (Auth::user()->is_admin == 1)
                                                     <td>
-                                                        {{ number_format($lot->total_price - $lot->total_base_price) }} ກີບ
+                                                        {{ number_format($lot->total_price - $lot->total_base_price) }}
+                                                        ກີບ
                                                     </td>
                                                 @endif
 
@@ -250,7 +317,8 @@
                                                         {{ number_format($lot->total_sale_price) }} ກີບ
                                                     </td>
                                                     <td>
-                                                        {{ number_format($lot->total_sale_price - $lot->total_price) }} ກີບ
+                                                        {{ number_format($lot->total_sale_price - $lot->total_price) }}
+                                                        ກີບ
                                                     </td>
                                                 @endif
                                                 <td>
@@ -266,7 +334,7 @@
                                                     </a>
                                                 </td>
                                                 <td>
-                                                    @if ($lot->status != 'success' && Auth::user()->is_admin == 1)
+                                                    @if ($lot->status != 'success' && Auth::user()->is_owner == 1)
 
                                                         <a href="/deleteLot?id={{ $lot->id }}">
                                                             <i class="material-icons">delete_forever</i>
@@ -274,6 +342,23 @@
 
                                                     @endif
                                                 </td>
+                                                <td>
+                                                    @if ($lot->status != 'success' && Auth::user()->is_owner == 1)
+                                                        <a type="button"
+                                                            onclick="change_weight({{ $lot->id . ',' . ($lot->lot_base_price_kg ? $lot->lot_base_price_kg : 0) . ',' . ($lot->lot_real_price_kg ? $lot->lot_real_price_kg : 0) . ',' . ($lot->lot_base_price_m ? $lot->lot_base_price_m : 0) . ',' . ($lot->lot_real_price_m ? $lot->lot_real_price_m : 0) . ',' . ($lot->weight_kg ? $lot->weight_kg : 0) . ',' . ($lot->fee ? $lot->fee : 0) . ',' . ($lot->pack_price ? $lot->pack_price : 0) }})"
+                                                            data-toggle="modal" data-target="#new_weight_modal">
+                                                            <i class="material-icons">create</i>
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if (Auth::user()->is_admin == 1)
+                                                        <a href="/importpdf/{{ $lot->id }}" target="_blank">
+                                                            <i class="material-icons">print</i>
+                                                        </a>
+                                                    @endif
+                                                </td>
+
                                                 <td>
                                                     @if ($lot->payment_status == 'not_paid' && Auth::user()->is_admin == 1)
 
@@ -355,6 +440,18 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
+        function change_weight(lot_id, base_price_kg, real_price_kg, base_price_m, real_price_m, old_weight,
+            fee,
+            pack_price) {
+            $("#lot_id_in_weight").val(lot_id);
+            $("#lot_base_price_kg").val(base_price_kg);
+            $("#lot_real_price_kg").val(real_price_kg);
+            $("#lot_base_price_m").val(base_price_m);
+            $("#lot_real_price_m").val(real_price_m);
+            $("#fee").val(fee);
+            $("#pack_price").val(pack_price);
+            $("#weight_in_weight").val(old_weight);
+        }
 
     </script>
 @endsection

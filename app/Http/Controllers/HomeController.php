@@ -128,7 +128,7 @@ class HomeController extends Controller
             ->groupBy('branchs.id')
             ->groupBy('branchs.branch_name');
 
-        if (Auth::user()->is_admin == 1) {
+        if (Auth::user()->branch_id == null) {
 
             $sum_base_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
                 ->sum("total_base_price");
@@ -214,6 +214,11 @@ class HomeController extends Controller
         // print_r($result_paid);
         // exit;
 
-        return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price'));
+        $sum_share = 0;
+        if (Auth::user()->is_admin != 1 && Auth::user()->branch_id == null) {
+            $sum_share = $sum_profit / Auth::user()->percent;
+        }
+
+        return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share'));
     }
 }
