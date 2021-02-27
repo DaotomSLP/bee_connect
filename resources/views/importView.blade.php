@@ -75,6 +75,31 @@
                 </div>
             </div>
 
+            <!-- Modal -->
+            <div class="modal fade" id="delete_lot_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="GET" action="/deleteLot">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title" id="exampleModalLabel">ຕ້ອງການລົບລາຍການ ຫຼືບໍ່?</h2>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <input type="hidden" id="lot_id_input" name="id">
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ຕົກລົງ</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                    aria-label="Close">ຍົກເລີກ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             @if (session()->get('error') == 'not_insert')
                 <div class="alert alert-danger">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -90,6 +115,14 @@
                     </button>
                     <span>
                         <b> Success - </b>ບັນທຶກຂໍ້ມູນສຳເລັດ</span>
+                </div>
+            @elseif(session()->get( 'error' )=='delete_success')
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <span>
+                        <b> Success - </b>ລົບຂໍ້ມູນສຳເລັດ</span>
                 </div>
             @endif
 
@@ -336,7 +369,8 @@
                                                 <td>
                                                     @if ($lot->status != 'success' && Auth::user()->is_owner == 1)
 
-                                                        <a href="/deleteLot?id={{ $lot->id }}">
+                                                        <a type="button" onclick="deleteLot({{ $lot->id }})"
+                                                            data-toggle="modal" data-target="#delete_lot_modal">
                                                             <i class="material-icons">delete_forever</i>
                                                         </a>
 
@@ -451,6 +485,10 @@
             $("#fee").val(fee);
             $("#pack_price").val(pack_price);
             $("#weight_in_weight").val(old_weight);
+        }
+
+        function deleteLot(id) {
+            $("#lot_id_input").val(id);
         }
 
     </script>

@@ -779,7 +779,7 @@ class ImportProductsController extends Controller
     $lot->delete();
     $import_products = Import_products::where('lot_id', $request->id);
     $import_products->delete();
-    return redirect('importView')->with(['error' => 'insert_success']);
+    return redirect('importView')->with(['error' => 'delete_success']);
   }
 
   public function paidLot(Request $request)
