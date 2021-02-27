@@ -7,134 +7,12 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>ການສົ່ງສິນຄ້າພາຍໃນ</h3>
+                    <h3>ການສົ່ງສິນຄ້າພາຍໃນທັງໝົດ
+                    </h3>
                 </div>
             </div>
             <div class="clearfix"></div>
 
-            @if (Auth::user()->is_admin != 1)
-                <div class="row">
-                    <div class="col">
-                        <div class="x_panel">
-                            <div>
-                                <h2>ເລືອກບ່ອນສົ່ງ</h2>
-                            </div>
-                            <div class="x_content">
-                                <form method="POST" action="/addProduct">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">ແຂວງ</label>
-                                                <select class="form-control" id="select_province" required>
-                                                    <option value="">
-                                                        ເລືອກ
-                                                    </option>
-                                                    @foreach ($provinces as $province)
-                                                        <option value="{{ $province->id }}">
-                                                            {{ $province->prov_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">ເມືອງ</label>
-                                                <select class="form-control" disabled id="select_district" required>
-                                                    <option value="">
-                                                        ເລືອກ
-                                                    </option>
-                                                    @foreach ($districts as $district)
-                                                        <option value="{{ $district->id }}">
-                                                            {{ $district->dist_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">ສາຂາ</label>
-                                                <select class="form-control" disabled id="select_branch"
-                                                    name="receiver_branch_id" required>
-                                                    <option value="">
-                                                        ເລືອກ
-                                                    </option>
-                                                    @foreach ($branchs as $branch)
-                                                        <option value="{{ $branch->id }}">
-                                                            {{ $branch->branch_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">ຂະໜາດ/ນ້ຳໜັກ</label>
-                                                <input type="number" value=1 min="1" class="form-control" name="weight">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">ຫົວໜ່ວຍ</label>
-                                                <select class="form-control" name="weight_type" required>
-                                                    <option value="">ເລືອກ</option>
-                                                    <option value="gram">kg</option>
-                                                    <option value="m">ແມັດກ້ອນ</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">ຊື່ລູກຄ້າຜູ້ສົ່ງ</label>
-                                                <input class="form-control" name="cust_send_name">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">ເບີໂທລູກຄ້າຜູ້ສົ່ງ</label>
-                                                <input class="form-control" name="cust_send_tel">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">ຊື່ລູກຄ້າຜູ້ຮັບ</label>
-                                                <input class="form-control" name="cust_receiver_name">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">ເບີໂທຜູ້ຮັບ</label>
-                                                <input class="form-control" name="cust_receiver_tel">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">ຮູບແບບການຈ່າຍເງິນ</label>
-                                                <select class="form-control" name="payment_type" required>
-                                                    <option value="normal">ທົ່ວໄປ</option>
-                                                    <option value="cashondelivery">ຈ່າຍປາຍທາງ</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
-                                    <div class="clearfix"></div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
             <div class="clearfix"></div>
             <div class="row">
                 <div class="col">
@@ -143,7 +21,7 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form class="form-label-left input_mask" method="GET" action="/send">
+                            <form class="form-label-left input_mask" method="GET" action="/allProducts">
                                 <div class="col-md-3 col-lg-3 col-12  form-group has-feedback">
                                     <label for="ex3" class="col-form-label">ລະຫັດເຄື່ອງ</label>
                                     <input type="text" value="{{ Request::input('id') }}" name="id" class="form-control"
@@ -264,11 +142,6 @@
                                         <th>
                                             ສະຖານະຈ່າຍເງິນ
                                         </th>
-                                        @if (Auth::user()->is_admin == 1)
-                                            <th>
-                                                ສະຖານະຈ່າຍເງິນໃຫ້ສາຂາສອງ
-                                            </th>
-                                        @endif
                                         <th>
                                         </th>
                                         <th>
@@ -301,15 +174,9 @@
                                                 <td>
                                                     {{ $product->price }} ກີບ
                                                 </td>
-                                                @if (Auth::user()->is_admin)
-                                                    <td>
-                                                        {{ ($product->price / 5) * 1 }} ກີບ
-                                                    </td>
-                                                @else
-                                                    <td>
-                                                        {{ ($product->price / 5) * 2 }} ກີບ
-                                                    </td>
-                                                @endif
+                                                <td>
+                                                    {{ ($product->price / 5) * 2 }} ກີບ
+                                                </td>
                                                 <td>
                                                     {{ $product->cust_send_name }}
                                                 </td>
@@ -328,45 +195,41 @@
                                                 <td>
                                                     {{ $product->payment_type == 'normal' ? 'ທົ່ວໄປ' : 'ຈ່າຍປາຍທາງ' }}
                                                 </td>
-                                                @if (Auth::user()->is_admin == 1)
-                                                    <td>
-                                                        {{ $product->payment_status == 'paid' ? 'ຈ່າຍແລ້ວ' : 'ຍັງບໍ່ຈ່າຍ' }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $product->second_branch_payment_status == 'paid' ? 'ຈ່າຍແລ້ວ' : 'ຍັງບໍ່ຈ່າຍ' }}
-                                                    </td>
-                                                @else
-                                                    <td>
-                                                        @if ($product->payment_type == 'normal')
+                                                <td>
+                                                    @if ($product->payment_type == 'normal')
+                                                        @if ($product->receiver_branch_id == Auth::user()->branch_id)
+                                                            {{ $product->second_branch_payment_status == 'paid' ? 'ຈ່າຍແລ້ວ' : 'ຍັງບໍ່ຈ່າຍ' }}
+                                                        @else
+                                                            {{ $product->payment_status == 'paid' ? 'ຈ່າຍແລ້ວ' : 'ຍັງບໍ່ຈ່າຍ' }}
+                                                        @endif
+                                                    @else
+                                                        @if ($product->receiver_branch_id == Auth::user()->branch_id)
                                                             {{ $product->payment_status == 'paid' ? 'ຈ່າຍແລ້ວ' : 'ຍັງບໍ່ຈ່າຍ' }}
                                                         @else
                                                             {{ $product->second_branch_payment_status == 'paid' ? 'ຈ່າຍແລ້ວ' : 'ຍັງບໍ່ຈ່າຍ' }}
                                                         @endif
-                                                    </td>
-                                                @endif
-
-                                                <td>
-                                                    @if ($product->payment_status == 'unpaid' && Auth::user()->is_admin == 1)
-
-                                                        <a href="/paidProduct?id={{ $product->id }}">
-                                                            ຮັບເງິນ
-                                                        </a>
 
                                                     @endif
-
                                                 </td>
                                                 <td>
-                                                    @if (!$product->received_at && Auth::user()->is_admin != 1)
+                                                    @if (!$product->received_at)
                                                         <a href="/pdf/{{ $product->id }}" target="_blank">
                                                             <i class="material-icons">print</i>
                                                         </a>
                                                     @endif
-                                                    @if (Auth::user()->is_admin != 1 && $product->second_branch_payment_status == 'unpaid' && $product->payment_type == 'cashondelivery')
 
-                                                        <a href="/paidProductForSecondBranch?id={{ $product->id }}">
-                                                            ຮັບເງິນ
-                                                        </a>
-
+                                                    @if ($product->payment_type == 'normal')
+                                                        @if ($product->receiver_branch_id == Auth::user()->branch_id && $product->second_branch_payment_status != 'paid')
+                                                            <a href="/paidProductForSecondBranch?id={{ $product->id }}">
+                                                                ຮັບເງິນ
+                                                            </a>
+                                                        @endif
+                                                    @else
+                                                        @if ($product->sender_branch_id == Auth::user()->branch_id && $product->second_branch_payment_status != 'paid')
+                                                            <a href="/paidProductForSecondBranch?id={{ $product->id }}">
+                                                                ຮັບເງິນ
+                                                            </a>
+                                                        @endif
                                                     @endif
                                                 </td>
                                             </tr>
@@ -432,45 +295,5 @@
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script>
-        var district_lists = <?php echo json_encode($districts); ?> ;;
-        var branch_lists = <?php echo json_encode($branchs); ?> ;;
-        $("#select_province").on("change", function() {
-            let province_id = this.value;
-            let district_options = "<option value=''>ເລືອກ</option>";
-            district_lists
-                .filter(district => district.prov_id === province_id)
-                .forEach(district => {
-                    district_options +=
-                        `<option value="${district.id}">${district.dist_name}</option>`
-                });
-            $("#select_district").html(district_options)
-            $("#select_district").attr("disabled", false);
-            $("#select_branch").val("");
-            $("#select_branch").attr("disabled", true);
-        });
 
-        $("#select_district").on("change", function() {
-            let district_id = this.value;
-            let branch_options = "<option value=''>ເລືອກ</option>";
-            branch_lists
-                .filter(branch => branch.district_id === district_id)
-                .forEach(branch => {
-                    branch_options +=
-                        `<option value="${branch.id}">${branch.branch_name}</option>`
-                });
-            $("#select_branch").html(branch_options)
-            $("#select_branch").attr("disabled", false);
-        });
-
-        $(document).ready(function() {
-            var product_id =
-                "<?php echo session()->get('id') ? session()->get('id') : 'no_id'; ?>";
-
-            if (product_id != 'no_id') {
-                window.open(`pdf/${product_id}`);
-            }
-        });
-
-    </script>
 @endsection

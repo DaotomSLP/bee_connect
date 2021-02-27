@@ -50,6 +50,10 @@ class ProductController extends Controller
         $product->cust_receiver_tel = $request->cust_receiver_tel;
         $product->status = 'sending';
         $product->type = 'domestic';
+        $product->payment_type = $request->payment_type;
+        $product->payment_status = 'unpaid';
+        $product->second_branch_payment_status = 'unpaid';
+
 
         if ($product->save()) {
             return redirect('send')->with(['error' => 'insert_success', 'id' => $product->id]);
@@ -58,12 +62,84 @@ class ProductController extends Controller
         }
     }
 
+    public function allProducts(Request $request)
+    {
+        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
+
+        $result = Product::query();
+
+        $result->select(
+            'products.*',
+            'send.branch_name as sender_branch_name',
+            'receive.branch_name as receiver_branch_name'
+        )
+            ->join('branchs As send', 'products.sender_branch_id', 'send.id')
+            ->join('branchs As receive', 'products.receiver_branch_id', 'receive.id')
+            ->where('products.type', 'domestic');
+
+        if (Auth::user()->is_admin != '1') {
+            $result->where('products.sender_branch_id', Auth::user()->branch_id)
+                ->orWhere('products.receiver_branch_id', Auth::user()->branch_id);
+        }
+
+        if ($request->send_date != '') {
+            $result->whereDate('products.created_at', '=',  $request->send_date);
+        }
+        if ($request->id != '') {
+            $result->where('products.id', $request->id);
+        }
+        if ($request->status != '') {
+            $result->where('status', $request->status);
+        }
+
+        if ($request->receive_branch != '') {
+            $result->where('receiver_branch_id', $request->receive_branch);
+        }
+
+        $all_products = $result->orderBy('products.id', 'desc')
+            ->get();
+
+        if ($request->page != '') {
+            $result->offset(($request->page - 1) * 25);
+        }
+
+        $products = $result->orderBy('products.id', 'desc')
+            ->limit(25)
+            ->get();
+
+        $pagination = [
+            'offsets' =>  ceil(sizeof($all_products) / 25),
+            'offset' => $request->page ? $request->page : 1,
+            'all' => sizeof($all_products)
+        ];
+
+        return view('allProduct', compact('branchs', 'products', 'pagination'));
+    }
+
     public function update(Request $request)
     {
         if (Product::where('id', $request->id)->update(['received_at' => Carbon::now(), 'status' => 'received'])) {
             return redirect('receive')->with(['error' => 'insert_success']);
         } else {
             return redirect('receive')->with(['error' => 'not_insert']);
+        }
+    }
+
+    public function paidProduct(Request $request)
+    {
+        if (Product::where('id', $request->id)->update(['payment_status' => 'paid'])) {
+            return redirect('send')->with(['error' => 'insert_success']);
+        } else {
+            return redirect('send')->with(['error' => 'not_insert']);
+        }
+    }
+
+    public function paidProductForSecondBranch(Request $request)
+    {
+        if (Product::where('id', $request->id)->update(['second_branch_payment_status' => 'paid'])) {
+            return redirect('allProducts')->with(['error' => 'insert_success']);
+        } else {
+            return redirect('allProducts')->with(['error' => 'not_insert']);
         }
     }
 

@@ -33,7 +33,10 @@ class Product extends Model
         'cust_receiver_name',
         'cust_receiver_tel',
         'status',
-        'type'
+        'type',
+        'payment_type',
+        'payment_status',
+        'second_branch_payment_status'
     ];
 
     /**

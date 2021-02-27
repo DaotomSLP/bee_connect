@@ -30,7 +30,7 @@
                 </div>
             @endif
             <div class="clearfix"></div>
- 
+
             @if (Auth::user()->is_admin != 1)
                 <div class="row">
                     <div class="col">
@@ -138,76 +138,117 @@
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
-                            <table class="table table-hover">
-                                <thead class=" text-primary">
-                                    <th>
-                                        ລ/ດ
-                                    </th>
-                                    <th>
-                                        ລະຫັດເຄື່ອງ
-                                    </th>
-                                    <th>
-                                        ຂະໜາດ
-                                    </th>
-                                    <th>
-                                        ຈາກສາຂາ
-                                    </th>
-                                    <th>
-                                        ສົ່ງວັນທີ
-                                    </th>
-                                    <th>
-                                        ລູກຄ້າຜູ້ສົ່ງ
-                                    </th>
-                                    <th>
-                                        ລູກຄ້າຜູ້ຮັບ
-                                    </th>
-                                    <th>
-                                        ເບີໂທ
-                                    </th>
-                                    <th>
-                                        ສະຖານະ
-                                    </th>
-                                    <th>
-                                        ລາຄາ
-                                    </th>
-                                </thead>
-                                <tbody>
-                                    @foreach ($products as $key => $product)
-                                    <tr>
-                                        <td>
-                                            {{ $key + 1 }}
-                                        </td>
-                                        <td>
-                                            {{ $product->id }}
-                                        </td>
-                                        <td>
-                                            {{ $product->weight }} {{ $product->weight_type }}
-                                        </td>
-                                        <td>
-                                            {{ $product->branch_name }}
-                                        </td>
-                                        <td>
-                                            {{ date('d-m-Y', strtotime($product->created_at)) }}
-                                        </td>
-                                        <td>
-                                            {{ $product->cust_send_name }}
-                                        </td>
-                                        <td>
-                                            {{ $product->cust_receiver_name }}
-                                        </td>
-                                        <td>
-                                            {{ $product->cust_receiver_tel }}
-                                        </td>
-                                        <td>
-                                            {{ $product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
-                                        </td>
-                                        <td>
-                                            {{ $product->price }} ກີບ
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class=" text-primary">
+                                        <th>
+                                            ລ/ດ
+                                        </th>
+                                        <th>
+                                            ລະຫັດເຄື່ອງ
+                                        </th>
+                                        <th>
+                                            ຂະໜາດ
+                                        </th>
+                                        <th>
+                                            ຈາກສາຂາ
+                                        </th>
+                                        <th>
+                                            ສົ່ງວັນທີ
+                                        </th>
+                                        <th>
+                                            ລູກຄ້າຜູ້ສົ່ງ
+                                        </th>
+                                        <th>
+                                            ລູກຄ້າຜູ້ຮັບ
+                                        </th>
+                                        <th>
+                                            ເບີໂທ
+                                        </th>
+                                        <th>
+                                            ສະຖານະ
+                                        </th>
+                                        <th>
+                                            ລາຄາ
+                                        </th>
+                                        <th>
+                                            ສ່ວນແບ່ງ
+                                        </th>
+                                        <th>
+                                            ປະເພດການຈ່າຍເງິນ
+                                        </th>
+                                        <th>
+                                            ສະຖານະຈ່າຍເງິນ
+                                        </th>
+
+                                        <th>
+                                        </th>
+                                        <th>
+                                        </th>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($products as $key => $product)
+                                            <tr>
+                                                <td>
+                                                    {{ $key + 1 }}
+                                                </td>
+                                                <td>
+                                                    {{ $product->id }}
+                                                </td>
+                                                <td>
+                                                    {{ $product->weight }} {{ $product->weight_type }}
+                                                </td>
+                                                <td>
+                                                    {{ $product->branch_name }}
+                                                </td>
+                                                <td>
+                                                    {{ date('d-m-Y', strtotime($product->created_at)) }}
+                                                </td>
+                                                <td>
+                                                    {{ $product->cust_send_name }}
+                                                </td>
+                                                <td>
+                                                    {{ $product->cust_receiver_name }}
+                                                </td>
+                                                <td>
+                                                    {{ $product->cust_receiver_tel }}
+                                                </td>
+                                                <td>
+                                                    {{ $product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
+                                                </td>
+                                                <td>
+                                                    {{ $product->price }} ກີບ
+                                                </td>
+                                                <td>
+                                                    {{ ($product->price / 5) * 2 }} ກີບ
+                                                </td>
+                                                <td>
+                                                    {{ $product->payment_type == 'normal' ? 'ທົ່ວໄປ' : 'ຈ່າຍປາຍທາງ' }}
+                                                </td>
+                                                <td>
+
+                                                    @if ($product->payment_type == 'normal')
+                                                        {{ $product->second_branch_payment_status == 'paid' ? 'ຈ່າຍແລ້ວ' : 'ຍັງບໍ່ຈ່າຍ' }}
+                                                    @else
+                                                        {{ $product->payment_status == 'paid' ? 'ຈ່າຍແລ້ວ' : 'ຍັງບໍ່ຈ່າຍ' }}
+                                                    @endif
+
+                                                </td>
+                                                <td>
+                                                    @if ($product->second_branch_payment_status == 'unpaid' && $product->payment_type == 'normal')
+
+                                                        <a href="/paidProductForSecondBranch?id={{ $product->id }}">
+                                                            ຈ່າຍເງິນ
+                                                        </a>
+
+                                                    @endif
+
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

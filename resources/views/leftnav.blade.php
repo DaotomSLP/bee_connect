@@ -37,6 +37,10 @@
 
                                 @if (Auth::user()->is_admin != 1)
                                     <li
+                                        class="{{ Request::is('allProducts') || Request::is('allProducts/*') ? 'current-page' : '' }}">
+                                        <a href="/allProducts">ການສົ່ງສິນຄ້າພາຍໃນທັງໝົດ</a>
+                                    </li>
+                                    <li
                                         class="{{ Request::is('receive') || Request::is('receive/*') ? 'current-page' : '' }}">
                                         <a href="/receive">ຮັບສິນຄ້າ</a>
                                     </li>

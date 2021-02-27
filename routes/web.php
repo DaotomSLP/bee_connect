@@ -34,6 +34,8 @@ Auth::routes();
 
 Route::get('/send', [SendController::class, 'index'])->middleware('auth')->name('send');
 
+Route::get('/allProducts', [ProductController::class, 'allProducts'])->middleware('auth')->name('allProducts');
+
 Route::get('/import', [ImportProductsController::class, 'index'])->middleware('auth')->name('import');
 
 Route::get('/importView', [ImportProductsController::class, 'importView'])->middleware('auth')->name('importView');
@@ -59,6 +61,10 @@ Route::get('/pdf/{id}', [ProductController::class, 'report'])->middleware('auth'
 Route::get('/importpdf/{id}', [ImportProductsController::class, 'report'])->middleware('auth')->name('importreport');
 
 Route::get('/salepdf/{id}', [ImportProductsController::class, 'salereport'])->middleware('auth')->name('salepdf');
+
+Route::get('/paidProduct', [ProductController::class, 'paidProduct'])->middleware('auth')->name('paidProduct');
+
+Route::get('/paidProductForSecondBranch', [ProductController::class, 'paidProductForSecondBranch'])->middleware('auth')->name('paidProductForSecondBranch');
 
 Route::get('/home', [HomeController::class, 'index'])->middleware('auth')->name('home');
 

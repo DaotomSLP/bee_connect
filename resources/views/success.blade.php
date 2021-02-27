@@ -45,7 +45,7 @@
                     <div class="col">
                         <div class="x_panel">
                             <div>
-                                <h2>ຮັບສິນຄ້າ</h2>
+                                <h2>ສົ່ງເຄື່ອງໃຫ້ລູກຄ້າ</h2>
                             </div>
                             <div class="x_content">
                                 <form method="POST" action="/successProduct">
