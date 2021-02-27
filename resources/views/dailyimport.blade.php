@@ -158,7 +158,8 @@
                         <div class="x_panel">
                             <div>
                                 <p class="h4 d-inline">ລາຍຈ່າຍອື່ນໆ</p>
-                                <p class="pl-3 h4 d-inline" ><a href="/expenditure"><i class="fa fa-arrow-right"></i></span></a></p>
+                                <p class="pl-3 h4 d-inline"><a href="/expenditure"><i
+                                            class="fa fa-arrow-right"></i></span></a></p>
                             </div>
                             <hr>
                             <div class="x_content">
@@ -205,7 +206,13 @@
                                                 ຊື່ສາຂາ
                                             </th>
                                             <th>
-                                                ຈຳນວນຂາຍໄດ້ທັງໝົດ (ລາຍການ)
+                                                ຈຳນວນຂາຍໄດ້ (ລາຍການ)
+                                            </th>
+                                            <th>
+                                                ນ້ຳໜັກຂາຍໄດ້ (kg)
+                                            </th>
+                                            <th>
+                                                ນ້ຳໜັກຂາຍໄດ້ (ແມັດກ້ອນ)
                                             </th>
                                             <th>
                                                 ລວມເປັນເງິນ
@@ -233,6 +240,20 @@
                                                         @foreach ($import_product_count as $item)
                                                             @if ($item->receiver_branch_id == $branch_sale_total->receiver_branch_id)
                                                                 {{ $item->count_import_product }}
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td>
+                                                        @foreach ($result_weight as $item)
+                                                            @if ($item->receiver_branch_id == $branch_sale_total->receiver_branch_id)
+                                                                {{ $item->sum_weight_kg }}
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td>
+                                                        @foreach ($result_weight_m as $item)
+                                                            @if ($item->receiver_branch_id == $branch_sale_total->receiver_branch_id)
+                                                                {{ $item->sum_weight_m }}
                                                             @endif
                                                         @endforeach
                                                     </td>

@@ -225,6 +225,26 @@ class HomeController extends Controller
             ->groupBy('branchs.branch_name')
             ->get();
 
+        $result_weight = DB::table('lot')
+            ->select(DB::raw('branchs.id as receiver_branch_id, sum(lot.weight_kg) as sum_weight_kg'))
+            // ->join('import_products', 'lot.id', 'import_products.lot_id')
+            ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+            ->whereBetween('lot.created_at', [$date, $to_date])
+            ->groupBy('branchs.id')
+            ->groupBy('branchs.branch_name')
+            ->get();
+
+        $result_weight_m = DB::table('lot')
+            ->select(DB::raw('branchs.id as receiver_branch_id, sum(import_products.weight) as sum_weight_m'))
+            // ->join('import_products', 'lot.id', 'import_products.lot_id')
+            ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+            ->join('import_products', 'lot.id', 'import_products.lot_id')
+            ->whereBetween('lot.created_at', [$date, $to_date])
+            ->where('import_products.weight_type', 'm')
+            ->groupBy('branchs.id')
+            ->groupBy('branchs.branch_name')
+            ->get();
+
 
         // print_r($result_paid);
         // exit;
@@ -234,6 +254,6 @@ class HomeController extends Controller
             $sum_share = $sum_profit / Auth::user()->percent;
         }
 
-        return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share'));
+        return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share', 'result_weight','result_weight_m'));
     }
 }
