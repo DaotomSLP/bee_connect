@@ -38,7 +38,7 @@ class PriceController extends Controller
         }
 
         if ($request->date != '') {
-            $result->whereDate('created_at', '=', DateTime::createFromFormat('Y-m-d', $request->date));
+            $result->whereDate('created_at', '=',  $request->date);
         }
 
         $all_price = $result->orderBy('id', 'desc')
@@ -78,7 +78,7 @@ class PriceController extends Controller
         }
 
         if ($request->date != '') {
-            $result->whereDate('created_at', '=', DateTime::createFromFormat('Y-m-d', $request->date));
+            $result->whereDate('created_at', '=',  $request->date);
         }
 
         $all_price = $result->orderBy('id', 'desc')
@@ -118,7 +118,7 @@ class PriceController extends Controller
         }
 
         if ($request->date != '') {
-            $result->whereDate('created_at', '=', DateTime::createFromFormat('Y-m-d', $request->date));
+            $result->whereDate('created_at', '=',  $request->date);
         }
 
         $all_price = $result->orderBy('id', 'desc')

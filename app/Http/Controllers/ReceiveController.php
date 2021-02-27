@@ -28,7 +28,7 @@ class ReceiveController extends Controller
             ->where('products.receiver_branch_id', Auth::user()->branch_id);
 
         if ($request->receive_date != '') {
-            $result->whereDate('products.created_at', '=', DateTime::createFromFormat('Y-m-d', $request->receive_date));
+            $result->whereDate('products.created_at', '=',  $request->receive_date);
         }
         if ($request->id != '') {
             $result->where('products.id', $request->id);
@@ -73,7 +73,7 @@ class ReceiveController extends Controller
             ->where('import_products.receiver_branch_id', Auth::user()->branch_id);
 
         if ($request->receive_date != '') {
-            $result->whereDate('import_products.created_at', '=', DateTime::createFromFormat('Y-m-d', $request->receive_date));
+            $result->whereDate('import_products.created_at', '=',  $request->receive_date);
         }
         if ($request->id != '') {
             $result->where('import_products.id', $request->id);

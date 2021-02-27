@@ -29,7 +29,7 @@ class SuccessController extends Controller
             ->where('type', 'domestic');
 
         if ($request->receive_date != '') {
-            $result->whereDate('products.created_at', '=', DateTime::createFromFormat('Y-m-d', $request->receive_date));
+            $result->whereDate('products.created_at', '=',  $request->receive_date);
         }
         if ($request->id != '') {
             $result->where('products.id', $request->id);
@@ -75,7 +75,7 @@ class SuccessController extends Controller
             ->where('type', 'import');
 
         if ($request->receive_date != '') {
-            $result->whereDate('import_products.created_at', '=', DateTime::createFromFormat('Y-m-d', $request->receive_date));
+            $result->whereDate('import_products.created_at', '=',  $request->receive_date);
         }
         if ($request->id != '') {
             $result->where('import_products.id', $request->id);

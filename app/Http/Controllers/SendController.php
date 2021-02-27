@@ -44,7 +44,7 @@ class SendController extends Controller
         }
 
         if ($request->send_date != '') {
-            $result->whereDate('products.created_at', '=', DateTime::createFromFormat('Y-m-d', $request->send_date));
+            $result->whereDate('products.created_at', '=',  $request->send_date);
         }
         if ($request->id != '') {
             $result->where('products.id', $request->id);

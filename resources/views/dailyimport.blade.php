@@ -39,7 +39,7 @@
             </div>
 
             <hr>
-            @if (Auth::user()->is_admin != 1)
+            @if (Auth::user()->branch_id != null)
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
                         <div class="x_panel">
@@ -75,8 +75,23 @@
                         </div>
                     </div>
                 </div>
-            @endif
-            @if (Auth::user()->is_admin == 1)
+            @else
+                @if (Auth::user()->is_admin != 1)
+                    <div class="row">
+                        <div class="col-12 col-mg-4 col-lg-4">
+                            <div class="x_panel">
+                                <div>
+                                    <p class="h4">ສ່ວນແບ່ງ</p>
+                                </div>
+                                <hr>
+                                <div class="x_content">
+                                    <p class="h2">{{ number_format($sum_share) }} ກີບ</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                @endif
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
                         <div class="x_panel">
@@ -142,7 +157,8 @@
                     <div class="col-12 col-mg-4 col-lg-4">
                         <div class="x_panel">
                             <div>
-                                <p class="h4">ລາຍຈ່າຍອື່ນໆ</p>
+                                <p class="h4 d-inline">ລາຍຈ່າຍອື່ນໆ</p>
+                                <p class="pl-3 h4 d-inline" ><a href="/expenditure"><i class="fa fa-arrow-right"></i></span></a></p>
                             </div>
                             <hr>
                             <div class="x_content">

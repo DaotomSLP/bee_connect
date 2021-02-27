@@ -31,44 +31,46 @@
             @endif
 
 
-            <div class="row">
-                <div class="col">
-                    <div class="x_panel">
-                        <div>
-                            <h2 class="card-title">ເພິ່ມລາຍຈ່າຍ</h2>
-                        </div>
-                        <div class="x_content">
-                            <form method="POST" action="/addExpenditure">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ວັນທີ</label>
-                                            <input class="form-control" type="date" value="{{ $date_now }}" name="date">
+            @if (Auth::user()->is_admin == 1)
+                <div class="row">
+                    <div class="col">
+                        <div class="x_panel">
+                            <div>
+                                <h2 class="card-title">ເພິ່ມລາຍຈ່າຍ</h2>
+                            </div>
+                            <div class="x_content">
+                                <form method="POST" action="/addExpenditure">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ວັນທີ</label>
+                                                <input class="form-control" type="date" value="{{ $date_now }}"
+                                                    name="date">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ຈຳນວນເງິນ</label>
+                                                <input class="form-control" name="price">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ລາຍລະອຽດ</label>
+                                                <textarea class="form-control" name="detail"></textarea>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ຈຳນວນເງິນ</label>
-                                            <input class="form-control" name="price">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ລາຍລະອຽດ</label>
-                                            <textarea class="form-control" name="detail"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
-                                <div class="clearfix"></div>
-                            </form>
+                                    <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
+                                    <div class="clearfix"></div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <hr>
+                <hr>
+            @endif
 
             <div class="row">
                 <div class="col">
@@ -162,14 +164,12 @@
                             href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page=1">1</a>
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                                <a class="page-link"
-                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else
-
-                        @endif
+                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                        <a class="page-link"
+                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -182,14 +182,12 @@
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                                <a class="page-link"
-                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else
-
-                        @endif
+                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                        <a class="page-link"
+                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"

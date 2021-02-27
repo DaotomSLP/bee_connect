@@ -329,7 +329,7 @@ class ImportProductsController extends Controller
     // }
 
     if ($request->send_date != '') {
-      $result->whereDate('lot.created_at', '=', DateTime::createFromFormat('Y-m-d', $request->send_date));
+      $result->whereDate('lot.created_at', '=',  $request->send_date);
     }
     if ($request->id != '') {
       $result->where('lot.id', $request->id);
@@ -373,7 +373,7 @@ class ImportProductsController extends Controller
     $result->select('sale_import.*')->where('branch_id', Auth::user()->branch_id);
 
     if ($request->send_date != '') {
-      $result->whereDate('sale_import.created_at', '=', DateTime::createFromFormat('Y-m-d', $request->send_date));
+      $result->whereDate('sale_import.created_at', '=', $request->send_date);
     }
     if ($request->id != '') {
       $result->where('sale_import.id', $request->id);
@@ -416,7 +416,7 @@ class ImportProductsController extends Controller
     // }
 
     if ($request->send_date != '') {
-      $result->whereDate('lot.created_at', '=', DateTime::createFromFormat('Y-m-d', $request->send_date));
+      $result->whereDate('lot.created_at', '=',  $request->send_date);
     }
     if ($request->id != '') {
       $result->where('lot.id', $request->id);
@@ -493,7 +493,7 @@ class ImportProductsController extends Controller
       ->where('lot_id', $request->id);
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products.created_at', '=', DateTime::createFromFormat('Y-m-d', $request->send_date));
+      $result->whereDate('import_products.created_at', '=',  $request->send_date);
     }
 
     if ($request->product_id != '') {
@@ -541,7 +541,7 @@ class ImportProductsController extends Controller
       ->where('sale_import.id', $request->id);
 
     if ($request->send_date != '') {
-      $result->whereDate('sale_import.created_at', '=', DateTime::createFromFormat('Y-m-d', $request->send_date));
+      $result->whereDate('sale_import.created_at', '=',  $request->send_date);
     }
 
     if ($request->product_id != '') {
@@ -581,7 +581,7 @@ class ImportProductsController extends Controller
       ->where('lot.receiver_branch_id', Auth::user()->branch_id);
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products.created_at', '=', DateTime::createFromFormat('Y-m-d', $request->send_date));
+      $result->whereDate('import_products.created_at', '=',  $request->send_date);
     }
 
     if ($request->product_id != '') {
@@ -628,7 +628,7 @@ class ImportProductsController extends Controller
       ->join('branchs As receive', 'lot.receiver_branch_id', 'receive.id');
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products.received_at', '=', DateTime::createFromFormat('Y-m-d', $request->send_date));
+      $result->whereDate('import_products.received_at', '=',  $request->send_date);
     }
 
     if ($request->product_id != '') {
@@ -675,7 +675,7 @@ class ImportProductsController extends Controller
       ->join('branchs As receive', 'lot.receiver_branch_id', 'receive.id');
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products.received_at', '=', DateTime::createFromFormat('Y-m-d', $request->send_date));
+      $result->whereDate('import_products.received_at', '=',  $request->send_date);
     }
 
     if ($request->product_id != '') {

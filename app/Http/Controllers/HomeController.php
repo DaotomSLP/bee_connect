@@ -8,6 +8,7 @@ use App\Models\Lots;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\Product;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -29,28 +30,38 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+        $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
 
         if ($request->date != '') {
-            $date = $request->date;
+            $date =  $request->date;
+            $to_date = $request->to_date;
             $date_now = date('Y-m-d', strtotime($request->date));
+            // echo($to_date);exit;
         } else {
-            $date = [Carbon::today()->toDateString()];
+            $date = Carbon::today()->toDateString();
+            $to_date = Carbon::today()->toDateString();
             $date_now = date('Y-m-d', strtotime(Carbon::now()));
         }
 
         if (Auth::user()->is_admin != '1') {
             $branch_id = Auth::user()->branch_id;
-            $sum_delivery_received = Product::whereDate('created_at', '=', $date)
+            // echo($branch_id);exit;
+            $sum_delivery_received = Product::whereBetween('created_at', [$date, $to_date])
                 ->where('sender_branch_id', $branch_id)
                 ->where('status', 'received')
                 ->get()->count();
 
-            $sum_delivery_sending = Product::whereDate('created_at', '=', $date)
+            $sum_delivery_sending = Product::whereBetween('created_at', [$date, $to_date])
                 ->where('sender_branch_id', $branch_id)
                 ->where('status', 'sending')
                 ->get()->count();
 
-            $sum_price = Product::whereDate('created_at', '=', $date)
+            $sum_delivery_success = Product::whereBetween('created_at', [$date, $to_date])
+                ->where('sender_branch_id', $branch_id)
+                ->where('status', 'success')
+                ->get()->count();
+
+            $sum_price = Product::whereBetween('created_at', [$date, $to_date])
                 ->where(function ($query) use ($branch_id) {
                     $query->where('sender_branch_id', $branch_id)
                         ->orWhere('receiver_branch_id', $branch_id);
@@ -58,50 +69,54 @@ class HomeController extends Controller
                 ->get()->sum('price');
             // print_r($sum_price);exit;
 
-
-            $sum_received = Product::whereDate('created_at', '=', $date)
+            ////////////////////////////
+            $sum_received = Product::whereBetween('created_at', [$date, $to_date])
                 ->where('receiver_branch_id', $branch_id)
                 ->where('status', 'received')
                 ->get()->count();
 
-            $sum_success = Product::whereDate('created_at', '=', $date)
+            $sum_success = Product::whereBetween('created_at', [$date, $to_date])
                 ->where('receiver_branch_id', $branch_id)
                 ->where('status', 'success')
                 ->get()->count();
 
-            $sum_receive_sending = Product::whereDate('created_at', '=', $date)
+            $sum_receive_sending = Product::whereBetween('created_at', [$date, $to_date])
                 ->where('receiver_branch_id', $branch_id)
                 ->where('status', 'sending')
                 ->get()->count();
 
-
             $branch_money = $sum_price / 5 * 2;
-        } else {
-            $sum_delivery_received = Product::whereDate('created_at', '=', $date)
-                ->where('status', 'received')
-                ->get()->count();
 
-            $sum_delivery_sending = Product::whereDate('created_at', '=', $date)
+            $sum_expenditure = 0;
+        } else {
+            $sum_delivery_received = 0;
+
+            $sum_delivery_sending = Product::whereBetween('created_at', [$date, $to_date])
                 ->where('status', 'sending')
                 ->get()->count();
 
-            $sum_price = Product::whereDate('created_at', '=', $date)
+            $sum_price = Product::whereBetween('created_at', [$date, $to_date])
                 ->get()->sum('price');
 
-            $sum_received = Product::whereDate('created_at', '=', $date)
+            $sum_received = Product::whereBetween('created_at', [$date, $to_date])
                 ->where('status', 'received')
                 ->get()->count();
 
-            $sum_success = Product::whereDate('created_at', '=', $date)
+            $sum_success = Product::whereBetween('created_at', [$date, $to_date])
                 ->where('status', 'success')
                 ->get()->count();
 
             $sum_receive_sending = [];
 
+            $sum_delivery_success = 0;
+
             $branch_money = $sum_price / 5 * 1;
+
+            $sum_expenditure = Expenditure::whereBetween('created_at', [$date, $to_date])
+                ->sum("price");
         }
 
-        return view('home', compact('sum_delivery_received', 'sum_delivery_sending', 'sum_receive_sending', 'sum_price', 'branch_money', 'sum_received', 'sum_success', 'date_now'));
+        return view('home', compact('sum_delivery_received', 'sum_delivery_sending', 'sum_receive_sending', 'sum_price', 'branch_money', 'sum_received', 'sum_success', 'date_now', 'to_date_now', 'sum_delivery_success', 'sum_expenditure'));
     }
 
     public function dailyImport(Request $request)
