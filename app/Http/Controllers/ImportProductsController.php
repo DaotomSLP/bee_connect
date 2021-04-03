@@ -137,7 +137,7 @@ class ImportProductsController extends Controller
           }
 
           $product->weight_type = $request->weight_type[$count];
-          $product->status = 'sending';
+          $product->status = 'waiting';
           $product->lot_id = $lot->id;
 
           if ($product->save()) {
@@ -157,7 +157,6 @@ class ImportProductsController extends Controller
   public function insertImportForUser(Request $request)
   {
     if ($request->item_id) {
-
       $count = 0;
       foreach ($request->item_id as $product_code) {
 

@@ -36,7 +36,7 @@ class HomeController extends Controller
             $date =  $request->date;
             $to_date = $request->to_date;
             $date_now = date('Y-m-d', strtotime($request->date));
-            // echo($to_date);exit;
+            $to_date_now = date('Y-m-d', strtotime($request->to_date));
         } else {
             $date = Carbon::today()->toDateString();
             $to_date = Carbon::today()->toDateString();
@@ -127,6 +127,7 @@ class HomeController extends Controller
             $date = $request->date;
             $to_date = $request->to_date;
             $date_now = date('Y-m-d', strtotime($request->date));
+            $to_date_now = date('Y-m-d',  strtotime($request->to_date));
         } else {
             $date = [Carbon::today()->toDateString()];
             $to_date = [Carbon::today()->toDateString()];
@@ -254,6 +255,6 @@ class HomeController extends Controller
             $sum_share = $sum_profit / Auth::user()->percent;
         }
 
-        return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share', 'result_weight','result_weight_m'));
+        return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share', 'result_weight', 'result_weight_m'));
     }
 }

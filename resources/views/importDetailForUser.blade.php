@@ -119,7 +119,7 @@
                                                     {{ $import_product->success_at ? date('d-m-Y', strtotime($import_product->success_at)) : '' }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
+                                                    {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ສົ່ງຮອດສາຂາ' : ($import_product->status == 'waiting' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ')) }}
                                                 </td>
                                                 <td>
                                                     {{ $import_product->weight }}
