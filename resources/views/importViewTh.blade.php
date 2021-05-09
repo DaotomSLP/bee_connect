@@ -15,7 +15,7 @@
             <!-- Modal -->
             <div class="modal fade" id="new_weight_modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
-                    <form method="POST" action="/changeImportWeight">
+                    <form method="POST" action="/changeImportWeightTh">
                         @csrf
                         <div class="modal-content">
                             <div class="modal-header">
@@ -78,7 +78,7 @@
             <!-- Modal -->
             <div class="modal fade" id="delete_lot_modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
-                    <form method="GET" action="/deleteLot">
+                    <form method="GET" action="/deleteLotTh">
                         @csrf
                         <div class="modal-content">
                             <div class="modal-header">
@@ -134,7 +134,7 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="GET" action="/importView">
+                            <form method="GET" action="/importViewTh">
                                 {{-- @csrf --}}
                                 <div class="row">
                                     <div class="col-md-3">
@@ -362,7 +362,7 @@
                                                 </td>
                                                 <td>
                                                     <a
-                                                        href="/{{ Auth::user()->is_admin == 1 ? 'importDetail' : 'importDetailForUser' }}?id={{ $lot->id }}">
+                                                        href="/{{ Auth::user()->is_admin == 1 ? 'importDetailTh' : 'importDetailForUserTh' }}?id={{ $lot->id }}">
                                                         <i class="material-icons">assignment</i>
                                                     </a>
                                                 </td>
@@ -387,7 +387,7 @@
                                                 </td>
                                                 <td>
                                                     @if (Auth::user()->is_admin == 1)
-                                                        <a href="/importpdf/{{ $lot->id }}" target="_blank">
+                                                        <a href="/importpdfTh/{{ $lot->id }}" target="_blank">
                                                             <i class="material-icons">print</i>
                                                         </a>
                                                     @endif
@@ -396,19 +396,19 @@
                                                 <td>
                                                     @if ($lot->payment_status == 'not_paid' && Auth::user()->is_admin == 1)
 
-                                                        <a href="/paidLot?id={{ $lot->id }}">
+                                                        <a href="/paidLotTh?id={{ $lot->id }}">
                                                             ຈ່າຍເງິນ
                                                         </a>
 
                                                     @endif
                                                 </td>
                                                 {{-- <td>
-                                                    @if (!$lot->received_at)
-                                                        <a href="/importpdf/{{ $lot->id }}" target="_blank">
-                                                            <i class="material-icons">print</i>
-                                                        </a>
-                                                    @endif
-                                                </td> --}}
+                                            @if (!$lot->received_at)
+                                            <a href="/importpdf/{{ $lot->id }}" target="_blank">
+                                                <i class="material-icons">print</i>
+                                            </a>
+                                            @endif
+                                        </td> --}}
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -433,8 +433,7 @@
                         <a class="page-link"
                             href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page=1">1</a>
                     </li>
-                    @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                    @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++) @if ($j % 10 == 0 && $j > 1) <li class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
                         <a class="page-link"
                         href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>

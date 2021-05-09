@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\SendController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImportProductsController;
-use App\Http\Controllers\ImportProductsControllerTh;
+use App\Http\Controllers\ImportProductsThController;
 use App\Http\Controllers\ReceiveController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProductController;
@@ -170,3 +170,61 @@ Route::post('/insertAdmin', [UsersController::class, 'insertAdmin'])->middleware
 Route::get('/editAdmin/{id}', [UsersController::class, 'editAdmin'])->middleware('auth')->name('editAdmin');
 
 Route::post('/updateAdmin', [UsersController::class, 'updateAdmin'])->middleware('auth')->name('updateAdmin');
+
+Route::get('/addImportTh', [ImportProductsThController::class, 'addImportTh'])->middleware('auth')->name('addImportTh');
+
+Route::get('/importTh', [ImportProductsThController::class, 'index'])->middleware('auth')->name('import');
+
+Route::post('/checkImportProductTh', [ImportProductsThController::class, 'checkImportProductTh'])->middleware('auth')->name('checkImportProductTh');
+
+Route::get('/importViewTh', [ImportProductsThController::class, 'importViewTh'])->middleware('auth')->name('importViewTh');
+
+Route::get('/importDetailTh', [ImportProductsThController::class, 'importDetailTh'])->middleware('auth')->name('importDetailTh');
+
+Route::get('/importProductTrackTh', [ImportProductsThController::class, 'importProductTrackTh'])->middleware('auth')->name('importProductTrackTh');
+
+Route::get('/dailyImportTh', [HomeController::class, 'dailyImportTh'])->middleware('auth')->name('dailyImportTh');
+
+Route::get('/priceImportTh', [PriceController::class, 'priceImportTh'])->middleware('auth')->name('priceImportTh');
+
+Route::post('/importProductTh', [ImportProductsThController::class, 'importProductTh'])->middleware('auth')->name('importProductTh');
+
+Route::post('/addPriceImportTh', [PriceController::class, 'insertPriceImportTh'])->middleware('auth')->name('addPriceImportTh');
+
+Route::post('/changeImportWeightTh', [ImportProductsThController::class, 'changeImportWeightTh'])->middleware('auth')->name('changeImportWeightTh');
+
+Route::get('/deleteLotTh', [ImportProductsThController::class, 'deleteLotTh'])->middleware('auth')->name('deleteLotTh');
+
+Route::get('/paidLotTh', [ImportProductsThController::class, 'paidLotTh'])->middleware('auth')->name('paidLotTh');
+
+Route::get('/importpdfTh/{id}', [ImportProductsThController::class, 'reportTh'])->middleware('auth')->name('importreportTh');
+
+Route::post('/deleteImportItemTh', [ImportProductsThController::class, 'deleteImportItemTh'])->middleware('auth')->name('deleteImportItemTh');
+
+Route::post('/changeImportItemWeightTh', [ImportProductsThController::class, 'changeImportItemWeightTh'])->middleware('auth')->name('changeImportItemWeightTh');
+
+Route::post('/importProductForUserTh', [ImportProductsThController::class, 'insertImportForUserTh'])->middleware('auth')->name('importProductForUserTh');
+
+Route::post('/getImportProductTh', [ImportProductsThController::class, 'getImportProductTh'])->middleware('auth')->name('getImportProductTh');
+
+Route::get('/importViewForUserTh', [ImportProductsThController::class, 'importViewForUserTh'])->middleware('auth')->name('importViewForUserTh');
+
+Route::get('/importProductTrackForUserTh', [ImportProductsThController::class, 'importProductTrackForUserTh'])->middleware('auth')->name('importProductTrackForUserTh');
+
+Route::get('/saleImportTh', [ImportProductsThController::class, 'saleImportTh'])->middleware('auth')->name('saleImportTh');
+
+Route::post('/insertSaleImportTh', [ImportProductsThController::class, 'insertSaleImportTh'])->middleware('auth')->name('insertSaleImportTh');
+
+Route::post('/insertSaleImportForRiderTh', [ImportProductsThController::class, 'insertSaleImportForRiderTh'])->middleware('auth')->name('insertSaleImportForRiderTh');
+
+Route::get('/saleViewTh', [ImportProductsThController::class, 'saleViewTh'])->middleware('auth')->name('saleViewTh');
+
+Route::get('/salepdfTh/{id}', [ImportProductsThController::class, 'salereportTh'])->middleware('auth')->name('salepdfTh');
+
+Route::get('/saleDetailTh', [ImportProductsThController::class, 'saleDetailTh'])->middleware('auth')->name('saleDetailTh');
+
+Route::post('/editSalePriceTh', [PriceController::class, 'editSalePriceTh'])->middleware('auth')->name('editSalePriceTh');
+
+Route::get('/saleImportPriceTh', [PriceController::class, 'saleImportPriceTh'])->middleware('auth')->name('saleImportPriceTh');
+
+Route::post('/addSalePriceImport​Th', [PriceController::class, 'insertSalePriceImportTh'])->middleware('auth')->name('addSalePriceImport​Th');

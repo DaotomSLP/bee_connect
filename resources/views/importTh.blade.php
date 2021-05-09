@@ -30,7 +30,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="/importProduct">
+            <form method="POST" action="/importProductTh">
                 @csrf
                 <div class="row">
                     <div class="col">
@@ -256,7 +256,7 @@
                 "<?php echo session()->get('id') ? session()->get('id') : 'no_id'; ?>";
 
             if (product_id != 'no_id') {
-                window.open(`importpdf/${product_id}`);
+                window.open(`importpdfTh/${product_id}`);
             }
         });
 
@@ -285,7 +285,7 @@
             let receive_branch = $("#select_branch").val();
             $.ajax({
                 type: 'POST',
-                url: '/checkImportProduct',
+                url: '/checkImportProductTh',
                 data: {
                     id: code,
                     receive_branch: receive_branch,

@@ -80,7 +80,7 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="GET" action="/price">
+                            <form method="GET" action="/priceImport">
                                 {{-- @csrf --}}
                                 <div class="row">
                                     <div class="col-md-6">
