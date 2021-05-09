@@ -7,6 +7,7 @@ use App\Models\Import_products;
 use Illuminate\Http\Request;
 use App\Models\Price;
 use App\Models\Price_imports;
+use App\Models\Price_imports_th;
 use App\Models\Sale_import;
 use App\Models\Sale_prices;
 use DateTime;
@@ -99,6 +100,46 @@ class PriceController extends Controller
         ];
 
         return view('priceImport', compact('prices', 'pagination'));
+    }
+
+    public function priceImportTh(Request $request)
+    {
+        $pagination = [
+            'offsets' =>  ceil(sizeof(Price_imports_th::all()) / 10),
+            'offset' => 1,
+            'all' => sizeof(Price_imports_th::all())
+        ];
+
+        $result = Price_imports_th::query();
+
+        $result = Price_imports_th::orderBy('id', 'desc');
+
+        if ($request->unit != '') {
+            $result->where('weight_type', $request->unit);
+        }
+
+        if ($request->date != '') {
+            $result->whereDate('created_at', '=',  $request->date);
+        }
+
+        $all_price = $result->orderBy('id', 'desc')
+            ->get();
+
+        if ($request->page != '') {
+            $result->offset(($request->page - 1) * 25);
+        }
+
+        $prices = $result->orderBy('id', 'desc')
+            ->limit(10)
+            ->get();
+
+        $pagination = [
+            'offsets' =>  ceil(sizeof($all_price) / 25),
+            'offset' => $request->page ? $request->page : 1,
+            'all' => sizeof($all_price)
+        ];
+
+        return view('priceImportTh', compact('prices', 'pagination'));
     }
 
     public function saleImportPrice(Request $request)

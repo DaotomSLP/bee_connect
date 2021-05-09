@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\SendController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImportProductsController;
+use App\Http\Controllers\ImportProductsControllerTh;
 use App\Http\Controllers\ReceiveController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProductController;
@@ -92,7 +93,13 @@ Route::get('/branchs/{offset}', [BranchController::class, 'pagination'])->middle
 
 Route::post('/addProduct', [ProductController::class, 'insert'])->middleware('auth')->name('addProduct');
 
-Route::post('/importProduct', [ImportProductsController::class, 'insertImport'])->middleware('auth')->name('importProduct');
+Route::get('/addChinaProduct', [ImportProductsController::class, 'addChinaProduct'])->middleware('auth')->name('addChinaProduct');
+
+Route::post('/checkImportProduct', [ImportProductsController::class, 'checkImportProduct'])->middleware('auth')->name('checkImportProduct');
+
+Route::post('/insertChinaProduct', [ImportProductsController::class, 'insertChinaProduct'])->middleware('auth')->name('insertChinaProduct');
+
+Route::post('/importProduct', [ImportProductsController::class, 'importProduct'])->middleware('auth')->name('importProduct');
 
 Route::get('/deleteLot', [ImportProductsController::class, 'deleteLot'])->middleware('auth')->name('deleteLot');
 
@@ -107,6 +114,8 @@ Route::post('/changeImportItemWeight', [ImportProductsController::class, 'change
 Route::post('/importProductForUser', [ImportProductsController::class, 'insertImportForUser'])->middleware('auth')->name('importProductForUser');
 
 Route::post('/insertSaleImport', [ImportProductsController::class, 'insertSaleImport'])->middleware('auth')->name('insertSaleImport');
+
+Route::post('/insertSaleImportForRider', [ImportProductsController::class, 'insertSaleImportForRider'])->middleware('auth')->name('insertSaleImportForRider');
 
 Route::post('/addPrice', [PriceController::class, 'insert'])->middleware('auth')->name('addPrice');
 

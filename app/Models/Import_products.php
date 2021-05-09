@@ -34,7 +34,12 @@ class Import_products extends Model
         'sale_price',
         'total_sale_price',
         'status',
-        'lot_id'
+        'delivery_type',
+        'addr_detail',
+        'shipping_fee',
+        'lot_id',
+        'receive_branch_id',
+        'sale_id'
     ];
 
     /**

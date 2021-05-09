@@ -26,7 +26,7 @@
         }
 
         body {
-            font-size: 8pt;
+            font-size: 7pt;
             font-family: 'Saysettha OT';
         }
 
@@ -53,6 +53,7 @@
             <th>ລະຫັດເຄື່ອງ</th>
             <th>ນ້ຳໜັກ</th>
             <th>ລາຄາ</th>
+            <th>ຄ່າສົ່ງ</th>
             <th>ລວມ</th>
         </tr>
         @foreach ($items as $item)
@@ -60,7 +61,8 @@
                 <td>{{ $item->code }}</td>
                 <td>{{ $item->weight }} {{ $item->weight_type == 'm' ? 'm' : 'kg' }}</td>
                 <td>{{ number_format($item->sale_price) }}</td>
-                <td>{{ number_format($item->total_sale_price) }}</td>
+                <td>{{ number_format($item->shipping_fee ? $item->shipping_fee : 0) }}</td>
+                <td>{{ number_format($item->total_sale_price + ($item->shipping_fee ? $item->shipping_fee : 0)) }}</td>
             </tr>
         @endforeach
     </table>
