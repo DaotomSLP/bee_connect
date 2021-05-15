@@ -438,7 +438,7 @@
                 success: function(res) {
                     console.log(res.id);
                     if (res.id !== 0) {
-                        window.open(`salepdf/${res.id}`);
+                        window.open(`salepdfTh/${res.id}`);
                         items = [];
                         total = 0;
                         codes = [];
@@ -473,7 +473,7 @@
                 success: function(res) {
                     console.log(res.id);
                     if (res.id !== 0) {
-                        window.open(`salepdf/${res.id}`);
+                        window.open(`salepdfTh/${res.id}`);
                         items_for_rider = [];
                         total_for_rider = 0;
                         codes_for_rider = [];

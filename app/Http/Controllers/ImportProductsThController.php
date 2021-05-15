@@ -5,24 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Branchs;
 use App\Models\Districts;
 use App\Models\import_products_th;
-use App\Models\Lots;
 use App\Models\Lots_th;
-use App\Models\Price;
 use App\Models\Price_imports;
 use App\Models\Price_imports_th;
 use App\Models\Provinces;
-use App\Models\Sale_import;
 use App\Models\Sale_import_th;
 use App\Models\Sale_prices;
 use Carbon\Carbon;
-use DateTime;
-use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Laravel\Ui\Presets\React;
 use PDF;
 
 class ImportProductsThController extends Controller
@@ -41,9 +32,9 @@ class ImportProductsThController extends Controller
     // }
 
     if (Auth::user()->is_admin == 1) {
-      return view('importTh', compact('provinces', 'districts', 'branchs'));
+      return view('th.importTh', compact('provinces', 'districts', 'branchs'));
     } else {
-      return view('importForUserTh', compact('provinces', 'districts', 'branchs'));
+      return view('th.importForUserTh', compact('provinces', 'districts', 'branchs'));
     }
   }
 
@@ -53,7 +44,7 @@ class ImportProductsThController extends Controller
     $districts = Districts::all();
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
-    return view('addImportTh', compact('provinces', 'districts', 'branchs'));
+    return view('th.addImportTh', compact('provinces', 'districts', 'branchs'));
   }
 
   public function addImportProductTh(Request $request)
@@ -84,50 +75,7 @@ class ImportProductsThController extends Controller
       ->where('branch_id',  Auth::user()->branch_id)
       ->orderBy('id', 'DESC')->first();
 
-    return view('saleImportTh', compact('sale_price_gram', 'sale_price_m'));
-  }
-
-  public function addChinaProduct()
-  {
-
-    // $lots = Lots_th::all();
-
-    // foreach ($lots as $key => $value) {
-    //   import_products_th::where('lot_id', $value->id)->update([
-    //     "receive_branch_id" => $value->receiver_branch_id
-    //   ]);
-    // }
-    return view('addChinaProduct');
-  }
-
-  public function insertChinaProduct(Request $request)
-  {
-    if ($request->item_id) {
-      $count = 0;
-      foreach ($request->item_id as $product_id) {
-        $product = new Import_products;
-        $product->code = $product_id;
-        $product->weight = 0;
-        $product->base_price = 0;
-        $product->real_price = 0;
-        $product->total_base_price = 0;
-        $product->total_real_price = 0;
-        $product->total_sale_price = 0;
-        $product->weight_type = "";
-        $product->status = 'waiting';
-        $product->receive_branch_id = Auth::user()->branch_id;
-        $product->delivery_type = $request->delivery_type[$count];
-        $product->addr_detail = $request->addr_detail[$count];
-
-        if ($product->save()) {
-        }
-
-        $count++;
-      }
-      return redirect('import')->with(['error' => 'insert_success']);
-    } else {
-      return redirect('import')->with(['error' => 'not_insert']);
-    }
+    return view('th.saleImportTh', compact('sale_price_gram', 'sale_price_m'));
   }
 
   public function checkImportProductTh(Request $request)
@@ -278,7 +226,6 @@ class ImportProductsThController extends Controller
       foreach ($request->items as $key => $value) {
         $sum_price += ($value["price"] * $value["weight"]);
       }
-
       $sale_import = new Sale_import_th;
       $sale_import->branch_id = Auth::user()->branch_id;
       $sale_import->total = $sum_price - ($request->discount == "" ? 0 : $request->discount);
@@ -530,7 +477,7 @@ class ImportProductsThController extends Controller
       'all' => $all_lots
     ];
 
-    return view('importViewTh', compact('branchs', 'lots', 'pagination'));
+    return view('th.importViewTh', compact('branchs', 'lots', 'pagination'));
   }
 
   public function saleViewTh(Request $request)
@@ -563,7 +510,7 @@ class ImportProductsThController extends Controller
       'all' => $all_sale_imports
     ];
 
-    return view('saleViewTh', compact('sale_imports', 'pagination'));
+    return view('th.saleViewTh', compact('sale_imports', 'pagination'));
   }
 
   public function importViewForUserTh(Request $request)
@@ -613,7 +560,7 @@ class ImportProductsThController extends Controller
       'all' => $all_lots
     ];
 
-    return view('importViewTh', compact('branchs', 'lots', 'pagination'));
+    return view('th.importViewTh', compact('branchs', 'lots', 'pagination'));
   }
 
   public function reportTh($id)
@@ -696,7 +643,7 @@ class ImportProductsThController extends Controller
     // echo ($import_products));
     // exit;
 
-    return view('importDetailTh', compact('branchs', 'import_products', 'pagination'));
+    return view('th.importDetailTh', compact('branchs', 'import_products', 'pagination'));
   }
 
   public function saleDetailTh(Request $request)
@@ -733,7 +680,7 @@ class ImportProductsThController extends Controller
       'all' => $all_import_products
     ];
 
-    return view('saleDetailTh', compact('import_products', 'pagination'));
+    return view('th.saleDetailTh', compact('import_products', 'pagination'));
   }
 
   public function importDetailForUser(Request $request)
@@ -781,7 +728,7 @@ class ImportProductsThController extends Controller
       'all' => $all_import_products
     ];
 
-    return view('importDetailForUser', compact('branchs', 'import_products', 'pagination'));
+    return view('th.importDetailForUser', compact('branchs', 'import_products', 'pagination'));
   }
 
 
@@ -792,8 +739,7 @@ class ImportProductsThController extends Controller
     $result = Import_products_th::query();
 
     $result->select('import_products_th.*', 'receive.branch_name')
-      ->join('lot_th', 'lot_th.id', 'import_products_th.lot_id')
-      ->join('branchs As receive', 'lot_th.receiver_branch_id', 'receive.id');
+      ->join('branchs As receive', 'import_products_th.receive_branch_id', 'receive.id');
 
     if ($request->send_date != '') {
       $result->whereDate('import_products_th.created_at', '=',  $request->send_date);
@@ -828,7 +774,7 @@ class ImportProductsThController extends Controller
       'all' => $all_import_products
     ];
 
-    return view('allImportDetailTh', compact('branchs', 'import_products', 'pagination'));
+    return view('th.allImportDetailTh', compact('branchs', 'import_products', 'pagination'));
   }
 
   public function importProductTrackForUserTh(Request $request)
@@ -874,7 +820,7 @@ class ImportProductsThController extends Controller
       'all' => $all_import_products
     ];
 
-    return view('allImportDetailForUserTh', compact('import_products', 'pagination', 'branchs'));
+    return view('th.allImportDetailForUserTh', compact('import_products', 'pagination', 'branchs'));
   }
 
   public function getImportProductTh(Request $request)
