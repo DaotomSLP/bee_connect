@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Branchs;
 use App\Models\Districts;
-use App\Models\import_products_th;
+use App\Models\Import_products_th;
 use App\Models\Lots_th;
 use App\Models\Price_imports;
 use App\Models\Price_imports_th;
