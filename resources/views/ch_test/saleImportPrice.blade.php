@@ -37,7 +37,7 @@
                             <h2>ຕັ້ງຄ່າລາຄາເຄື່ອງນຳເຂົ້າ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="POST" action="/addSalePriceImport​">
+                            <form method="POST" action="/addSalePriceImport​Ch">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-9">
@@ -75,7 +75,7 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="GET" action="/saleImportPrice">
+                            <form method="GET" action="/saleImportPriceCh">
                                 {{-- @csrf --}}
                                 <div class="row">
                                     <div class="col-md-6">
@@ -169,8 +169,7 @@
                         <a class="page-link"
                             href="{{ Request::route()->getName() }}?unit={{ Request::input('unit') }}&date={{ Request::input('date') }}&page=1">1</a>
                     </li>
-                    @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                    @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++) @if ($j % 10 == 0 && $j > 1) <li class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
                         <a class="page-link"
                         href="{{ Request::route()->getName() }}?unit={{ Request::input('unit') }}&date={{ Request::input('date') }}&page={{ $j }}">{{ $j }}</a>

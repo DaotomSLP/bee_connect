@@ -37,7 +37,7 @@
                             <h2>ຕັ້ງຄ່າລາຄາເຄື່ອງນຳເຂົ້າ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="POST" action="/addSalePriceImport​">
+                            <form method="POST" action="/addSalePriceImportTh​a">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-9">
@@ -75,7 +75,7 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="GET" action="/saleImportPrice">
+                            <form method="GET" action="/saleImportPriceTh">
                                 {{-- @csrf --}}
                                 <div class="row">
                                     <div class="col-md-6">

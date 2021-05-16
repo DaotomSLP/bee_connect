@@ -7,7 +7,7 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>ລາຍລະອຽດການນຳເຂົ້າ</h3>
+                    <h3>ການສົ່ງສິນຄ້າພາຍໃນ</h3>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -19,42 +19,20 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="GET" action="/importDetailForUser?id=25">
+                            <form method="GET" action="/saleViewCh">
                                 {{-- @csrf --}}
-                                <input type="hidden" value="{{ Request::input('id') }}" name="id">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ເລກບິນ</label>
-                                            <input class="form-control form-control-sm"
-                                                value="{{ Request::input('product_id') }}" name="product_id">
+                                            <input class="form-control form-control-sm" value="{{ Request::input('id') }}"
+                                                name="id">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ສະຖານະ</label>
-                                            <select class="form-control form-control-sm" id="select_status" name="status">
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                <option {{ Request::input('status') == 'sending' ? 'selected' : '' }}
-                                                    value="sending">
-                                                    ກຳລັງສົ່ງ
-                                                </option>
-                                                <option {{ Request::input('status') == 'received' ? 'selected' : '' }}
-                                                    value="received">
-                                                    ຮອດແລ້ວ
-                                                </option>
-                                                <option {{ Request::input('status') == 'success' ? 'selected' : '' }}
-                                                    value="success">
-                                                    ສຳເລັດ
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ວັນທີຮັບ</label>
+                                            <label class="bmd-label-floating">ວັນທີຂາຍ</label>
                                             <input class="form-control form-control-sm" type="date"
                                                 value="{{ Request::input('send_date') }}" name="send_date">
                                         </div>
@@ -72,7 +50,8 @@
                 <div class="col-md-12">
                     <div class="x_panel">
                         <div>
-                            <h2 class="card-title ">ລາຍການສິນຄ້າຂອງເລກບິນທີ່ {{ Request::input('id') }}</h2>
+                            <h2>ລາຍການປະຫວັດການຂາຍ</h2>
+                            <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
                             <div class="table-responsive">
@@ -82,54 +61,64 @@
                                             ລ/ດ
                                         </th>
                                         <th>
-                                            ລະຫັດເຄື່ອງ
+                                            ເລກບິນ
                                         </th>
-                                        <th>
-                                            ຮັບມາວັນທີ່
-                                        </th>
+
                                         <th>
                                             ຂາຍວັນທີ່
                                         </th>
                                         <th>
-                                            ສະຖານະ
+                                            ລວມ
                                         </th>
                                         <th>
-                                            ນ້ຳໜັກ/ຂະໜາດ
+                                            ສ່ວນຫຼຸດ
                                         </th>
-                                        {{-- <th>
-                                            ຕົ້ນທຶນ
-                                        </th> --}}
+                                        @if (Auth::user()->is_admin != 1)
+                                            <th>
+                                                ລວມເປັນເງິນທັງໝົດ
+                                            </th>
+                                        @endif
+
                                         <th>
-                                            ລາຄາຂາຍ
+
+                                        </th>
+                                        <th>
+
                                         </th>
                                     </thead>
                                     <tbody>
-                                        @foreach ($import_products as $key => $import_product)
+                                        @foreach ($sale_imports as $key => $sale_import)
                                             <tr>
                                                 <td>
                                                     {{ $key + 1 }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->code }}
+                                                    {{ $sale_import->id }}
+                                                </td>
+
+                                                <td>
+                                                    {{ date('d-m-Y', strtotime($sale_import->created_at)) }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->received_at ? date('d-m-Y', strtotime($import_product->received_at)) : '' }}
+                                                    {{ number_format($sale_import->subtotal) }} ກີບ
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->success_at ? date('d-m-Y', strtotime($import_product->success_at)) : '' }}
+                                                    {{ number_format($sale_import->discount) }} ກີບ
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
+                                                    {{ number_format($sale_import->total) }} ກີບ
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->weight }}
-                                                    {{ $import_product->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກິໂລກຼາມ' }}
+                                                    <a
+                                                        href="/{{ Auth::user()->is_admin == 1 ? 'saleDetail' : 'saleDetail' }}?id={{ $sale_import->id }}">
+                                                        ລາຍລະອຽດ
+                                                    </a>
                                                 </td>
-                                                {{-- <td>
-                                                    {{ number_format($import_product->total_real_price) }}
-                                                </td> --}}
                                                 <td>
-                                                    {{ number_format($import_product->total_sale_price) }}
+                                                    <a href="/salepdf/{{ $sale_import->id }}" target="_blank">
+                                                        <i class="material-icons">print</i>
+                                                    </a>
+
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -156,12 +145,14 @@
                             href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page=1">1</a>
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
-                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+
+                        @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -174,12 +165,14 @@
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
-                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li class="page-item {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+
+                        @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"
@@ -196,6 +189,38 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
+        $(document).ready(function() {
+            var product_id =
+                "<?php echo session()->get('id') ? session()->get('id') : 'no_id'; ?>";
+
+            if (product_id != 'no_id') {
+                window.open(`importpdf/${product_id}`);
+            }
+        });
+
+        var codes = [];
+        $('#product_id').keypress(function(event) {
+            if (event.keyCode == 13) {
+                let code = $('#product_id').val();
+                if (code == '') {
+                    alert("empty!!!");
+                } else {
+                    if (codes.includes(code)) {
+                        alert("ລະຫັດຊ້ຳ");
+                    } else {
+                        generateItem(code);
+                        codes.push(code);
+                        $('#product_id').val('');
+                    }
+                }
+            }
+        });
+
+        function generateItem(code) {
+            $('#product_item_table').append(
+                `<tr><td class="py-0"><div class="form-group"><input value='${code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><input type="number" value=0 min="0"class="form-control form-control-sm" name="weight[]" required></div></td><td class="py-0"><div class="form-group"><select class="form-control form-control-sm" name="weight_type[]"required><option value="gram">ກິໂລກຼາມ</option> <option value="m">ແມັດກ້ອນ</option></select></div></td><td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="base_price[]"> </div></td> <td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="real_price[]"></div></td></tr>`
+            )
+        }
 
     </script>
 @endsection

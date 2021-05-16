@@ -7,10 +7,11 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>ລາຍລະອຽດການນຳເຂົ້າ</h3>
+                    <h3>ການສົ່ງສິນຄ້າພາຍໃນ</h3>
                 </div>
             </div>
             <div class="clearfix"></div>
+
 
             <div class="row">
                 <div class="col">
@@ -19,13 +20,13 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="GET" action="/importDetailForUser?id=25">
+                            <form method="GET" action="/importProductTrackForUserCh">
                                 {{-- @csrf --}}
                                 <input type="hidden" value="{{ Request::input('id') }}" name="id">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ເລກບິນ</label>
+                                            <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
                                             <input class="form-control form-control-sm"
                                                 value="{{ Request::input('product_id') }}" name="product_id">
                                         </div>
@@ -36,6 +37,10 @@
                                             <select class="form-control form-control-sm" id="select_status" name="status">
                                                 <option value="">
                                                     ເລືອກ
+                                                </option>
+                                                <option {{ Request::input('status') == 'waiting' ? 'selected' : '' }}
+                                                    value="waiting">
+                                                    ລໍຖ້າ
                                                 </option>
                                                 <option {{ Request::input('status') == 'sending' ? 'selected' : '' }}
                                                     value="sending">
@@ -49,6 +54,24 @@
                                                     value="success">
                                                     ສຳເລັດ
                                                 </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
+                                            <select class="form-control form-control-sm" id="select_branch"
+                                                name="receive_branch">
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                @foreach ($branchs as $branch)
+                                                    <option
+                                                        {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
+                                                        value="{{ $branch->id }}">
+                                                        {{ $branch->branch_name }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -68,13 +91,14 @@
                 </div>
             </div>
 
+            <div class="clearfix"></div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="x_panel">
-                        <div>
-                            <h2 class="card-title ">ລາຍການສິນຄ້າຂອງເລກບິນທີ່ {{ Request::input('id') }}</h2>
+                    <div class="card">
+                        <div class="card-header card-header-primary">
+                            <h5 class="card-title ">ລາຍການສົ່ງອອກທັງໝົດຂອງສາຂາ</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead class=" text-primary">
@@ -86,6 +110,9 @@
                                         </th>
                                         <th>
                                             ຮັບມາວັນທີ່
+                                        </th>
+                                        <th>
+                                            ສົ່ງໄປສາຂາ
                                         </th>
                                         <th>
                                             ຂາຍວັນທີ່
@@ -116,10 +143,13 @@
                                                     {{ $import_product->received_at ? date('d-m-Y', strtotime($import_product->received_at)) : '' }}
                                                 </td>
                                                 <td>
+                                                    {{ $import_product->branch_name }}
+                                                </td>
+                                                <td>
                                                     {{ $import_product->success_at ? date('d-m-Y', strtotime($import_product->success_at)) : '' }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
+                                                    {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : ($import_product->status == 'waiting' ? 'ລໍຖ້າ' : 'ສຳເລັດ')) }}
                                                 </td>
                                                 <td>
                                                     {{ $import_product->weight }}
@@ -196,6 +226,67 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
+        var branch_lists = <?php echo json_encode($branchs); ?> ;;
+        $("#select_province").on("change", function() {
+            let province_id = this.value;
+            let district_options = "<option value=''>ເລືອກ</option>";
+            district_lists
+                .filter(district => district.prov_id === province_id)
+                .forEach(district => {
+                    district_options +=
+                        `<option value="${district.id}">${district.dist_name}</option>`
+                });
+            $("#select_district").html(district_options)
+            $("#select_district").attr("disabled", false);
+            $("#select_branch").val("");
+            $("#select_branch").attr("disabled", true);
+        });
+
+        $("#select_district").on("change", function() {
+            let district_id = this.value;
+            let branch_options = "<option value=''>ເລືອກ</option>";
+            branch_lists
+                .filter(branch => branch.district_id === district_id)
+                .forEach(branch => {
+                    branch_options +=
+                        `<option value="${branch.id}">${branch.branch_name}</option>`
+                });
+            $("#select_branch").html(branch_options)
+            $("#select_branch").attr("disabled", false);
+        });
+
+        $(document).ready(function() {
+            var product_id =
+                "<?php echo session()->get('id') ? session()->get('id') : 'no_id'; ?>";
+
+            if (product_id != 'no_id') {
+                window.open(`importpdf/${product_id}`);
+            }
+        });
+
+        var codes = [];
+        $('#product_id').keypress(function(event) {
+            if (event.keyCode == 13) {
+                let code = $('#product_id').val();
+                if (code == '') {
+                    alert("empty!!!");
+                } else {
+                    if (codes.includes(code)) {
+                        alert("ລະຫັດຊ້ຳ");
+                    } else {
+                        generateItem(code);
+                        codes.push(code);
+                        $('#product_id').val('');
+                    }
+                }
+            }
+        });
+
+        function generateItem(code) {
+            $('#product_item_table').append(
+                `<tr><td class="py-0"><div class="form-group"><input value='${code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><input type="number" value=0 min="0"class="form-control form-control-sm" name="weight[]" required></div></td><td class="py-0"><div class="form-group"><select class="form-control form-control-sm" name="weight_type[]"required><option value="gram">ກິໂລກຼາມ</option> <option value="m">ແມັດກ້ອນ</option></select></div></td><td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="base_price[]"> </div></td> <td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="real_price[]"></div></td></tr>`
+            )
+        }
 
     </script>
 @endsection

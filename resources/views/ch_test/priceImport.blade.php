@@ -7,7 +7,7 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>ຕັ້ງຄ່າລາຄາຂາຍ</h3>
+                    <h3>ຕັ້ງຄ່າລາຄາເຄື່ອງນຳເຂົ້າ</h3>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -37,13 +37,19 @@
                             <h2>ຕັ້ງຄ່າລາຄາເຄື່ອງນຳເຂົ້າ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="POST" action="/addSalePriceImport​">
+                            <form method="POST" action="/addPriceImportCh">
                                 @csrf
                                 <div class="row">
-                                    <div class="col-md-9">
+                                    <div class="col-md-5">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ລາຄາຂາຍ/ຫົວໜ່ວຍ</label>
-                                            <input type="number" min="100" class="form-control" name="price" required>
+                                            <label class="bmd-label-floating">ຕົ້ນທຶນ/ຫົວໜ່ວຍ</label>
+                                            <input type="number" min="100" class="form-control" name="base_price" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ຄ່າສົ່ງ/ຫົວໜ່ວຍ</label>
+                                            <input type="number" min="100" class="form-control" name="real_price" required>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -66,7 +72,6 @@
                 </div>
             </div>
 
-
             <div class="clearfix"></div>
             <div class="row">
                 <div class="col">
@@ -75,7 +80,7 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="GET" action="/saleImportPrice">
+                            <form method="GET" action="/priceImportCh">
                                 {{-- @csrf --}}
                                 <div class="row">
                                     <div class="col-md-6">
@@ -111,49 +116,54 @@
                 </div>
             </div>
 
+            <div class="clearfix"></div>
+
             <div class="row">
-                <div class="col-md-12">
+                <div class="col">
                     <div class="x_panel">
                         <div>
                             <h2>ປະຫວັດການຕັ້ງຄ່າລາຄາ</h2>
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead class=" text-primary">
-                                        <th>
-                                            ປະຈຳວັນທີ
-                                        </th>
-                                        <th>
-                                            ຈຳນວນເງິນ
-                                        </th>
-                                        <th>
-                                            ຕໍ່ຫົວໜ່ວຍ
-                                        </th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($prices as $price)
-                                            <tr>
-                                                <td>
-                                                    {{ date('d-m-Y', strtotime($price->created_at)) }}
-                                                </td>
-                                                <td>
-                                                    {{ $price->price }}
-                                                </td>
-                                                <td>
-                                                    {{ $price->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກຼາມ' }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="table table-hover">
+                                <thead class=" text-primary">
+                                    <th>
+                                        ປະຈຳວັນທີ
+                                    </th>
+                                    <th>
+                                        ຕົ້ນທຶນ
+                                    </th>
+                                    <th>
+                                        ຄ່າສົ່ງ
+                                    </th>
+                                    <th>
+                                        ຕໍ່ຫົວໜ່ວຍ
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    @foreach ($prices as $price)
+                                        <tr>
+                                            <td>
+                                                {{ date('d-m-Y', strtotime($price->created_at)) }}
+                                            </td>
+                                            <td>
+                                                {{ $price->base_price }}
+                                            </td>
+                                            <td>
+                                                {{ $price->real_price }}
+                                            </td>
+                                            <td>
+                                                {{ $price->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກຼາມ' }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-
 
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">

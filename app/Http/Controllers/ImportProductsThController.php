@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Branchs;
 use App\Models\Districts;
+use App\Models\Expenditure;
 use App\Models\Import_products_th;
 use App\Models\Lots_th;
 use App\Models\Price_imports;
@@ -14,6 +15,7 @@ use App\Models\Sale_prices;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use PDF;
 
 class ImportProductsThController extends Controller
@@ -36,6 +38,145 @@ class ImportProductsThController extends Controller
     } else {
       return view('th.importForUserTh', compact('provinces', 'districts', 'branchs'));
     }
+  }
+
+  public function dailyImportTh(Request $request)
+  {
+    $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
+
+    if ($request->date != '') {
+      $date = $request->date;
+      $to_date = $request->to_date;
+      $date_now = date('Y-m-d', strtotime($request->date));
+      $to_date_now = date('Y-m-d',  strtotime($request->to_date));
+    } else {
+      $date = [Carbon::today()->toDateString()];
+      $to_date = [Carbon::today()->toDateString()];
+      $date_now = date('Y-m-d', strtotime(Carbon::now()));
+    }
+
+    $branch_id = Auth::user()->branch_id;
+
+    $result = DB::table('lot_th')
+      ->select(DB::raw('branchs.id as receiver_branch_id, branchs.branch_name as branch_name, sum(lot_th.total_price) as branch_total_price'))
+      // ->join('import_products_th', 'lot_th.id', 'import_products_th.lot_id')
+      ->join('branchs', 'lot_th.receiver_branch_id', 'branchs.id')
+      ->whereBetween('lot_th.created_at', [$date, $to_date])
+      ->groupBy('branchs.id')
+      ->groupBy('branchs.branch_name');
+
+    if (Auth::user()->branch_id == null) {
+
+      $sum_base_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
+        ->sum("total_base_price");
+      $sum_real_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
+        ->sum("total_main_price");
+
+      $sum_fee_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
+        ->sum("fee");
+      $sum_pack_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
+        ->sum("pack_price");
+    } else {
+
+      $result->where('lot_th.receiver_branch_id', Auth::user()->branch_id);
+
+      $sum_base_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
+        ->where('lot_th.receiver_branch_id', Auth::user()->branch_id)
+        ->sum("total_main_price");
+      $sum_real_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
+        ->where('lot_th.receiver_branch_id', Auth::user()->branch_id)
+        ->sum("total_sale_price");
+
+      $sum_fee_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
+        ->where('lot_th.receiver_branch_id', Auth::user()->branch_id)
+        ->sum("fee");
+      $sum_pack_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
+        ->where('lot_th.receiver_branch_id', Auth::user()->branch_id)
+        ->sum("pack_price");
+    }
+
+    $sum_sale_profit    = $sum_real_price - $sum_base_price;
+
+    $sum_expenditure = Expenditure::whereBetween('created_at', [$date, $to_date])
+      ->sum("price");
+
+    $sum_profit    = $sum_real_price - $sum_base_price - $sum_expenditure;
+
+
+    $all_branch_sale_totals = $result
+      ->count();
+
+    if ($request->page != '') {
+      $result->offset(($request->page - 1) * 25);
+    }
+
+    $branch_sale_totals = $result
+      ->limit(25)
+      ->get();
+
+    $pagination = [
+      'offsets' =>  ceil($all_branch_sale_totals / 25),
+      'offset' => $request->page ? $request->page : 1,
+      'all' => $all_branch_sale_totals
+    ];
+
+    $import_product_count = DB::table('lot_th')
+      ->select(DB::raw('count(import_products_th.id) as count_import_product, lot_th.receiver_branch_id'))
+      ->join('import_products_th', 'lot_th.id', 'import_products_th.lot_id')
+      ->join('branchs', 'lot_th.receiver_branch_id', 'branchs.id')
+      ->whereBetween('lot_th.created_at', [$date, $to_date])
+      ->groupBy('lot_th.receiver_branch_id')->get();
+
+    $result_unpaid = DB::table('lot_th')
+      ->select(DB::raw('branchs.id as receiver_branch_id, sum(lot_th.total_main_price) as branch_total_price'))
+      // ->join('import_products_th', 'lot_th.id', 'import_products_th.lot_id')
+      ->join('branchs', 'lot_th.receiver_branch_id', 'branchs.id')
+      ->whereBetween('lot_th.created_at', [$date, $to_date])
+      ->where('lot_th.payment_status', 'not_paid')
+      ->groupBy('branchs.id')
+      ->groupBy('branchs.branch_name')
+      ->get();
+
+    $result_paid = DB::table('lot_th')
+      ->select(DB::raw('branchs.id as receiver_branch_id, sum(lot_th.total_main_price) as branch_total_price'))
+      // ->join('import_products_th', 'lot_th.id', 'import_products_th.lot_id')
+      ->join('branchs', 'lot_th.receiver_branch_id', 'branchs.id')
+      ->whereBetween('lot_th.created_at', [$date, $to_date])
+      ->where('lot_th.payment_status', '<>', 'not_paid')
+      ->groupBy('branchs.id')
+      ->groupBy('branchs.branch_name')
+      ->get();
+
+    $result_weight = DB::table('lot_th')
+      ->select(DB::raw('branchs.id as receiver_branch_id, sum(lot_th.weight_kg) as sum_weight_kg'))
+      // ->join('import_products_th', 'lot_th.id', 'import_products_th.lot_id')
+      ->join('branchs', 'lot_th.receiver_branch_id', 'branchs.id')
+      ->whereBetween('lot_th.created_at', [$date, $to_date])
+      ->groupBy('branchs.id')
+      ->groupBy('branchs.branch_name')
+      ->get();
+
+    $result_weight_m = DB::table('lot_th')
+      ->select(DB::raw('branchs.id as receiver_branch_id, sum(import_products_th.weight) as sum_weight_m'))
+      // ->join('import_products_th', 'lot_th.id', 'import_products_th.lot_id')
+      ->join('branchs', 'lot_th.receiver_branch_id', 'branchs.id')
+      ->join('import_products_th', 'lot_th.id', 'import_products_th.lot_id')
+      ->whereBetween('lot_th.created_at', [$date, $to_date])
+      ->where('import_products_th.weight_type', 'm')
+      ->groupBy('branchs.id')
+      ->groupBy('branchs.branch_name')
+      ->get();
+
+
+    // print_r($result_paid);
+    // exit;
+
+    $sum_share = 0;
+    if (Auth::user()->is_admin != 1 && Auth::user()->branch_id == null) {
+      $sum_share = $sum_profit / Auth::user()->percent;
+    }
+
+    return view('dailyimportTh', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share', 'result_weight', 'result_weight_m'));
   }
 
   public function addImportTh()
@@ -690,7 +831,7 @@ class ImportProductsThController extends Controller
     $result = import_products_th::query();
 
     $result->select('import_products_th.*')
-      ->join('lot', 'lot_th.id', 'import_products_th.lot_id')
+      ->join('lot_th', 'lot_th.id', 'import_products_th.lot_id')
       ->join('branchs As receive', 'lot_th.receiver_branch_id', 'receive.id')
       ->where('lot_id', $request->id)
       ->where('lot_th.receiver_branch_id', Auth::user()->branch_id);

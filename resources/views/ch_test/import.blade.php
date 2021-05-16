@@ -30,34 +30,103 @@
                 </div>
             @endif
 
-            <div class="row">
-                <div class="col">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ສະແກນບາໂຄດ</h2>
-                        </div>
-                        <div class="x_content">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
-                                        <div class="spinner-border d-none" id="loading" role="status">
-                                            <span class="sr-only">Loading...</span>
+            <form method="POST" action="/importProductCh">
+                @csrf
+                <div class="row">
+                    <div class="col">
+                        <div class="x_panel">
+                            <div>
+                                <h2>ເລຶອກບ່ອນສົ່ງ</h2>
+                            </div>
+                            <div class="x-content">
+
+                                <input type="hidden" name="receiver_branch_id" id="receiver_branch_id">
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ແຂວງ</label>
+                                            <select class="form-control form-control-sm" id="select_province" required>
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                @foreach ($provinces as $province)
+                                                    <option value="{{ $province->id }}">
+                                                        {{ $province->prov_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
-                                        <input class="form-control" id="product_id">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ເມືອງ</label>
+                                            <select class="form-control form-control-sm" disabled id="select_district"
+                                                required>
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                @foreach ($districts as $district)
+                                                    <option value="{{ $district->id }}">
+                                                        {{ $district->dist_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ສາຂາ</label>
+                                            <select class="form-control form-control-sm" disabled id="select_branch"
+                                                required>
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                @foreach ($branchs as $branch)
+                                                    <option value="{{ $branch->id }}">
+                                                        {{ $branch->branch_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="button" onclick="handleSelectReceiveBranch()"
+                                        class="btn btn-primary pull-right px-5">ຕົກລົງ</button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row d-none" id="barcode_input_box">
+                    <div class="col">
+                        <div class="x_panel">
+                            <div>
+                                <h2>ສະແກນບາໂຄດ</h2>
+                            </div>
+                            <div class="x_content">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
+                                            <div class="spinner-border d-none" id="loading" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                            <input class="form-control" id="product_id">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="clearfix"></div>
-            <div class="row">
-                <div class="col">
-                    <form method="POST" action="/importProduct">
-                        @csrf
+                <div class="clearfix"></div>
+                <div class="row d-none" id="list_box">
+                    <div class="col">
                         <div class="row">
                             <div class="col">
                                 <div class="x_panel">
@@ -135,75 +204,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- <div>
-                                            <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
-                                            <div class="clearfix"></div>
-                                        </div> --}}
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-
-                        <div class="row">
-                            <div class="col">
-                                <div class="x_panel">
-                                    <div>
-                                        <h2>ເລຶອກບ່ອນສົ່ງ</h2>
-                                    </div>
-                                    <div class="x-content">
-
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ແຂວງ</label>
-                                                    <select class="form-control form-control-sm" id="select_province"
-                                                        required>
-                                                        <option value="">
-                                                            ເລືອກ
-                                                        </option>
-                                                        @foreach ($provinces as $province)
-                                                            <option value="{{ $province->id }}">
-                                                                {{ $province->prov_name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ເມືອງ</label>
-                                                    <select class="form-control form-control-sm" disabled
-                                                        id="select_district" required>
-                                                        <option value="">
-                                                            ເລືອກ
-                                                        </option>
-                                                        @foreach ($districts as $district)
-                                                            <option value="{{ $district->id }}">
-                                                                {{ $district->dist_name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ສາຂາ</label>
-                                                    <select class="form-control form-control-sm" disabled id="select_branch"
-                                                        name="receiver_branch_id" required>
-                                                        <option value="">
-                                                            ເລືອກ
-                                                        </option>
-                                                        @foreach ($branchs as $branch)
-                                                            <option value="{{ $branch->id }}">
-                                                                {{ $branch->branch_name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div>
                                             <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
                                             <div class="clearfix"></div>
@@ -212,11 +212,10 @@
                                 </div>
                             </div>
                         </div>
-
-                    </form>
-
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
@@ -257,7 +256,7 @@
                 "<?php echo session()->get('id') ? session()->get('id') : 'no_id'; ?>";
 
             if (product_id != 'no_id') {
-                window.open(`importpdf/${product_id}`);
+                window.open(`importpdfCh/${product_id}`);
             }
         });
 
@@ -273,6 +272,30 @@
                         $('#product_id').val('');
                         alert("ລະຫັດຊ້ຳ");
                     } else {
+                        $("#product_id").prop('disabled', true);
+                        $("#loading").removeClass('d-none');
+                        checkItem(code)
+                        $('#product_id').val('');
+                    }
+                }
+            }
+        });
+
+        function checkItem(code) {
+            let receive_branch = $("#select_branch").val();
+            $.ajax({
+                type: 'POST',
+                url: '/checkImportProductCh',
+                data: {
+                    id: code,
+                    receive_branch: receive_branch,
+                    '_token': $('meta[name=csrf-token]').attr('content')
+                },
+                success: function(data) {
+                    $("#product_id").prop('disabled', false);
+                    $("#loading").addClass('d-none');
+                    $("#product_id").focus();
+                    if (!data.error) {
                         items.push({
                             code: code,
                             weight_type: 'gram',
@@ -280,11 +303,20 @@
                         })
                         codes.push(code);
                         generateItem();
-                        $('#product_id').val('');
+                    } else {
+                        alert("ບໍ່ມີສິນຄ້ານີ້ ຫຼື ບໍ່ແມ່ນຂອງສາຂານີ້!!!");
                     }
+
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    $("#product_id").prop('disabled', false);
+                    $("#loading").addClass('d-none');
+                    $("#product_id").focus();
+                    alert("ບໍ່ມີສິນຄ້ານີ້!!!");
                 }
-            }
-        });
+
+            });
+        }
 
         function deleteItem(id) {
             codes = codes.filter(code => code !== id);
@@ -330,6 +362,16 @@
                 $("#all_weight_kg").attr("required", true);
             }
 
+        }
+
+        function handleSelectReceiveBranch() {
+            $("#receiver_branch_id").val($("#select_branch").val());
+            $("#select_province").attr("disabled", true);
+            $("#select_district").attr("disabled", true);
+            $("#select_branch").attr("disabled", true);
+            $("#barcode_input_box").removeClass("d-none");
+            $("#list_box").removeClass("d-none");
+            $("#product_id").focus();
         }
 
     </script>

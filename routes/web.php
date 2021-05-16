@@ -4,16 +4,15 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ExpenditureController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\SendController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ReceiveController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PriceController;
-use App\Http\Controllers\SuccessController;
+use App\Models\Import_products;
 
 require('th_routes.php');
 require('ch_routes.php');
+require('ch_routes_test.php');
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +26,9 @@ require('ch_routes.php');
 */
 
 
-Route::get('/', [HomeController::class, 'dailyImport'])->middleware('auth')->name('dailyImport');
-
 Auth::routes();
 
-Route::get('/send', [SendController::class, 'index'])->middleware('auth')->name('send');
+Route::get('/send', [ProductController::class, 'send'])->middleware('auth')->name('send');
 
 Route::get('/allProducts', [ProductController::class, 'allProducts'])->middleware('auth')->name('allProducts');
 
@@ -41,21 +38,11 @@ Route::get('/paidProduct', [ProductController::class, 'paidProduct'])->middlewar
 
 Route::get('/paidProductForSecondBranch', [ProductController::class, 'paidProductForSecondBranch'])->middleware('auth')->name('paidProductForSecondBranch');
 
-Route::get('/home', [HomeController::class, 'index'])->middleware('auth')->name('home');
+Route::get('/receive', [ProductController::class, 'receive'])->middleware('auth')->name('receive');
 
-Route::get('/dailyImport', [HomeController::class, 'dailyImport'])->middleware('auth')->name('dailyImport');
-
-Route::get('/receive', [ReceiveController::class, 'index'])->middleware('auth')->name('receive');
-
-Route::get('/receiveImport', [ReceiveController::class, 'receiveImport'])->middleware('auth')->name('receiveImport');
-
-Route::get('/success', [SuccessController::class, 'index'])->middleware('auth')->name('success');
+Route::get('/success', [ProductController::class, 'success'])->middleware('auth')->name('success');
 
 Route::get('/price', [PriceController::class, 'index'])->middleware('auth')->name('price');
-
-Route::get('/priceImport', [PriceController::class, 'priceImport'])->middleware('auth')->name('priceImport');
-
-Route::get('/saleImportPrice', [PriceController::class, 'saleImportPrice'])->middleware('auth')->name('saleImportPrice');
 
 Route::get('/users', [UsersController::class, 'index'])->middleware('auth')->name('users');
 
@@ -69,7 +56,7 @@ Route::post('/addPrice', [PriceController::class, 'insert'])->middleware('auth')
 
 Route::post('/receiveProduct', [ProductController::class, 'update'])->middleware('auth')->name('receiveProduct');
 
-Route::post('/successProduct', [ProductController::class, 'success'])->middleware('auth')->name('successProduct');
+Route::post('/successProduct', [ProductController::class, 'successProduct'])->middleware('auth')->name('successProduct');
 
 Route::post('/addBranch', [BranchController::class, 'insert'])->middleware('auth')->name('addBranch');
 

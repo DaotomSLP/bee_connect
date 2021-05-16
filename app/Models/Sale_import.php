@@ -23,7 +23,6 @@ class Sale_import extends Model
         'updated_at',
         'branch_id',
         'total',
-        'sale_type'
     ];
 
     /**

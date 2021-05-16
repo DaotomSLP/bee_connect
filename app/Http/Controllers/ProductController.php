@@ -125,6 +125,152 @@ class ProductController extends Controller
         }
     }
 
+    public function send(Request $request)
+    {
+        $provinces = Provinces::all();
+        $districts = Districts::all();
+        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
+
+        $result = Product::query();
+
+        $result->select(
+            'products.*',
+            'send.branch_name as sender_branch_name',
+            'receive.branch_name as receiver_branch_name'
+        )
+            ->join('branchs As send', 'products.sender_branch_id', 'send.id')
+            ->join('branchs As receive', 'products.receiver_branch_id', 'receive.id')
+            ->where('products.type', 'domestic');
+
+        if (Auth::user()->is_admin != '1') {
+            $result->where('products.sender_branch_id', Auth::user()->branch_id);
+        }
+
+        if ($request->send_date != '') {
+            $result->whereDate('products.created_at', '=',  $request->send_date);
+        }
+        if ($request->id != '') {
+            $result->where('products.id', $request->id);
+        }
+        if ($request->status != '') {
+            $result->where('status', $request->status);
+        }
+
+        if ($request->receive_branch != '') {
+            $result->where('receiver_branch_id', $request->receive_branch);
+        }
+
+        $all_products = $result->orderBy('products.id', 'desc')
+            ->get();
+
+        if ($request->page != '') {
+            $result->offset(($request->page - 1) * 25);
+        }
+
+        $products = $result->orderBy('products.id', 'desc')
+            ->limit(25)
+            ->get();
+
+        $pagination = [
+            'offsets' =>  ceil(sizeof($all_products) / 25),
+            'offset' => $request->page ? $request->page : 1,
+            'all' => sizeof($all_products)
+        ];
+
+        return view('send', compact('provinces', 'districts', 'branchs', 'products', 'pagination'));
+    }
+
+    public function receive(Request $request)
+    {
+        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
+
+        $result = Product::query();
+
+        $result->select('products.*', 'branchs.branch_name')
+            ->join('branchs', 'products.receiver_branch_id', 'branchs.id')
+            ->where('products.receiver_branch_id', Auth::user()->branch_id);
+
+        if ($request->receive_date != '') {
+            $result->whereDate('products.created_at', '=',  $request->receive_date);
+        }
+        if ($request->id != '') {
+            $result->where('products.id', $request->id);
+        }
+
+        if ($request->status != '') {
+            $result->where('status', $request->status);
+        }
+
+        if ($request->send_branch != '') {
+            $result->where('sender_branch_id', $request->send_branch);
+        }
+
+        $all_products = $result->orderBy('products.id', 'desc')
+            ->get();
+
+        if ($request->page != '') {
+            $result->offset(($request->page - 1) * 25);
+        }
+
+        $products = $result->orderBy('products.id', 'desc')
+            ->limit(25)
+            ->get();
+
+        $pagination = [
+            'offsets' =>  ceil(sizeof($all_products) / 25),
+            'offset' => $request->page ? $request->page : 1,
+            'all' => sizeof($all_products)
+        ];
+
+        return view('receive', compact('products', 'pagination', 'branchs'));
+    }
+
+    public function success(Request $request)
+    {
+        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
+
+        $result = Product::query();
+
+        $result->select('products.*', 'branchs.branch_name')
+            ->join('branchs', 'products.receiver_branch_id', 'branchs.id')
+            ->where('products.receiver_branch_id', Auth::user()->branch_id)
+            ->where('type', 'domestic');
+
+        if ($request->receive_date != '') {
+            $result->whereDate('products.created_at', '=',  $request->receive_date);
+        }
+        if ($request->id != '') {
+            $result->where('products.id', $request->id);
+        }
+
+        if ($request->status != '') {
+            $result->where('status', $request->status);
+        }
+
+        if ($request->send_branch != '') {
+            $result->where('sender_branch_id', $request->send_branch);
+        }
+
+        $all_products = $result->orderBy('products.id', 'desc')
+            ->get();
+
+        if ($request->page != '') {
+            $result->offset(($request->page - 1) * 25);
+        }
+
+        $products = $result->orderBy('products.id', 'desc')
+            ->limit(25)
+            ->get();
+
+        $pagination = [
+            'offsets' =>  ceil(sizeof($all_products) / 25),
+            'offset' => $request->page ? $request->page : 1,
+            'all' => sizeof($all_products)
+        ];
+
+        return view('success', compact('products', 'pagination', 'branchs'));
+    }
+
     public function paidProduct(Request $request)
     {
         if (Product::where('id', $request->id)->update(['payment_status' => 'paid'])) {
@@ -143,16 +289,7 @@ class ProductController extends Controller
         }
     }
 
-    public function updateImport(Request $request)
-    {
-        if (Import_products::where('id', $request->id)->update(['received_at' => Carbon::now(), 'status' => 'received'])) {
-            return redirect('receive')->with(['error' => 'insert_success']);
-        } else {
-            return redirect('receive')->with(['error' => 'not_insert']);
-        }
-    }
-
-    public function success(Request $request)
+    public function successProduct(Request $request)
     {
         if (sizeof(Product::where('id', $request->id)
             ->where('status', 'received')->get()) == 1) {

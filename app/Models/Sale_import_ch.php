@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Import_products extends Model
+class Sale_import_ch extends Model
 {
     use HasFactory;
 
@@ -15,26 +15,15 @@ class Import_products extends Model
      *
      * @var string
      */
-    protected $table = 'import_products';
+    protected $table = 'sale_import_ch';
 
     protected $fillable = [
         'id',
-        'code',
         'created_at',
         'updated_at',
-        'received_at',
-        'success_at',
-        'receiver_branch_id',
-        'weight',
-        'weight_type',
-        'base_price',
-        'total_base_price',
-        'real_price',
-        'total_real_price',
-        'sale_price',
-        'total_sale_price',
-        'status',
-        'lot_id'
+        'branch_id',
+        'total',
+        'sale_type'
     ];
 
     /**

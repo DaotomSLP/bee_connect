@@ -7,64 +7,61 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>ລາຍລະອຽດການນຳເຂົ້າ</h3>
+                    <h3>ຮັບສິນຄ້າ</h3>
                 </div>
             </div>
             <div class="clearfix"></div>
 
-            <div class="row">
-                <div class="col">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ຄົ້ນຫາ</h2>
-                        </div>
-                        <div class="x_content">
-                            <form method="GET" action="/importDetailForUser?id=25">
-                                {{-- @csrf --}}
-                                <input type="hidden" value="{{ Request::input('id') }}" name="id">
+            @if (session()->get('error') == 'not_insert')
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <span>
+                        <b> Danger - </b>ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່</span>
+                </div>
+            @elseif(session()->get( 'error' )=='insert_success')
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="material-icons">close</i>
+                    </button>
+                    <span>
+                        <b> Success - </b>ບັນທຶກຂໍ້ມູນສຳເລັດ</span>
+                </div>
+            @endif
+
+            <!-- Modal -->
+            <div class="modal fade" id="new_price_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="POST" action="/editSalePriceCh">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title" id="exampleModalLabel">ແກ້ໄຂລາຄາ</h2>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ເລກບິນ</label>
-                                            <input class="form-control form-control-sm"
-                                                value="{{ Request::input('product_id') }}" name="product_id">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ສະຖານະ</label>
-                                            <select class="form-control form-control-sm" id="select_status" name="status">
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                <option {{ Request::input('status') == 'sending' ? 'selected' : '' }}
-                                                    value="sending">
-                                                    ກຳລັງສົ່ງ
-                                                </option>
-                                                <option {{ Request::input('status') == 'received' ? 'selected' : '' }}
-                                                    value="received">
-                                                    ຮອດແລ້ວ
-                                                </option>
-                                                <option {{ Request::input('status') == 'success' ? 'selected' : '' }}
-                                                    value="success">
-                                                    ສຳເລັດ
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ວັນທີຮັບ</label>
-                                            <input class="form-control form-control-sm" type="date"
-                                                value="{{ Request::input('send_date') }}" name="send_date">
+                                            <label class="bmd-label-floating">ລາຄາຂາຍ</label>
+                                            <input type="hidden" id="sale_item_id" name="sale_item_id">
+                                            <input type="hidden" id="weight" name="weight">
+                                            <input type="hidden" id="sale_id" name="sale_id">
+                                            <input type="hidden" id="old_price" name="old_price">
+                                            <input type="number" min="100" id="new_price" class="form-control"
+                                                name="new_price" required>
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-primary pull-right px-4">ຄົ້ນຫາ</button>
-                                <div class="clearfix"></div>
-                            </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ບັນທຶກ</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
 
@@ -72,7 +69,7 @@
                 <div class="col-md-12">
                     <div class="x_panel">
                         <div>
-                            <h2 class="card-title ">ລາຍການສິນຄ້າຂອງເລກບິນທີ່ {{ Request::input('id') }}</h2>
+                            <h2>ລາຍການສິນຄ້າຂອງເລກບິນທີ່ {{ Request::input('id') }}</h2>
                         </div>
                         <div class="x_content">
                             <div class="table-responsive">
@@ -85,22 +82,13 @@
                                             ລະຫັດເຄື່ອງ
                                         </th>
                                         <th>
-                                            ຮັບມາວັນທີ່
-                                        </th>
-                                        <th>
-                                            ຂາຍວັນທີ່
-                                        </th>
-                                        <th>
-                                            ສະຖານະ
-                                        </th>
-                                        <th>
                                             ນ້ຳໜັກ/ຂະໜາດ
                                         </th>
-                                        {{-- <th>
-                                            ຕົ້ນທຶນ
-                                        </th> --}}
                                         <th>
                                             ລາຄາຂາຍ
+                                        </th>
+                                        <th>
+                                            ລວມເປັນເງິນ
                                         </th>
                                     </thead>
                                     <tbody>
@@ -113,21 +101,16 @@
                                                     {{ $import_product->code }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->received_at ? date('d-m-Y', strtotime($import_product->received_at)) : '' }}
-                                                </td>
-                                                <td>
-                                                    {{ $import_product->success_at ? date('d-m-Y', strtotime($import_product->success_at)) : '' }}
-                                                </td>
-                                                <td>
-                                                    {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
-                                                </td>
-                                                <td>
                                                     {{ $import_product->weight }}
                                                     {{ $import_product->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກິໂລກຼາມ' }}
                                                 </td>
-                                                {{-- <td>
-                                                    {{ number_format($import_product->total_real_price) }}
-                                                </td> --}}
+                                                <td>
+                                                    {{ number_format($import_product->sale_price) }}<a type="button"
+                                                        onclick="change_price({{ $import_product->id . ',' . $import_product->sale_price . ',' . $import_product->weight . ',' . $import_product->sale_id }})"
+                                                        data-toggle="modal" data-target="#new_price_modal">
+                                                        <i class="material-icons">create</i>
+                                                    </a>
+                                                </td>
                                                 <td>
                                                     {{ number_format($import_product->total_sale_price) }}
                                                 </td>
@@ -196,6 +179,13 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
+        function change_price(id, price, weight, sale_id) {
+            $("#new_price").val(price);
+            $("#old_price").val(price);
+            $("#sale_item_id").val(id);
+            $("#weight").val(weight);
+            $("#sale_id").val(sale_id);
+        }
 
     </script>
 @endsection

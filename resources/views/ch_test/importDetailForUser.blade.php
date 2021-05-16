@@ -19,7 +19,7 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="GET" action="/importDetailForUser?id=25">
+                            <form method="GET" action="/importDetailForUserCh?id=25">
                                 {{-- @csrf --}}
                                 <input type="hidden" value="{{ Request::input('id') }}" name="id">
                                 <div class="row">
@@ -119,7 +119,7 @@
                                                     {{ $import_product->success_at ? date('d-m-Y', strtotime($import_product->success_at)) : '' }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
+                                                    {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ສົ່ງຮອດສາຂາ' : ($import_product->status == 'waiting' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ')) }}
                                                 </td>
                                                 <td>
                                                     {{ $import_product->weight }}

@@ -65,31 +65,6 @@
 
                         @if (Auth::user()->is_tester == 'yes')
 
-                            {{-- china test --}}
-                            <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (ທົດສອບ) <span
-                                        class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li
-                                        class="{{ Request::is('importCh') || Request::is('importCh/*') ? 'current-page' : '' }}">
-                                        <a href="/importCh">ນຳເຂົ້າສິນຄ້າ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('importViewCh') || Request::is('importViewCh/*') || Request::is('importDetail*') ? 'current-page' : '' }}">
-                                        <a href="/importViewCh">ລາຍການນຳເຂົ້າສິນຄ້າ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('importProductTrackCh') || Request::is('importProductTrackCh/*') ? 'current-page' : '' }}">
-                                        <a href="/importProductTrackCh">ຕິດຕາມສິນຄ້າ</a>
-                                    </li>
-                                    <li class="{{ Request::is('dailyImportCh') ? 'current-page' : '' }}"><a
-                                            href="/dailyImportCh">ລາຍງານປະຈຳວັນ</a></li>
-                                    <li
-                                        class="{{ Request::is('priceImportCh') || Request::is('priceImportCh/*') ? 'current-page' : '' }}">
-                                        <a href="/priceImportCh">ຕັ້ງຄ່າລາຄາ</a>
-                                    </li>
-                                </ul>
-                            </li>
-
                             {{-- Thai --}}
                             <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span
                                         class="fa fa-chevron-down"></span></a>
@@ -174,8 +149,7 @@
                         </li>
 
                         {{-- china --}}
-                        <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ <span
-                                    class="fa fa-chevron-down"></span></a>
+                        <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
                                 {{-- <li
                                     class="{{ Request::is('addChinaProduct') || Request::is('addChinaProduct/*') ? 'current-page' : '' }}">
@@ -213,45 +187,6 @@
                         </li>
 
                         @if (Auth::user()->is_tester == 'yes')
-
-                            {{-- china test --}}
-                            <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (ທົດສອບ) <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li
-                                        class="{{ Request::is('addChinaProductCh') || Request::is('addChinaProductCh/*') ? 'current-page' : '' }}">
-                                        <a href="/addChinaProductCh">ສັ່ງນຳເຂົ້າສິນຄ້າ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('importCh') || Request::is('importCh/*') ? 'current-page' : '' }}">
-                                        <a href="/importCh">ນຳເຂົ້າສິນຄ້າ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('importViewForUserCh') || Request::is('importViewForUserCh/*') || Request::is('importDetailForUser*') ? 'current-page' : '' }}">
-                                        <a href="/importViewForUserCh">ລາຍການນຳເຂົ້າສິນຄ້າ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('importProductTrackForUserCh') || Request::is('importProductTrackForUserCh/*') ? 'current-page' : '' }}">
-                                        <a href="/importProductTrackForUserCh">ຕິດຕາມສິນຄ້າ</a>
-                                    </li>
-
-                                    <li
-                                        class="{{ Request::is('saleImportCh') || Request::is('saleImportCh/*') ? 'current-page' : '' }}">
-                                        <a href="/saleImportCh">ຂາຍສິນຄ້າ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('saleViewCh') || Request::is('saleViewCh/*') || Request::is('saleDetail') || Request::is('saleDetail/*') ? 'current-page' : '' }}">
-                                        <a href="/saleViewCh">ປະຫວັດການຂາຍ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('saleImportPriceCh') || Request::is('saleImportPriceCh/*') ? 'current-page' : '' }}">
-                                        <a href="/saleImportPriceCh">ຕັ້ງຄ່າລາຄາຂາຍ</a>
-                                    </li>
-
-                                    <li class="{{ Request::is('dailyImportCh') ? 'current-page' : '' }}"><a
-                                            href="/dailyImportCh">ລາຍງານປະຈຳວັນ</a></li>
-                                </ul>
-                            </li>
-
                             {{-- thai --}}
                             <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span
                                         class="fa fa-chevron-down"></span></a>
