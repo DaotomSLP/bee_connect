@@ -1,14 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\ImportProductApi;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ExpenditureController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PriceController;
-use App\Models\Import_products;
 
 require('th_routes.php');
 require('ch_routes.php');
@@ -93,3 +92,5 @@ Route::post('/insertAdmin', [UsersController::class, 'insertAdmin'])->middleware
 Route::get('/editAdmin/{id}', [UsersController::class, 'editAdmin'])->middleware('auth')->name('editAdmin');
 
 Route::post('/updateAdmin', [UsersController::class, 'updateAdmin'])->middleware('auth')->name('updateAdmin');
+
+Route::get('/api/import_products/{id}', [ImportProductApi::class, 'import_products'])->name('import_products_api');
