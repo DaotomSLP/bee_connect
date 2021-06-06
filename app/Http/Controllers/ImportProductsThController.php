@@ -207,7 +207,7 @@ class ImportProductsThController extends Controller
 
   public function saleImportTh(Request $request)
   {
-    $sale_price_gram = Sale_prices::where('weight_type', 'gram')
+    $sale_price_gram = Sale_prices::where('weight_type', 'kg')
       ->where('branch_id',  Auth::user()->branch_id)
       ->orderBy('id', 'DESC')->first();
 
@@ -251,7 +251,7 @@ class ImportProductsThController extends Controller
         $count++;
       }
 
-      $default_price_kg = Price_imports::where('weight_type', 'gram')
+      $default_price_kg = Price_imports::where('weight_type', 'kg')
         ->orderBy('id', 'DESC')->first();
 
       $default_price_m = Price_imports::where('weight_type', 'm')
@@ -423,7 +423,7 @@ class ImportProductsThController extends Controller
             }
           } else {
             import_products_th::where('sale_id', $sale_import->id)
-              ->where('weight_type', 'gram')
+              ->where('weight_type', 'kg')
               ->update([
                 'status' => 'received',
                 'success_at' => '',
@@ -528,7 +528,7 @@ class ImportProductsThController extends Controller
             }
           } else {
             import_products_th::where('sale_id', $sale_import->id)
-              ->where('weight_type', 'gram')
+              ->where('weight_type', 'kg')
               ->update([
                 'status' => 'received',
                 'success_at' => '',

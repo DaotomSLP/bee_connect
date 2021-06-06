@@ -51,7 +51,7 @@
                                             <label class="bmd-label-floating">ຫົວໜ່ວຍ</label>
                                             <select class="form-control" name="weight_type" required>
                                                 <option value="">ເລືອກ</option>
-                                                <option value="gram">ກິໂລກຼາມ</option>
+                                                <option value="kg">ກິໂລກຼາມ</option>
                                                 <option value="m">ແມັດກ້ອນ</option>
                                             </select>
                                         </div>
@@ -88,8 +88,8 @@
                                                 <option {{ Request::input('unit') == 'm' ? 'selected' : '' }} value="m">
                                                     ແມັດກ້ອນ
                                                 </option>
-                                                <option {{ Request::input('unit') == 'gram' ? 'selected' : '' }}
-                                                    value="gram">
+                                                <option {{ Request::input('unit') == 'kg' ? 'selected' : '' }}
+                                                    value="kg">
                                                     ກຼາມ
                                                 </option>
                                             </select>

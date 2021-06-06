@@ -15,7 +15,7 @@ class SaleImportProductsController extends Controller
 {
   public function saleImport(Request $request)
   {
-    $sale_price_gram = Sale_prices::where('weight_type', 'gram')
+    $sale_price_gram = Sale_prices::where('weight_type', 'kg')
       ->where('branch_id',  Auth::user()->branch_id)
       ->orderBy('id', 'DESC')->first();
 
@@ -93,7 +93,7 @@ class SaleImportProductsController extends Controller
             }
           } else {
             Import_products::where('sale_id', $sale_import->id)
-              ->where('weight_type', 'gram')
+              ->where('weight_type', 'kg')
               ->update([
                 'status' => 'received',
                 'success_at' => '',

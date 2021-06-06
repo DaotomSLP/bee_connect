@@ -82,7 +82,7 @@
                                                 <label class="bmd-label-floating">ຫົວໜ່ວຍ</label>
                                                 <select class="form-control" name="weight_type" required>
                                                     <option value="">ເລືອກ</option>
-                                                    <option value="gram">kg</option>
+                                                    <option value="kg">kg</option>
                                                     <option value="m">ແມັດກ້ອນ</option>
                                                 </select>
                                             </div>

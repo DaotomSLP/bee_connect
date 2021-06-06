@@ -26,7 +26,7 @@
     </p>
     <p>ຂະໜາດ :
         <?php echo $weight; ?>
-        <?php echo $weight_type === 'gram' ? 'kg' : 'ແມັດກ້ອນ'; ?>
+        <?php echo $weight_type === 'kg' ? 'kg' : 'ແມັດກ້ອນ'; ?>
     </p>
     <p>ສົ່ງວັນທີ :
         <?php echo $date; ?>

@@ -275,7 +275,7 @@
                     } else {
                         items.push({
                             code: code,
-                            weight_type: 'gram',
+                            weight_type: 'kg',
                             weight: 0,
                         })
                         codes.push(code);
@@ -298,7 +298,7 @@
             var html_table = '';
             items.slice().reverse().forEach(item => {
                 html_table +=
-                    `<tr><td class="py-0"><div class="form-group"><input value='${item.code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><input type="number" value=${item.weight} step="0.001" class="form-control form-control-sm" name="weight[]" onchange=changeWeight(this.value,'${item.code}') required></div></td><td class="py-0"><div class="form-group"><select onchange=changeWeightType(this.value,'${item.code}') class="form-control form-control-sm" name="weight_type[]"required><option value="gram" ${item.weight_type !=='m'?'selected':''}>ກິໂລກຼາມ</option> <option value="m" ${item.weight_type ==='m'?'selected':''}>ແມັດກ້ອນ</option></select></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteItem("${item.code}")> <i class="material-icons">clear</i></a></div></td></tr>`
+                    `<tr><td class="py-0"><div class="form-group"><input value='${item.code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><input type="number" value=${item.weight} step="0.001" class="form-control form-control-sm" name="weight[]" onchange=changeWeight(this.value,'${item.code}') required></div></td><td class="py-0"><div class="form-group"><select onchange=changeWeightType(this.value,'${item.code}') class="form-control form-control-sm" name="weight_type[]"required><option value="kg" ${item.weight_type !=='m'?'selected':''}>ກິໂລກຼາມ</option> <option value="m" ${item.weight_type ==='m'?'selected':''}>ແມັດກ້ອນ</option></select></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteItem("${item.code}")> <i class="material-icons">clear</i></a></div></td></tr>`
             })
             $('#product_item_table').html(html_table)
         }
@@ -324,7 +324,7 @@
                 weight_type: weight_type,
             });
 
-            if (items.filter(filter => filter.weight_type === 'gram').length <= 0) {
+            if (items.filter(filter => filter.weight_type === 'kg').length <= 0) {
                 $("#all_weight_kg").attr("required", false);
             } else {
                 $("#all_weight_kg").attr("required", true);

@@ -116,7 +116,7 @@ class ImportProductsControllerCh extends Controller
         $count++;
       }
 
-      $default_price_kg = Price_imports::where('weight_type', 'gram')
+      $default_price_kg = Price_imports::where('weight_type', 'kg')
         ->orderBy('id', 'DESC')->first();
 
       $default_price_m = Price_imports::where('weight_type', 'm')
@@ -286,7 +286,7 @@ class ImportProductsControllerCh extends Controller
             }
           } else {
             Import_products_ch::where('sale_id', $sale_import->id)
-              ->where('weight_type', 'gram')
+              ->where('weight_type', 'kg')
               ->update([
                 'status' => 'received',
                 'success_at' => '',
@@ -342,7 +342,7 @@ class ImportProductsControllerCh extends Controller
     //     ]);
     //   }
 
-    //   $prod_kg = Import_products_ch::where('weight_type', 'gram')->where('lot_id', $value->lot_id)
+    //   $prod_kg = Import_products_ch::where('weight_type', 'kg')->where('lot_id', $value->lot_id)
     //     ->first();
 
     //   if ($prod_kg) {

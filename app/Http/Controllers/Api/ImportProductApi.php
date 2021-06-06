@@ -11,7 +11,7 @@ class ImportProductApi extends Controller
   {
     $import_product = Import_products::query();
 
-    $import_product->select('import_products.code', 'import_products.status', 'import_products.created_at as receive_at', 'branchs.branch_name', 'branchs.phone as branch_contact')
+    $import_product->select('import_products.code', 'import_products.status', 'import_products.created_at as receive_at', 'import_products.weight', 'import_products.weight_type', 'branchs.branch_name', 'branchs.phone as branch_contact')
       ->join('lot', 'lot.id', 'import_products.lot_id')
       ->join('branchs', 'branchs.id', 'lot.receiver_branch_id')
       ->where('import_products.code', $id);
@@ -22,6 +22,8 @@ class ImportProductApi extends Controller
     } else {
       $import_product->code = $id;
       $import_product->status = "waiting";
+      $import_product->weight = "";
+      $import_product->weight_type = "";
       $import_product->receive_at = "";
       $import_product->branch_name = "";
       $import_product->branch_contact = "";
