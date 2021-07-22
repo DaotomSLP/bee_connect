@@ -36,6 +36,8 @@
                         </div>
                         <div class="card-body">
                             <form method="GET" action="/editServiceCharge">
+                            @if (isset($service_charges) && sizeof($service_charges) > 0)
+
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead class=" text-primary">
@@ -53,6 +55,7 @@
                                             </th>
                                         </thead>
                                         <tbody>
+
                                                 @csrf
                                                 @foreach ($service_charges as $key => $service_charge)
                                                     <tr>
@@ -74,6 +77,7 @@
                                 <input type="hidden" value="{{ $service_charges[0]->lot_id }}" name="lot_id">
                             <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກການແກ້ໄຂ</button>
                             <div class="clearfix"></div>
+                            @endif
                                 </form>
                         </div>
                     </div>
