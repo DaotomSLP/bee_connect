@@ -345,7 +345,7 @@
                                                         </a>
                                                 </td>
                                                 <td>
-                                                    {{ number_format($lot->total_main_price) }} ກີບ
+                                                    <p class="text-danger font-weight-bold">{{ number_format($lot->total_main_price) }} ກີບ</p>
                                                 </td>
                                                 @if (Auth::user()->is_admin == 1)
                                                     <td>
