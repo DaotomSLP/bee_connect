@@ -9,6 +9,7 @@ use App\Models\Import_products;
 use App\Models\Lots;
 use App\Models\Price_imports;
 use App\Models\Provinces;
+use App\Models\Service_charge;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -184,6 +185,7 @@ class ImportProductsController extends Controller
       $sum_price = 0;
       $sum_m_weight = 0;
       $count = 0;
+
       foreach ($request->weight_type as $weight_type) {
         if ($weight_type == 'm') {
           $sum_m_weight += $request->weight[$count];
@@ -194,6 +196,13 @@ class ImportProductsController extends Controller
         }
 
         $count++;
+      }
+
+      $sum_service_charge = 0;
+      if(isset($request->service_item_price)){
+        foreach ($request->service_item_price as $key => $price) {
+          $sum_service_charge+=$price;
+        }
       }
 
       $default_price_kg = Price_imports::where('weight_type', 'kg')
@@ -216,7 +225,7 @@ class ImportProductsController extends Controller
       $lot->total_base_price_kg = $sum_kg_base_price;
       $lot->total_base_price_m = $sum_m_base_price;
       $lot->total_base_price = $sum_base_price;
-      $lot->total_main_price = $sum_price + $request->fee + $request->pack_price;
+      $lot->total_main_price = $sum_price + $request->fee + $request->pack_price + $sum_service_charge;
       $lot->total_price = $sum_price;
       $lot->total_unit_m = $sum_m_price;
       $lot->total_unit_kg = $sum_kg_price;
@@ -228,6 +237,7 @@ class ImportProductsController extends Controller
       $lot->lot_base_price_kg = $request->base_price_kg;
       $lot->lot_real_price_m = $request->real_price_m;
       $lot->lot_base_price_m = $request->base_price_m;
+      $lot->service_charge = $sum_service_charge;
 
       if ($lot->save()) {
         $count = 0;
@@ -263,6 +273,17 @@ class ImportProductsController extends Controller
 
           $count++;
         }
+
+      if(isset($request->service_item_price)){
+        foreach ($request->service_item_price as $key => $price) {
+          $service_charge = new Service_charge;
+          $service_charge->name = $request->service_item_name[$key];
+          $service_charge->price = $price;
+          $service_charge->lot_id = $lot->id;
+          $service_charge->save();
+        }
+      }
+
         return redirect('import')->with(['error' => 'insert_success', 'id' => $lot->id]);
       } else {
         return redirect('import')->with(['error' => 'not_insert']);
@@ -446,6 +467,7 @@ class ImportProductsController extends Controller
       'price' => $lot->total_main_price,
       'pack_price' => $lot->pack_price,
       'fee' => $lot->fee,
+      'service_charge' => $lot->service_charge,
     ];
     $pdf = PDF::loadView('pdf.import', $data);
     return $pdf->stream('document.pdf');
@@ -592,6 +614,30 @@ class ImportProductsController extends Controller
     ];
 
     return view('allImportDetail', compact('branchs', 'import_products', 'pagination'));
+  }
+
+  public function serviceChargeDetail(Request $request)
+  {
+    $service_charges = Service_charge::where('lot_id',$request->id)->get();
+    return view('serviceChargeDetail', compact('service_charges'));
+  }
+
+  public function editServiceCharge(Request $request)
+  {
+    if(isset($request->service_item_price)){
+      $sum = 0;
+      foreach ($request->service_item_price as $key => $price) {
+        $sum += $price;
+        Service_charge::where('id', $request->service_item_id[$key])->update(
+          [
+            'name' => $request->service_item_name[$key],
+            'price' => $price
+          ]
+        );
+      }
+      Lots::where('id',$request->lot_id)->update(['service_charge'=>$sum]);
+      return redirect('serviceChargeDetail?id=' . $request->lot_id)->with(['error' => 'insert_success']);
+    }
   }
 
   public function importProductTrackForUser(Request $request)

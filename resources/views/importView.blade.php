@@ -265,6 +265,9 @@
                                         <th>
                                             ຄ່າເປົາ
                                         </th>
+                                        <th>
+                                            ຄ່າບໍລິການເພີ່ມເຕີມ
+                                        </th>
                                         @if (Auth::user()->is_admin == 1)
                                             <th>
                                                 ລວມເປັນເງິນທັງໝົດ
@@ -334,6 +337,12 @@
                                                 </td>
                                                 <td>
                                                     {{ number_format($lot->pack_price) }} ກີບ
+                                                </td>
+                                                <td>
+                                                    <a
+                                                            href="/{{ Auth::user()->is_admin == 1 ? 'serviceChargeDetail' : 'serviceChargeDetailForUser' }}?id={{ $lot->id }}">
+                                                             {{ number_format($lot->service_charge) }} ກີບ
+                                                        </a>
                                                 </td>
                                                 <td>
                                                     {{ number_format($lot->total_main_price) }} ກີບ

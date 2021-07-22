@@ -150,6 +150,56 @@
                             <div class="col">
                                 <div class="x_panel">
                                     <div>
+                                        <h2 class="mr-3">ຄ່າບໍລິການເພີ່ມເຕີມ</h2>
+                                        
+                                    </div>
+                                    <div class="x-content">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ຊື່ບໍລິການ</label>
+                                                    <input class="form-control form-control-sm" id="service_charge_name">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ລາຄາ</label>
+                                                    <input class="form-control form-control-sm" id="service_charge_price">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <button type="button" class="btn btn-sm btn-primary px-3" onclick="addServiceCharge()">ເພີ່ມ</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead class=" text-primary">
+                                                    <th>
+                                                        ລະຫັດເຄື່ອງ
+                                                    </th>
+                                                    <th>
+                                                        ນ້ຳໜັກ/ຂະໜາດ
+                                                    </th>
+                                                </thead>
+                                                <tbody id="service_item_table">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col">
+                                <div class="x_panel">
+                                    <div>
                                         <h2>ເລຶອກບ່ອນສົ່ງ</h2>
                                     </div>
                                     <div class="x-content">
@@ -330,6 +380,36 @@
                 $("#all_weight_kg").attr("required", true);
             }
 
+        }
+
+        var service_charge = []
+        function addServiceCharge(){
+            if($("#service_charge_name").val() === "" || $("#service_charge_price").val() === "" ){
+                alert("ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບ")
+            }else{
+
+                service_charge.push(
+                    {
+                        id:service_charge.length+1,
+                        name:$("#service_charge_name").val(),
+                        price:$("#service_charge_price").val()
+                    }
+                );
+                generateServiceChargeItems();
+                $("#service_charge_name").val("")
+                $("#service_charge_price").val("")
+            }
+        }
+
+        function generateServiceChargeItems(){
+            let service_charge_html = service_charge.map(val=>`<tr><td class="py-0"><div class="form-group"><input value='${val.name}' class="form-control form-control-sm" name="service_item_name[]" required readonly></div></td><td class="py-0"><div class="form-group"><input type="number" value=${val.price} step="0.001" class="form-control form-control-sm" name="service_item_price[]" required readonly></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteServiceItem(${val.id})> <i class="material-icons">clear</i></a></div></td></tr>`);
+            $("#service_item_table").html(service_charge_html)
+            
+        }
+
+        function deleteServiceItem(id){
+            service_charge = service_charge.filter(val=>val.id!==id);
+            generateServiceChargeItems();
         }
 
     </script>

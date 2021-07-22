@@ -56,6 +56,10 @@ Route::post('/importProduct', [ImportProductsController::class, 'insertImport'])
 
 Route::get('/receiveImport', [ImportProductsController::class, 'receiveImport'])->middleware('auth')->name('receiveImport');
 
+Route::get('/serviceChargeDetail', [ImportProductsController::class, 'serviceChargeDetail'])->middleware('auth')->name('serviceChargeDetail');
+
+Route::get('/editServiceCharge', [ImportProductsController::class, 'editServiceCharge'])->middleware('auth')->name('editServiceCharge');
+
 Route::get('/saleView', [SaleImportProductsController::class, 'saleView'])->middleware('auth')->name('saleView');
 
 Route::get('/saleImport', [SaleImportProductsController::class, 'saleImport'])->middleware('auth')->name('saleImport');

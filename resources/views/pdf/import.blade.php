@@ -44,7 +44,11 @@
             {{ number_format($pack_price) }} ກີບ
         </p>
     @endif
-
+    @if ($service_charge)
+        <p style="font-size: 11pt;">ຄ່າບໍລິການເພີ່ມເຕີມ :
+            {{ number_format($service_charge) }} ກີບ
+        </p>
+    @endif
 
 
     <hr>

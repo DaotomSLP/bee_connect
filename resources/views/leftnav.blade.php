@@ -46,7 +46,7 @@
                                     <a href="/import">ນຳເຂົ້າສິນຄ້າ</a>
                                 </li>
                                 <li
-                                    class="{{ Request::is('importView') || Request::is('importView/*') || Request::is('importDetail*') ? 'current-page' : '' }}">
+                                    class="{{ Request::is('importView') || Request::is('importView/*') || Request::is('serviceChargeDetail*') || Request::is('importDetail*') ? 'current-page' : '' }}">
                                     <a href="/importView">ລາຍການນຳເຂົ້າສິນຄ້າ</a>
                                 </li>
                                 <li

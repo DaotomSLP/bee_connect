@@ -39,7 +39,8 @@ class Lots extends Model
         'lot_base_price_kg',
         'lot_real_price_kg',
         'lot_base_price_m',
-        'lot_real_price_m'
+        'lot_real_price_m',
+        'service_charge'
     ];
 
     /**
