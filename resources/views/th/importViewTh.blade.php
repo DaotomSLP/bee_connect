@@ -243,13 +243,13 @@
                                         <th>
                                             ຮັບມາວັນທີ່
                                         </th>
-                                        <th>
+                                        {{-- <th>
                                             kg
-                                        </th>
+                                        </th> --}}
                                         @if (Auth::user()->is_admin == 1)
-                                            <th>
+                                            {{-- <th>
                                                 ລວມຕົ້ນທຶນ
-                                            </th>
+                                            </th> --}}
                                             <th>
                                                 ລວມລາຄາເຄື່ອງ
                                             </th>
@@ -277,10 +277,11 @@
                                             <th>
                                                 ລວມຂາຍໄດ້
                                             </th>
+                                            <th>
+                                                ກຳໄລ
+                                            </th>
                                         @endif
-                                        <th>
-                                            ກຳໄລ
-                                        </th>
+
                                         <th>
                                             ສະຖານະ
                                         </th>
@@ -290,9 +291,9 @@
                                         <th>
 
                                         </th>
-                                        <th>
+                                        {{-- <th>
 
-                                        </th>
+                                        </th> --}}
                                         <th>
 
                                         </th>
@@ -316,42 +317,43 @@
                                                 @endif
 
                                                 <td>
-                                                    {{ date('d-m-Y', strtotime($lot->created_at)) }}
+                                                    {{ date('d-m-Y-H:i', strtotime($lot->created_at)) }}
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     {{ $lot->weight_kg }}
-                                                </td>
+                                                </td> --}}
                                                 @if (Auth::user()->is_admin == 1)
-                                                    <td>
-                                                        {{ number_format($lot->total_base_price) }} ກີບ
-                                                    </td>
+                                                    {{-- <td>
+                                                        {{ number_format($lot->total_base_price) }} ບາດ
+                                                    </td> --}}
                                                 @endif
                                                 <td>
-                                                    {{ number_format($lot->total_price) }} ກີບ
+                                                    {{ number_format($lot->total_price) }} ບາດ
                                                 </td>
                                                 <td>
-                                                    {{ number_format($lot->fee) }} ກີບ
+                                                    {{ number_format($lot->fee) }} ບາດ
                                                 </td>
                                                 <td>
-                                                    {{ number_format($lot->pack_price) }} ກີບ
+                                                    {{ number_format($lot->pack_price) }} ບາດ
                                                 </td>
                                                 <td>
-                                                    {{ number_format($lot->total_main_price) }} ກີບ
+                                                    <p class="font-weight-bold text-danger">
+                                                        {{ number_format($lot->total_main_price) }} ບາດ</p>
                                                 </td>
-                                                @if (Auth::user()->is_admin == 1)
+                                                {{-- @if (Auth::user()->is_admin == 1)
                                                     <td>
                                                         {{ number_format($lot->total_price - $lot->total_base_price) }}
-                                                        ກີບ
+                                                        ບາດ
                                                     </td>
-                                                @endif
+                                                @endif --}}
 
                                                 @if (Auth::user()->is_admin != 1)
                                                     <td>
-                                                        {{ number_format($lot->total_sale_price) }} ກີບ
+                                                        {{ number_format($lot->total_sale_price) }} ບາດ
                                                     </td>
                                                     <td>
                                                         {{ number_format($lot->total_sale_price - $lot->total_price) }}
-                                                        ກີບ
+                                                        ບາດ
                                                     </td>
                                                 @endif
                                                 <td>
@@ -376,7 +378,7 @@
 
                                                     @endif
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     @if ($lot->status != 'success' && Auth::user()->is_owner == 1)
                                                         <a type="button"
                                                             onclick="change_weight({{ $lot->id . ',' . ($lot->lot_base_price_kg ? $lot->lot_base_price_kg : 0) . ',' . ($lot->lot_real_price_kg ? $lot->lot_real_price_kg : 0) . ',' . ($lot->lot_base_price_m ? $lot->lot_base_price_m : 0) . ',' . ($lot->lot_real_price_m ? $lot->lot_real_price_m : 0) . ',' . ($lot->weight_kg ? $lot->weight_kg : 0) . ',' . ($lot->fee ? $lot->fee : 0) . ',' . ($lot->pack_price ? $lot->pack_price : 0) }})"
@@ -384,7 +386,7 @@
                                                             <i class="material-icons">create</i>
                                                         </a>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     @if (Auth::user()->is_admin == 1)
                                                         <a href="/importpdfTh/{{ $lot->id }}" target="_blank">
@@ -489,6 +491,5 @@
         function deleteLot(id) {
             $("#lot_id_input").val(id);
         }
-
     </script>
 @endsection

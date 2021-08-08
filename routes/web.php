@@ -45,6 +45,8 @@ Route::get('/price', [PriceController::class, 'index'])->middleware('auth')->nam
 
 Route::get('/users', [UsersController::class, 'index'])->middleware('auth')->name('users');
 
+Route::get('/superAdmin', [UsersController::class, 'superAdmin'])->middleware('auth')->name('superAdmin');
+
 Route::get('/branchs', [BranchController::class, 'index'])->middleware('auth')->name('branchs');
 
 Route::get('/branchs/{offset}', [BranchController::class, 'pagination'])->middleware('auth')->name('branchs');
@@ -87,7 +89,7 @@ Route::post('/updatePartner', [UsersController::class, 'updatePartner'])->middle
 
 Route::get('/admin', [UsersController::class, 'admin'])->middleware('auth')->name('admin');
 
-Route::post('/insertAdmin', [UsersController::class, 'insertAdmin'])->middleware('auth')->name('insertAdmin');
+Route::post('/admin', [UsersController::class, 'insertAdmin'])->middleware('auth')->name('insertAdmin');
 
 Route::get('/editAdmin/{id}', [UsersController::class, 'editAdmin'])->middleware('auth')->name('editAdmin');
 

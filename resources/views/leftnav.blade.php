@@ -21,7 +21,17 @@
                                         href="/dailyImport">ລາຍງານປະຈຳວັນ</a></li>
                             </ul>
                         </li>
-                    @elseif(Auth::user()->is_admin == 1)
+                    @elseif(Auth::user()->is_admin == 1 && Auth::user()->is_thai_admin == 'yes')
+                        {{-- Thai --}}
+                        <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                                <li
+                                    class="{{ Request::is('addImportTh') || Request::is('addImportTh/*') ? 'current-page' : '' }}">
+                                    <a href="/addImportTh">ຮັບສິນຄ້າ(ສາງໄທ)</a>
+                                </li>
+                            </ul>
+                        </li>
+                    @elseif(Auth::user()->is_admin == 1 && Auth::user()->is_thai_admin != 'yes')
                         {{-- for Admin --}}
                         {{-- in-house --}}
                         <li><a><i class="fa fa-home"></i> ພາຍໃນ <span class="fa fa-chevron-down"></span></a>
@@ -90,36 +100,33 @@
                                 </ul>
                             </li>
 
-                            {{-- Thai --}}
-                            <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span
-                                        class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li
-                                        class="{{ Request::is('addImportTh') || Request::is('addImportTh/*') ? 'current-page' : '' }}">
-                                        <a href="/addImportTh">ຮັບສິນຄ້າ(ສາງໄທ)</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('importTh') || Request::is('importTh/*') ? 'current-page' : '' }}">
-                                        <a href="/importTh">ນຳເຂົ້າສິນຄ້າ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('importViewTh') || Request::is('importViewTh/*') || Request::is('importDetailTh*') ? 'current-page' : '' }}">
-                                        <a href="/importViewTh">ລາຍການນຳເຂົ້າສິນຄ້າ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('importProductTrackTh') || Request::is('importProductTrackTh/*') ? 'current-page' : '' }}">
-                                        <a href="/importProductTrackTh">ຕິດຕາມສິນຄ້າ</a>
-                                    </li>
-                                    <li class="{{ Request::is('dailyImportTh') ? 'current-page' : '' }}"><a
-                                            href="/dailyImportTh">ລາຍງານປະຈຳວັນ</a></li>
-                                    <li
-                                        class="{{ Request::is('priceImportTh') || Request::is('priceImportTh/*') ? 'current-page' : '' }}">
-                                        <a href="/priceImportTh">ຕັ້ງຄ່າລາຄາ</a>
-                                    </li>
-                                </ul>
-                            </li>
-
                         @endif
+
+
+                        {{-- Thai --}}
+                        <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                                {{-- <li
+                                    class="{{ Request::is('addImportTh') || Request::is('addImportTh/*') ? 'current-page' : '' }}">
+                                    <a href="/addImportTh">ຮັບສິນຄ້າ(ສາງໄທ)</a>
+                                </li> --}}
+                                <li
+                                    class="{{ Request::is('importTh') || Request::is('importTh/*') ? 'current-page' : '' }}">
+                                    <a href="/importTh">ນຳເຂົ້າສິນຄ້າ</a>
+                                </li>
+                                <li
+                                    class="{{ Request::is('importViewTh') || Request::is('importViewTh/*') || Request::is('importDetailTh*') ? 'current-page' : '' }}">
+                                    <a href="/importViewTh">ລາຍການນຳເຂົ້າສິນຄ້າ</a>
+                                </li>
+                                <li
+                                    class="{{ Request::is('importProductTrackTh') || Request::is('importProductTrackTh/*') ? 'current-page' : '' }}">
+                                    <a href="/importProductTrackTh">ຕິດຕາມສິນຄ້າ</a>
+                                </li>
+                                <li class="{{ Request::is('dailyImportTh') ? 'current-page' : '' }}"><a
+                                        href="/dailyImportTh">ລາຍງານປະຈຳວັນ</a></li>
+                            </ul>
+                        </li>
+
                         {{-- setting --}}
                         <li><a><i class="fa fa-desktop"></i> ຕັ້ງຄ່າລະບົບ <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
@@ -129,12 +136,13 @@
                                 </li>
                                 <li
                                     class="{{ Request::is('branchs') || Request::is('branchs/*') || Request::is('editBranch/*') ? 'current-page' : '' }}">
-                                    <a href="/branchs">ສາຂາ</a>
+                                      <a href="/branchs">ສາຂາ</a>
                                 </li>
                                 <li
                                     class="{{ Request::is('users') || Request::is('users/*') || Request::is('editUser/*') ? 'current-page' : '' }}">
                                     <a href="/users">Users</a>
                                 </li>
+
                                 <li
                                     class="{{ Request::is('partner') || Request::is('partner/*') || Request::is('editpartner/*') ? 'current-page' : '' }}">
                                     <a href="/partner">ຫຸ້ນສ່ວນ</a>
@@ -174,13 +182,12 @@
                         </li>
 
                         {{-- china --}}
-                        <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ <span
-                                    class="fa fa-chevron-down"></span></a>
+                        <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
                                 {{-- <li
                                     class="{{ Request::is('addChinaProduct') || Request::is('addChinaProduct/*') ? 'current-page' : '' }}">
-                                    <a href="/addChinaProduct">ສັ່ງນຳເຂົ້າສິນຄ້າ</a>
-                                </li> --}}
+                            <a href="/addChinaProduct">ສັ່ງນຳເຂົ້າສິນຄ້າ</a>
+                    </li> --}}
                                 <li
                                     class="{{ Request::is('import') || Request::is('import/*') ? 'current-page' : '' }}">
                                     <a href="/import">ນຳເຂົ້າສິນຄ້າ</a>
@@ -215,7 +222,8 @@
                         @if (Auth::user()->is_tester == 'yes')
 
                             {{-- china test --}}
-                            <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (ທົດສອບ) <span class="fa fa-chevron-down"></span></a>
+                            <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (ທົດສອບ) <span
+                                        class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li
                                         class="{{ Request::is('addChinaProductCh') || Request::is('addChinaProductCh/*') ? 'current-page' : '' }}">
@@ -251,42 +259,41 @@
                                             href="/dailyImportCh">ລາຍງານປະຈຳວັນ</a></li>
                                 </ul>
                             </li>
-
-                            {{-- thai --}}
-                            <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span
-                                        class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li
-                                        class="{{ Request::is('importTh') || Request::is('importTh/*') ? 'current-page' : '' }}">
-                                        <a href="/importTh">ນຳເຂົ້າສິນຄ້າ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('importViewForUserTh') || Request::is('importViewForUserTh/*') || Request::is('importDetailForUser*') ? 'current-page' : '' }}">
-                                        <a href="/importViewForUserTh">ລາຍການນຳເຂົ້າສິນຄ້າ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('importProductTrackForUserTh') || Request::is('importProductTrackForUserTh/*') ? 'current-page' : '' }}">
-                                        <a href="/importProductTrackForUserTh">ຕິດຕາມສິນຄ້າ</a>
-                                    </li>
-
-                                    <li
-                                        class="{{ Request::is('saleImportTh') || Request::is('saleImportTh/*') ? 'current-page' : '' }}">
-                                        <a href="/saleImportTh">ຂາຍສິນຄ້າ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('saleViewTh') || Request::is('saleViewTh/*') || Request::is('saleDetail') || Request::is('saleDetail/*') ? 'current-page' : '' }}">
-                                        <a href="/saleViewTh">ປະຫວັດການຂາຍ</a>
-                                    </li>
-                                    <li
-                                        class="{{ Request::is('saleImportPriceTh') || Request::is('saleImportPriceTh/*') ? 'current-page' : '' }}">
-                                        <a href="/saleImportPriceTh">ຕັ້ງຄ່າລາຄາຂາຍ</a>
-                                    </li>
-
-                                    <li class="{{ Request::is('dailyImportTh') ? 'current-page' : '' }}"><a
-                                            href="/dailyImportTh">ລາຍງານປະຈຳວັນ</a></li>
-                                </ul>
-                            </li>
                         @endif
+
+                        {{-- thai --}}
+                        <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                                <li
+                                    class="{{ Request::is('importTh') || Request::is('importTh/*') ? 'current-page' : '' }}">
+                                    <a href="/importTh">ນຳເຂົ້າສິນຄ້າ</a>
+                                </li>
+                                <li
+                                    class="{{ Request::is('importViewForUserTh') || Request::is('importViewForUserTh/*') || Request::is('importDetailForUser*') ? 'current-page' : '' }}">
+                                    <a href="/importViewForUserTh">ລາຍການນຳເຂົ້າສິນຄ້າ</a>
+                                </li>
+                                <li
+                                    class="{{ Request::is('importProductTrackForUserTh') || Request::is('importProductTrackForUserTh/*') ? 'current-page' : '' }}">
+                                    <a href="/importProductTrackForUserTh">ຕິດຕາມສິນຄ້າ</a>
+                                </li>
+
+                                <li
+                                    class="{{ Request::is('saleImportTh') || Request::is('saleImportTh/*') ? 'current-page' : '' }}">
+                                    <a href="/saleImportTh">ຂາຍສິນຄ້າ</a>
+                                </li>
+                                <li
+                                    class="{{ Request::is('saleViewTh') || Request::is('saleViewTh/*') || Request::is('saleDetail') || Request::is('saleDetail/*') ? 'current-page' : '' }}">
+                                    <a href="/saleViewTh">ປະຫວັດການຂາຍ</a>
+                                </li>
+                                {{-- <li
+                                    class="{{ Request::is('saleImportPriceTh') || Request::is('saleImportPriceTh/*') ? 'current-page' : '' }}">
+                                    <a href="/saleImportPriceTh">ຕັ້ງຄ່າລາຄາຂາຍ</a>
+                                </li> --}}
+
+                                <li class="{{ Request::is('dailyImportTh') ? 'current-page' : '' }}"><a
+                                        href="/dailyImportTh">ລາຍງານປະຈຳວັນ</a></li>
+                            </ul>
+                        </li>
                     @endif
                 </ul>
             </div>

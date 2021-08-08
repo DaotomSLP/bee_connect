@@ -20,6 +20,7 @@ class ImportProductsController extends Controller
 {
   public function index(Request $request)
   {
+
     $provinces = Provinces::all();
     $districts = Districts::all();
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
@@ -40,6 +41,12 @@ class ImportProductsController extends Controller
 
   public function dailyImport(Request $request)
   {
+
+    
+    if (Auth::user()->is_thai_admin == 'yes') {
+      return redirect('/addImportTh');
+    }
+
     $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
 
     if ($request->date != '') {
@@ -199,9 +206,9 @@ class ImportProductsController extends Controller
       }
 
       $sum_service_charge = 0;
-      if(isset($request->service_item_price)){
+      if (isset($request->service_item_price)) {
         foreach ($request->service_item_price as $key => $price) {
-          $sum_service_charge+=$price;
+          $sum_service_charge += $price;
         }
       }
 
@@ -274,15 +281,15 @@ class ImportProductsController extends Controller
           $count++;
         }
 
-      if(isset($request->service_item_price)){
-        foreach ($request->service_item_price as $key => $price) {
-          $service_charge = new Service_charge;
-          $service_charge->name = $request->service_item_name[$key];
-          $service_charge->price = $price;
-          $service_charge->lot_id = $lot->id;
-          $service_charge->save();
+        if (isset($request->service_item_price)) {
+          foreach ($request->service_item_price as $key => $price) {
+            $service_charge = new Service_charge;
+            $service_charge->name = $request->service_item_name[$key];
+            $service_charge->price = $price;
+            $service_charge->lot_id = $lot->id;
+            $service_charge->save();
+          }
         }
-      }
 
         return redirect('import')->with(['error' => 'insert_success', 'id' => $lot->id]);
       } else {
@@ -618,13 +625,13 @@ class ImportProductsController extends Controller
 
   public function serviceChargeDetail(Request $request)
   {
-    $service_charges = Service_charge::where('lot_id',$request->id)->get();
+    $service_charges = Service_charge::where('lot_id', $request->id)->get();
     return view('serviceChargeDetail', compact('service_charges'));
   }
 
   public function editServiceCharge(Request $request)
   {
-    if(isset($request->service_item_price)){
+    if (isset($request->service_item_price)) {
       $sum = 0;
       foreach ($request->service_item_price as $key => $price) {
         $sum += $price;
@@ -635,7 +642,7 @@ class ImportProductsController extends Controller
           ]
         );
       }
-      Lots::where('id',$request->lot_id)->update(['service_charge'=>$sum]);
+      Lots::where('id', $request->lot_id)->update(['service_charge' => $sum]);
       return redirect('serviceChargeDetail?id=' . $request->lot_id)->with(['error' => 'insert_success']);
     }
   }

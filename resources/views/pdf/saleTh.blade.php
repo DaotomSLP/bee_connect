@@ -51,7 +51,7 @@
     <table id="itemtable">
         <tr>
             <th>ລະຫັດເຄື່ອງ</th>
-            <th>ນ້ຳໜັກ</th>
+            <th>ຂະໜາດ/CM</th>
             <th>ລາຄາ</th>
             <th>ຄ່າສົ່ງ</th>
             <th>ລວມ</th>
@@ -59,7 +59,7 @@
         @foreach ($items as $item)
             <tr>
                 <td>{{ $item->code }}</td>
-                <td>{{ $item->weight }} {{ $item->weight_type == 'm' ? 'm' : 'kg' }}</td>
+                <td>{{ $item->weight }}</td>
                 <td>{{ number_format($item->sale_price) }}</td>
                 <td>{{ number_format($item->shipping_fee ? $item->shipping_fee : 0) }}</td>
                 <td>{{ number_format($item->total_sale_price + ($item->shipping_fee ? $item->shipping_fee : 0)) }}
@@ -70,11 +70,11 @@
     <hr>
     @if ($discount > 0)
         <p style="font-size: 10pt;margin: 0px; margin-bottom:10px; ">ສ່ວນຫຼຸດ :
-            {{ number_format($discount) }} ກີບ
+            {{ number_format($discount) }} ບາດ
         </p>
     @endif
-    <p style="font-size: 12pt;margin-top:5px:">ລວມເປັນເງິນ :
-        {{ number_format($price) }} ກີບ
+    <p style="font-size: 12pt;margin-top:5px">ລວມເປັນເງິນ :
+        {{ number_format($price) }} ບາດ
     </p>
 
 </body>

@@ -24,7 +24,8 @@ class User extends Authenticatable
         'enabled',
         'phone_no',
         'is_owner',
-        'percent'
+        'percent',
+        'is_thai_admin'
     ];
 
     /**

@@ -67,8 +67,7 @@ class ImportProductsThController extends Controller
 
     if (Auth::user()->branch_id == null) {
 
-      $sum_base_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
-        ->sum("total_base_price");
+      $sum_base_price = 0;
       $sum_real_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
         ->sum("total_main_price");
 
@@ -101,7 +100,6 @@ class ImportProductsThController extends Controller
       ->sum("price");
 
     $sum_profit    = $sum_real_price - $sum_base_price - $sum_expenditure;
-
 
     $all_branch_sale_totals = $result
       ->count();
@@ -147,36 +145,12 @@ class ImportProductsThController extends Controller
       ->groupBy('branchs.branch_name')
       ->get();
 
-    $result_weight = DB::table('lot_th')
-      ->select(DB::raw('branchs.id as receiver_branch_id, sum(lot_th.weight_kg) as sum_weight_kg'))
-      // ->join('import_products_th', 'lot_th.id', 'import_products_th.lot_id')
-      ->join('branchs', 'lot_th.receiver_branch_id', 'branchs.id')
-      ->whereBetween('lot_th.created_at', [$date, $to_date])
-      ->groupBy('branchs.id')
-      ->groupBy('branchs.branch_name')
-      ->get();
-
-    $result_weight_m = DB::table('lot_th')
-      ->select(DB::raw('branchs.id as receiver_branch_id, sum(import_products_th.weight) as sum_weight_m'))
-      // ->join('import_products_th', 'lot_th.id', 'import_products_th.lot_id')
-      ->join('branchs', 'lot_th.receiver_branch_id', 'branchs.id')
-      ->join('import_products_th', 'lot_th.id', 'import_products_th.lot_id')
-      ->whereBetween('lot_th.created_at', [$date, $to_date])
-      ->where('import_products_th.weight_type', 'm')
-      ->groupBy('branchs.id')
-      ->groupBy('branchs.branch_name')
-      ->get();
-
-
-    // print_r($result_paid);
-    // exit;
-
     $sum_share = 0;
     if (Auth::user()->is_admin != 1 && Auth::user()->branch_id == null) {
       $sum_share = $sum_profit / Auth::user()->percent;
     }
 
-    return view('dailyimportTh', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share', 'result_weight', 'result_weight_m'));
+    return view('th.dailyimportTh', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share'));
   }
 
   public function addImportTh()
@@ -195,11 +169,15 @@ class ImportProductsThController extends Controller
     $import_products_th->name = $request->name;
     $import_products_th->detail = $request->detail;
     $import_products_th->receive_branch_id = $request->receiver_branch_id;
-    $import_products_th->code = $imp_th_id ? $imp_th_id['id'] + 1 : 10000000;
+    if ($request->code == "") {
+      $import_products_th->code = $imp_th_id ? "BC" . strval($imp_th_id['id'] + 1) : "BC10000000";
+    } else {
+      $import_products_th->code = $request->code;
+    }
     $import_products_th->status = 'waiting';
 
     if ($import_products_th->save()) {
-      return redirect('addImportTh')->with(['error' => 'insert_success']);
+      return redirect('addImportTh')->with(['error' => 'insert_success', 'id' => $import_products_th->id]);
     } else {
       return redirect('addImportTh')->with(['error' => 'not_success']);
     }
@@ -237,79 +215,76 @@ class ImportProductsThController extends Controller
     if ($request->item_id) {
 
       $sum_price = 0;
-      $sum_m_weight = 0;
-      $count = 0;
-      foreach ($request->weight_type as $weight_type) {
-        if ($weight_type == 'm') {
-          $sum_m_weight += $request->weight[$count];
-        } else {
-          if ($request->weight_kg <= 0) {
-            return redirect('importTh')->with(['error' => 'not_insert']);
-          }
-        }
+      // $sum_base_price = 0;
+      // $sum_m_weight = 0;
 
-        $count++;
+      $count = 0;
+      // foreach ($request->weight_type as $weight_type) {
+      //   if ($weight_type == 'm') {
+      //     $sum_m_weight += $request->weight[$count];
+      //   } else {
+      //     if ($request->weight_kg <= 0) {
+      //       return redirect('importTh')->with(['error' => 'not_insert']);
+      //     }
+      //   }
+
+      //   $count++;
+      // }
+
+      foreach ($request->price as $price) {
+        $sum_price += $price;
       }
 
-      $default_price_kg = Price_imports::where('weight_type', 'kg')
-        ->orderBy('id', 'DESC')->first();
+      // foreach ($request->base_price as $base_price) {
+      //   $sum_base_price += $base_price;
+      // }
 
-      $default_price_m = Price_imports::where('weight_type', 'm')
-        ->orderBy('id', 'DESC')->first();
+      // $default_price_kg = Price_imports::where('weight_type', 'kg')
+      //   ->orderBy('id', 'DESC')->first();
 
-      $sum_kg_base_price = ($request->base_price_kg == '' ? $default_price_kg->base_price : $request->base_price_kg) * $request->weight_kg;
-      $sum_m_base_price = ($request->base_price_m == '' ? $default_price_m->base_price : $request->base_price_m) * $sum_m_weight;
-      $sum_base_price = $sum_m_base_price + $sum_kg_base_price;
+      // $default_price_m = Price_imports::where('weight_type', 'm')
+      //   ->orderBy('id', 'DESC')->first();
 
-      $sum_kg_price = ($request->real_price_kg == '' ? $default_price_kg->real_price : $request->real_price_kg) * $request->weight_kg;
-      $sum_m_price = ($request->real_price_m == '' ? $default_price_m->real_price : $request->real_price_m) * $sum_m_weight;
-      $sum_price = $sum_m_price + $sum_kg_price;
+      // $sum_kg_base_price = ($request->base_price_kg == '' ? $default_price_kg->base_price : $request->base_price_kg) * $request->weight_kg;
+      // $sum_m_base_price = ($request->base_price_m == '' ? $default_price_m->base_price : $request->base_price_m) * $sum_m_weight;
+      // $sum_base_price = $sum_m_base_price + $sum_kg_base_price;
+
+      // $sum_kg_price = ($request->real_price_kg == '' ? $default_price_kg->real_price : $request->real_price_kg) * $request->weight_kg;
+      // $sum_m_price = ($request->real_price_m == '' ? $default_price_m->real_price : $request->real_price_m) * $sum_m_weight;
+      // $sum_price = $sum_m_price + $sum_kg_price;
 
       $lot = new Lots_th;
       $lot->receiver_branch_id = $request->receiver_branch_id;
-      $lot->weight_kg = $request->weight_kg;
-      $lot->total_base_price_kg = $sum_kg_base_price;
-      $lot->total_base_price_m = $sum_m_base_price;
-      $lot->total_base_price = $sum_base_price;
+      // $lot->weight_kg = $request->weight_kg;
+      // $lot->total_base_price_kg = $sum_kg_base_price;
+      // $lot->total_base_price_m = $sum_m_base_price;
+      // $lot->total_base_price = $sum_base_price;
       $lot->total_main_price = $sum_price + $request->fee + $request->pack_price;
       $lot->total_price = $sum_price;
-      $lot->total_unit_m = $sum_m_price;
-      $lot->total_unit_kg = $sum_kg_price;
+      // $lot->total_unit_m = $sum_m_price;
+      // $lot->total_unit_kg = $sum_kg_price;
       $lot->status = 'sending';
       $lot->payment_status = 'not_paid';
       $lot->fee = $request->fee;
       $lot->pack_price = $request->pack_price;
-      $lot->lot_real_price_kg = $request->real_price_kg;
-      $lot->lot_base_price_kg = $request->base_price_kg;
-      $lot->lot_real_price_m = $request->real_price_m;
-      $lot->lot_base_price_m = $request->base_price_m;
+      // $lot->lot_real_price_kg = $request->real_price_kg;
+      // $lot->lot_base_price_kg = $request->base_price_kg;
+      // $lot->lot_real_price_m = $request->real_price_m;
+      // $lot->lot_base_price_m = $request->base_price_m;
 
       if ($lot->save()) {
         $count = 0;
         foreach ($request->item_id as $product_id) {
-          $price = Price_imports_th::where('weight_type', $request->weight_type[$count])
-            ->orderBy('id', 'DESC')->first();
 
           $product = array();
-          // $product->code = $product_id;
 
-          if ($request->weight_type[$count] == 'm') {
-            $product["weight"] = $request->weight[$count];
-            $product["base_price"] = $request->base_price_m == '' ? $price->base_price : $request->base_price_m;
-            $product["real_price"] = $request->real_price_m == '' ? $price->real_price : $request->real_price_m;
-            $product["total_base_price"] = ($request->base_price_m == '' ? $price->base_price : $request->base_price_m) * $request->weight[$count];
-            $product["total_real_price"] = ($request->real_price_m == '' ? $price->real_price : $request->real_price_m) * $request->weight[$count];
-            $product["total_sale_price"] = 0;
-          } else {
-            $product["weight"] = 0;
-            $product["base_price"] = $request->base_price_kg == '' ? $price->base_price : $request->base_price_kg;
-            $product["real_price"] = $request->real_price_kg == '' ? $price->real_price : $request->real_price_kg;
-            $product["total_base_price"] = 0;
-            $product["total_real_price"] = 0;
-            $product["total_sale_price"] = 0;
-          }
+          // $product["base_price"] = $request->base_price[$count];
+          $product["real_price"] = $request->price[$count];
+          // $product["total_base_price"] = $request->base_price[$count];
+          $product["total_real_price"] = $request->price[$count];
+          $product["total_sale_price"] = 0;
+          $product["weight"] = $request->weight[$count];
 
-          $product["weight_type"] = $request->weight_type[$count];
           $product["status"] = 'sending';
           $product["lot_id"] = $lot->id;
 
@@ -323,7 +298,7 @@ class ImportProductsThController extends Controller
         return redirect('importTh')->with(['error' => 'not_insert']);
       }
     } else {
-      return redirect('import')->with(['error' => 'not_insert']);
+      return redirect('importTh')->with(['error' => 'not_insert']);
     }
   }
 
@@ -365,7 +340,7 @@ class ImportProductsThController extends Controller
       $sum_price = 0;
 
       foreach ($request->items as $key => $value) {
-        $sum_price += ($value["price"] * $value["weight"]);
+        $sum_price += $value["price"];
       }
       $sale_import = new Sale_import_th;
       $sale_import->branch_id = Auth::user()->branch_id;
@@ -383,29 +358,29 @@ class ImportProductsThController extends Controller
           $lot = Lots_th::where('id', $import_product->lot_id)
             ->orderBy('id', 'DESC')->first();
 
-          if ($import_product->weight_type != 'm') {
-            $new_import_product_update =  [
-              'status' => 'success',
-              'success_at' => Carbon::now(),
-              'sale_id' => $sale_import->id,
-              'weight' => $value["weight"],
-              'shipping_fee' => 0,
-              'sale_price' => $value["price"],
-              'total_base_price' => ($lot->total_base_price_kg / $lot->weight_kg) * $value["weight"],
-              'total_real_price' => ($lot->total_unit_kg / $lot->weight_kg) * $value["weight"],
-              'total_sale_price' => ($value["price"] * $value["weight"])
-            ];
-          } else {
-            $new_import_product_update =  [
-              'status' => 'success',
-              'success_at' => Carbon::now(),
-              'sale_id' => $sale_import->id,
-              'sale_price' => $value["price"],
-              'shipping_fee' => 0,
-              'weight' => $value["weight"],
-              'total_sale_price' => ($value["price"] * $value["weight"])
-            ];
-          }
+          // if ($import_product->weight_type != 'm') {
+          //   $new_import_product_update =  [
+          //     'status' => 'success',
+          //     'success_at' => Carbon::now(),
+          //     'sale_id' => $sale_import->id,
+          //     'weight' => $value["weight"],
+          //     'shipping_fee' => 0,
+          //     'sale_price' => $value["price"],
+          //     'total_base_price' => ($lot->total_base_price_kg / $lot->weight_kg) * $value["weight"],
+          //     'total_real_price' => ($lot->total_unit_kg / $lot->weight_kg) * $value["weight"],
+          //     'total_sale_price' => ($value["price"] * $value["weight"])
+          //   ];
+          // } else {
+          $new_import_product_update =  [
+            'status' => 'success',
+            'success_at' => Carbon::now(),
+            'sale_id' => $sale_import->id,
+            'sale_price' => $value["price"],
+            'shipping_fee' => 0,
+            // 'weight' => $value["weight"],
+            'total_sale_price' => $value["price"]
+          ];
+          // }
 
           if (import_products_th::where('id', $value["id"])->update($new_import_product_update)) {
 
@@ -429,7 +404,7 @@ class ImportProductsThController extends Controller
                 'success_at' => '',
                 'sale_id' => '',
                 'sale_price' => '',
-                'weight' => '',
+                // 'weight' => '',
                 'total_sale_price' =>  '',
                 'shipping_fee' => null
               ]);
@@ -704,6 +679,20 @@ class ImportProductsThController extends Controller
     return view('th.importViewTh', compact('branchs', 'lots', 'pagination'));
   }
 
+  public function addImportThPdf($id)
+  {
+    $import_product = Import_products_th::find($id);
+    $receive_branch = Branchs::find($import_product->receive_branch_id);
+
+    $data = [
+      'id' => $import_product->code,
+      'date' => date('d-m-Y', strtotime($import_product->created_at)),
+      'to' => $receive_branch->branch_name,
+    ];
+    $pdf = PDF::loadView('pdf.addImportTh', $data);
+    return $pdf->stream('document.pdf');
+  }
+
   public function reportTh($id)
   {
     $lot = Lots_th::find($id);
@@ -735,7 +724,7 @@ class ImportProductsThController extends Controller
       'items' => $items
     ];
 
-    $pdf = PDF::loadView('pdf.sale', $data);
+    $pdf = PDF::loadView('pdf.saleTh', $data);
     return $pdf->stream('document.pdf');
   }
 
@@ -978,53 +967,58 @@ class ImportProductsThController extends Controller
     }
   }
 
-  public function deleteImportItemTh(Request $request)
+  public function deleteImportItemTh($id)
   {
-    $lot = Lots_th::where('id', $request->lot_id)
+    $import_product_data = Import_products_th::where('id', $id)
+      ->orderBy('id', 'DESC')->first();
+    $lot = Lots_th::where('id', $import_product_data->lot_id)
       ->orderBy('id', 'DESC')->first();
 
-    Lots_th::where('id', $request->lot_id)->update(
+    Lots_th::where('id', $import_product_data->lot_id)->update(
       [
-        'total_base_price' => ($lot->total_base_price - ($request->base_price * $request->weight)),
-        'total_price' => ($lot->total_price - ($request->real_price * $request->weight)),
-        'weight_kg' => $lot->weight_kg - ($request->weight_type == 'm' ? 0 : $request->weight),
+        'total_base_price' => ($lot->total_base_price - $import_product_data->base_price),
+        'total_price' => ($lot->total_price - $import_product_data->real_price),
+        'total_main_price' => ($lot->total_main_price - $import_product_data->real_price),
       ]
     );
 
-    $import_product = import_products_th::where('id', $request->lot_item_id);
+    $import_product = import_products_th::where('id', $id);
     $import_product->delete();
 
-    $count_import_product = import_products_th::where('lot_id', $request->lot_id)->count();
+    $count_import_product = import_products_th::where('lot_id', $import_product_data->lot_id)->count();
     if ($count_import_product < 1) {
       $lot->delete();
+    return redirect('importViewTh');
     }
 
-    return redirect('importDetailTh?id=' . $request->lot_id)->with(['error' => 'insert_success']);
+    return redirect('importDetailTh?id=' . $import_product_data->lot_id)->with(['error' => 'insert_success']);
   }
 
   public function changeImportItemWeightTh(Request $request)
   {
 
-    $import_product = import_products_th::where('id', $request->lot_item_id_in_weight)->first();
+    $import_product = import_products_th::where('id', $request->prod_id)->first();
 
-    $lot = Lots_th::where('id', $request->lot_id_in_weight)
+    $lot = Lots_th::where('id', $request->lot_id)
       ->orderBy('id', 'DESC')->first();
 
-    Lots_th::where('id', $request->lot_id_in_weight)->update(
+    Lots_th::where('id', $request->lot_id)->update(
       [
-        'total_base_price' => (($lot->total_base_price - ($import_product->base_price * $import_product->weight)) + ($request->base_price_in_weight * $request->weight_in_weight)),
-        'total_price' => (($lot->total_price - ($import_product->real_price * $import_product->weight)) + ($request->real_price_in_weight * $request->weight_in_weight)),
-        'total_main_price' => (($lot->total_price - ($import_product->real_price * $import_product->weight)) + ($request->real_price_in_weight * $request->weight_in_weight) + ($lot->fee ? $lot->fee : 0) + ($lot->pack_price ? $lot->pack_price : 0)),
+        'total_base_price' => (($lot->total_base_price - $import_product->base_price) + $request->base_price),
+        'total_price' => (($lot->total_price - $import_product->real_price) + $request->real_price),
+        'total_main_price' => (($lot->total_price - $import_product->real_price) + $request->real_price + ($lot->fee ? $lot->fee : 0) + ($lot->pack_price ? $lot->pack_price : 0)),
       ]
     );
 
-    $import_product = import_products_th::where('id', $request->lot_item_id_in_weight)->update(
+    $import_product = import_products_th::where('id', $request->prod_id)->update(
       [
-        'weight' => $request->weight_in_weight,
+        'weight' => $request->weight,
+        'base_price' => $request->base_price,
+        'real_price' => $request->real_price,
       ]
     );
 
-    return redirect('importDetailTh?id=' . $request->lot_id_in_weight)->with(['error' => 'insert_success']);
+    return redirect('importDetailTh?id=' . $request->lot_id)->with(['error' => 'insert_success']);
   }
 
   public function deleteLotTh(Request $request)

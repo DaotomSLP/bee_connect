@@ -29,29 +29,6 @@
         {{ $to }}
     </p>
 
-    <!-- <p style="font-size: 11pt;">ນ້ຳໜັກລວມ :
-        {{ $weight_kg }} kg
-    </p> -->
-
-
-    @if ($fee)
-        <p style="font-size: 11pt;">ຄ່າຂົນສົ່ງ :
-            {{ number_format($fee) }} ກີບ
-        </p>
-    @endif
-    @if ($pack_price)
-        <p style="font-size: 11pt;">ຄ່າເປົາ :
-            {{ number_format($pack_price) }} ກີບ
-        </p>
-    @endif
-
-
-
-    <hr>
-    <p style="font-size: 12pt;">ລວມເປັນເງິນ :
-        {{ number_format($price) }} ບາດ
-    </p>
-
 </body>
 
 </html>

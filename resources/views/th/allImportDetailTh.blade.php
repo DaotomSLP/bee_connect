@@ -14,7 +14,7 @@
 
 
             <!-- Modal -->
-            <div class="modal fade" id="new_price_modal" tabindex="-1" role="dialog" aria-hidden="true">
+            {{-- <div class="modal fade" id="new_price_modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <form method="POST" action="/deleteImportItemTh">
                         @csrf
@@ -47,7 +47,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Modal -->
             <div class="modal fade" id="new_weight_modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -56,7 +56,7 @@
                         @csrf
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">ແກ້ໄຂນ້ຳໜັກ</h5>
+                                <h2 class="modal-title" id="exampleModalLabel">ແກ້ໄຂ</h2>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -66,13 +66,25 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ຂະໜາດ</label>
-                                            <input type="hidden" id="lot_item_id_in_weight" name="lot_item_id_in_weight">
-                                            <input type="hidden" id="lot_id_in_weight" name="lot_id_in_weight">
-                                            <input type="hidden" id="real_price_in_weight" name="real_price_in_weight">
-                                            <input type="hidden" id="base_price_in_weight" name="base_price_in_weight">
-                                            <input type="hidden" id="base_price_in_weight" name="old_weight_in_weight">
-                                            <input type="number" id="weight_in_weight" step="0.001" class="form-control"
-                                                name="weight_in_weight" required>
+                                            <input name="lot_id" type="hidden" id="lot_id" required>
+                                            <input name="prod_id" type="hidden" id="prod_id" required>
+                                            <input class="form-control" name="weight" id="weight" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ</label>
+                                            <input class="form-control" name="base_price" id="base_price" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ລາຄາ</label>
+                                            <input class="form-control" name="real_price" id="real_price" required>
                                         </div>
                                     </div>
                                 </div>
@@ -84,8 +96,6 @@
                     </form>
                 </div>
             </div>
-
-
 
             <div class="row">
                 <div class="col">
@@ -179,6 +189,15 @@
                                             ລະຫັດເຄື່ອງ
                                         </th>
                                         <th>
+                                            ຊື່ເຄື່ອງ
+                                        </th>
+                                        <th>
+                                            ລາຄາ
+                                        </th>
+                                        <th>
+                                            ຂະໜາດ
+                                        </th>
+                                        <th>
                                             ຮັບມາວັນທີ່
                                         </th>
                                         <th>
@@ -189,9 +208,6 @@
                                         </th>
                                         <th>
                                             ສະຖານະ
-                                        </th>
-                                        <th>
-                                            ນ້ຳໜັກ/ຂະໜາດ
                                         </th>
                                         {{-- <th>
                                         ຕົ້ນທຶນ
@@ -213,7 +229,16 @@
                                                     {{ $import_product->code }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->created_at ? date('d-m-Y', strtotime($import_product->created_at)) : '' }}
+                                                    {{ $import_product->name }}
+                                                </td>
+                                                <td>
+                                                    <p class="font-weight-bold text-danger">{{ number_format($import_product->real_price) }} ບາດ</p>
+                                                </td>
+                                                <td>
+                                                    {{ $import_product->weight }}
+                                                </td>
+                                                <td>
+                                                    {{ $import_product->created_at ? date('d-m-Y-H:i', strtotime($import_product->created_at)) : '' }}
                                                 </td>
                                                 <td>
                                                     {{ $import_product->branch_name }}
@@ -224,32 +249,24 @@
                                                 <td>
                                                     {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : ($import_product->status == 'waiting' ? 'ລໍຖ້າ' : 'ສຳເລັດ')) }}
                                                 </td>
-                                                <td>
-                                                    {{ $import_product->weight }}
-                                                    {{ $import_product->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກິໂລກຼາມ' }}
-                                                </td>
                                                 {{-- <td>
                                             {{ number_format($import_product->total_real_price) }}
                                         </td> --}}
                                                 <td>
-                                                    {{ number_format($import_product->total_sale_price) }}
+                                                    {{ number_format($import_product->total_sale_price) }} ບາດ
                                                 </td>
                                                 <td>
                                                     @if ($import_product->status != 'success' && Auth::user()->is_owner == 1)
                                                         @if ($import_product->status != 'success')
-                                                            <a type="button"
-                                                                onclick="change_price({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->base_price . ',' . $import_product->real_price . ',' . $import_product->weight . ',' }}'{{ $import_product->weight_type }}')"
-                                                                data-toggle="modal" data-target="#new_price_modal">
+                                                            <a href="/deleteImportItemTh/{{ $import_product->id }}">
                                                                 <i class="material-icons">delete_forever</i>
                                                             </a>
                                                         @endif
-                                                        @if ($import_product->weight_type == 'm' && $import_product->status != 'success')
-                                                            <a type="button"
-                                                                onclick="change_weight({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->base_price . ',' . $import_product->real_price . ',' . $import_product->weight }})"
-                                                                data-toggle="modal" data-target="#new_weight_modal">
-                                                                <i class="material-icons">create</i>
-                                                            </a>
-                                                        @endif
+                                                        <a type="button"
+                                                            onclick="change_weight({{ $import_product->lot_id . ',' . $import_product->id . ',' . $import_product->base_price . ',' . $import_product->real_price . ',' }} '{{ $import_product->weight }}')"
+                                                            data-toggle="modal" data-target="#new_weight_modal">
+                                                            <i class="material-icons">create</i>
+                                                        </a>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -316,23 +333,23 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        function change_price(id, lot_id, base_price, real_price, weight, weight_type) {
-            $("#lot_item_id").val(id);
-            $("#lot_id").val(lot_id);
+        // function change_price(id, lot_id, base_price, real_price, weight, weight_type) {
+        //     $("#lot_item_id").val(id);
+        //     $("#lot_id").val(lot_id);
+        //     $("#base_price").val(base_price);
+        //     $("#real_price").val(real_price);
+        //     $("#weight").val(weight);
+        //     $("#weight_type").val(weight_type);
+        // }
+
+        function change_weight(id, prod_id, base_price, real_price, weight) {
+            console.log(weight);
             $("#base_price").val(base_price);
             $("#real_price").val(real_price);
+            $("#prod_id").val(prod_id);
             $("#weight").val(weight);
-            $("#weight_type").val(weight_type);
-        }
+            $("#lot_id").val(id);
 
-        function change_weight(id, lot_id, base_price, real_price, old_weight) {
-            $("#lot_item_id_in_weight").val(id);
-            $("#lot_id_in_weight").val(lot_id);
-            $("#base_price_in_weight").val(base_price);
-            $("#real_price_in_weight").val(real_price);
-            $("#old_weight_in_weight").val(old_weight);
-            $("#weight_in_weight").val(old_weight);
         }
-
     </script>
 @endsection

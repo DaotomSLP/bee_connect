@@ -100,13 +100,13 @@
                                                     {{ date('d-m-Y', strtotime($sale_import->created_at)) }}
                                                 </td>
                                                 <td>
-                                                    {{ number_format($sale_import->subtotal) }} ກີບ
+                                                    {{ number_format($sale_import->subtotal) }} ບາດ
                                                 </td>
                                                 <td>
-                                                    {{ number_format($sale_import->discount) }} ກີບ
+                                                    {{ number_format($sale_import->discount) }} ບາດ
                                                 </td>
                                                 <td>
-                                                    {{ number_format($sale_import->total) }} ກີບ
+                                                    {{ number_format($sale_import->total) }} ບາດ
                                                 </td>
                                                 <td>
                                                     <a

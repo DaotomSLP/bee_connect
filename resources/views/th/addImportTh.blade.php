@@ -43,6 +43,12 @@
                                         <div class="row">
                                             <div class="col">
                                                 <div class="form-group">
+                                                    <label class="bmd-label-floating">ລະຫັດສິນຄ້າ</label>
+                                                    <input class="form-control form-control-sm" name="code">
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group">
                                                     <label class="bmd-label-floating">ຊື່ສິນຄ້າ</label>
                                                     <input class="form-control form-control-sm" name="name">
                                                 </div>
@@ -136,8 +142,8 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        var district_lists = <?php echo json_encode($districts); ?> ;;
-        var branch_lists = <?php echo json_encode($branchs); ?> ;;
+        var district_lists = <?php echo json_encode($districts); ?>;;
+        var branch_lists = <?php echo json_encode($branchs); ?>;;
         $("#select_province").on("change", function() {
             let province_id = this.value;
             let district_options = "<option value=''>ເລືອກ</option>";
@@ -171,9 +177,8 @@
                 "<?php echo session()->get('id') ? session()->get('id') : 'no_id'; ?>";
 
             if (product_id != 'no_id') {
-                window.open(`importpdf/${product_id}`);
+                window.open(`addImportThPdf/${product_id}`);
             }
         });
-
     </script>
 @endsection

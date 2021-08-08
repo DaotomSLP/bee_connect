@@ -31,6 +31,8 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+
+
         $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
 
         if ($request->date != '') {
@@ -119,5 +121,4 @@ class HomeController extends Controller
 
         return view('home', compact('sum_delivery_received', 'sum_delivery_sending', 'sum_receive_sending', 'sum_price', 'branch_money', 'sum_received', 'sum_success', 'date_now', 'to_date_now', 'sum_delivery_success', 'sum_expenditure'));
     }
-
 }

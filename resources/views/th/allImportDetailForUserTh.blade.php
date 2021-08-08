@@ -109,6 +109,15 @@
                                             ລະຫັດເຄື່ອງ
                                         </th>
                                         <th>
+                                            ຊື່ເຄື່ອງ
+                                        </th>
+                                        <th>
+                                            ລາຄາ
+                                        </th>
+                                        <th>
+                                            ນ້ຳໜັກ/ຂະໜາດ
+                                        </th>
+                                        <th>
                                             ຮັບມາວັນທີ່
                                         </th>
                                         <th>
@@ -120,9 +129,7 @@
                                         <th>
                                             ສະຖານະ
                                         </th>
-                                        <th>
-                                            ນ້ຳໜັກ/ຂະໜາດ
-                                        </th>
+
                                         {{-- <th>
                                         ຕົ້ນທຶນ
                                     </th> --}}
@@ -140,26 +147,31 @@
                                                     {{ $import_product->code }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->received_at ? date('d-m-Y', strtotime($import_product->received_at)) : '' }}
+                                                    {{ $import_product->name }}
+                                                </td>
+                                                <td>
+                                                    {{ number_format($import_product->real_price) }} ບາດ
+                                                </td>
+                                                <td>
+                                                    {{ $import_product->weight }}
+                                                </td>
+                                                <td>
+                                                    {{ $import_product->received_at ? date('d-m-Y-H:i', strtotime($import_product->received_at)) : '' }}
                                                 </td>
                                                 <td>
                                                     {{ $import_product->branch_name }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->success_at ? date('d-m-Y', strtotime($import_product->success_at)) : '' }}
+                                                    {{ $import_product->success_at ? date('d-m-Y-H:i', strtotime($import_product->success_at)) : '' }}
                                                 </td>
                                                 <td>
                                                     {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : ($import_product->status == 'waiting' ? 'ລໍຖ້າ' : 'ສຳເລັດ')) }}
-                                                </td>
-                                                <td>
-                                                    {{ $import_product->weight }}
-                                                    {{ $import_product->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກິໂລກຼາມ' }}
                                                 </td>
                                                 {{-- <td>
                                             {{ number_format($import_product->total_real_price) }}
                                         </td> --}}
                                                 <td>
-                                                    {{ number_format($import_product->total_sale_price) }}
+                                                    {{ number_format($import_product->total_sale_price) }} ບາດ
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -225,7 +237,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        var branch_lists = < ? php echo json_encode($branchs); ?> ;;
+        var branch_lists = < ? php echo json_encode($branchs); ? > ;;
         $("#select_province").on("change", function() {
             let province_id = this.value;
             let district_options = "<option value=''>ເລືອກ</option>";
@@ -262,6 +274,5 @@
                 window.open(`importpdf/${product_id}`);
             }
         });
-
     </script>
 @endsection
