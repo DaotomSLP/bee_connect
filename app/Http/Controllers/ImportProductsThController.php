@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Base_price_th;
 use App\Models\Branchs;
 use App\Models\Districts;
 use App\Models\Expenditure;
@@ -45,13 +46,13 @@ class ImportProductsThController extends Controller
     $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
 
     if ($request->date != '') {
-      $date = $request->date;
-      $to_date = $request->to_date;
+      $date = date('Y-m-d H:i:s', strtotime($request->date));
+      $to_date = date('Y-m-d H:i:s',  strtotime($request->to_date)) == Carbon::today() ? Carbon::tomorrow() : date('Y-m-d H:i:s',  strtotime($request->to_date));
       $date_now = date('Y-m-d', strtotime($request->date));
       $to_date_now = date('Y-m-d',  strtotime($request->to_date));
     } else {
-      $date = [Carbon::today()->toDateString()];
-      $to_date = [Carbon::today()->toDateString()];
+      $date = Carbon::today();
+      $to_date = Carbon::tomorrow();
       $date_now = date('Y-m-d', strtotime(Carbon::now()));
     }
 
@@ -64,12 +65,18 @@ class ImportProductsThController extends Controller
       ->whereBetween('lot_th.created_at', [$date, $to_date])
       ->groupBy('branchs.id')
       ->groupBy('branchs.branch_name');
-
     if (Auth::user()->branch_id == null) {
 
-      $sum_base_price = 0;
+      $sum_base_price = Base_price_th::whereBetween('base_price_th.created_at', [$date, $to_date])
+        ->sum("price");
+
       $sum_real_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
+        ->where("payment_status", "paid")
         ->sum("total_main_price");
+
+      // echo($to_date);
+
+      //   print_r($sum_real_price);exit;
 
       $sum_fee_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
         ->sum("fee");
@@ -988,7 +995,7 @@ class ImportProductsThController extends Controller
     $count_import_product = import_products_th::where('lot_id', $import_product_data->lot_id)->count();
     if ($count_import_product < 1) {
       $lot->delete();
-    return redirect('importViewTh');
+      return redirect('importViewTh');
     }
 
     return redirect('importDetailTh?id=' . $import_product_data->lot_id)->with(['error' => 'insert_success']);
@@ -1067,5 +1074,63 @@ class ImportProductsThController extends Controller
     );
 
     return redirect('importViewTh')->with(['error' => 'insert_success']);
+  }
+
+  public function base_price_th(Request $request)
+  {
+
+    if ($request->date_search != '') {
+      $date = date('Y-m-d H:i:s', strtotime($request->date_search));
+      $to_date = date('Y-m-d H:i:s', strtotime("+1 day", strtotime($request->date_search)));
+      $date_now = date('Y-m-d', strtotime($request->date));
+    } else {
+      $date = Carbon::today();
+      $to_date = Carbon::tomorrow();
+      $date_now = date('Y-m-d', strtotime(Carbon::now()));
+    }
+
+    $result = Base_price_th::query();
+    $date_now = date('Y-m-d', strtotime(Carbon::now()));
+
+    $result->select('base_price_th.*', 'users.name')
+      ->join('users', 'base_price_th.user_id', 'users.id')
+      ->whereBetween('base_price_th.created_at', [$date, $to_date]);
+
+    if ($request->date_search != '') {
+    }
+
+    $all_base_price_th = $result->orderBy('base_price_th.id', 'desc')
+      ->get();
+
+    if ($request->page != '') {
+      $result->offset(($request->page - 1) * 25);
+    }
+
+    $base_price_th = $result->orderBy('base_price_th.id', 'desc')
+      ->limit(25)
+      ->get();
+
+    $pagination = [
+      'offsets' =>  ceil(sizeof($all_base_price_th) / 25),
+      'offset' => $request->page ? $request->page : 1,
+      'all' => sizeof($all_base_price_th)
+    ];
+
+    return view('th.base_price_th', compact('base_price_th', 'pagination', 'date_now'));
+  }
+
+  public function addBasePriceTh(Request $request)
+  {
+    $base_price_th = new Base_price_th;
+    $base_price_th->created_at = $request->date;
+    $base_price_th->price = $request->price;
+    $base_price_th->user_id = Auth::user()->id;
+    $base_price_th->detail = $request->detail;
+
+    if ($base_price_th->save()) {
+      return redirect('base_price_th')->with(['error' => 'insert_success']);
+    } else {
+      return redirect('base_price_th')->with(['error' => 'not_insert']);
+    }
   }
 }

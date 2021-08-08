@@ -411,7 +411,7 @@
             url: '/insertSaleImportTh',
             data: {
                 items: items,
-                discount: $("#discount_input_for_rider").val(),
+                discount: $("#discount_input").val(),
                 '_token': $('meta[name=csrf-token]').attr('content')
             },
             success: function(res) {

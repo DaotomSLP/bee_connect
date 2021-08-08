@@ -65,3 +65,7 @@ Route::post('/addSalePriceImportTh​a', [PriceImportControllerTh::class, 'inser
 Route::get('/priceImportTh', [PriceImportControllerTh::class, 'priceImportTh'])->middleware('auth')->name('priceImportTh');
 
 Route::post('/addPriceImportTh', [PriceImportControllerTh::class, 'insertPriceImportTh'])->middleware('auth')->name('addPriceImportTh');
+
+Route::get('/base_price_th', [ImportProductsThController::class, 'base_price_th'])->middleware('auth')->name('base_price_th');
+
+Route::post('/addBasePriceTh', [ImportProductsThController::class, 'addBasePriceTh'])->middleware('auth')->name('addBasePriceTh');

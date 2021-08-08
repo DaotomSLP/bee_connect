@@ -122,8 +122,9 @@
                                     class="{{ Request::is('importProductTrackTh') || Request::is('importProductTrackTh/*') ? 'current-page' : '' }}">
                                     <a href="/importProductTrackTh">ຕິດຕາມສິນຄ້າ</a>
                                 </li>
-                                <li class="{{ Request::is('dailyImportTh') ? 'current-page' : '' }}"><a
-                                        href="/dailyImportTh">ລາຍງານປະຈຳວັນ</a></li>
+                                <li
+                                    class="{{ Request::is('dailyImportTh') || Request::is('base_price_th') ? 'current-page' : '' }}">
+                                    <a href="/dailyImportTh">ລາຍງານປະຈຳວັນ</a></li>
                             </ul>
                         </li>
 
@@ -136,7 +137,7 @@
                                 </li>
                                 <li
                                     class="{{ Request::is('branchs') || Request::is('branchs/*') || Request::is('editBranch/*') ? 'current-page' : '' }}">
-                                      <a href="/branchs">ສາຂາ</a>
+                                    <a href="/branchs">ສາຂາ</a>
                                 </li>
                                 <li
                                     class="{{ Request::is('users') || Request::is('users/*') || Request::is('editUser/*') ? 'current-page' : '' }}">

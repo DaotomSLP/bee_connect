@@ -107,7 +107,9 @@
                     <div class="col-12 col-mg-4 col-lg-4">
                         <div class="x_panel">
                             <div>
-                                <p class="h4">ຕົ້ນທຶນ</p>
+                                <p class="h4 d-inline">ຕົ້ນທຶນ</p>
+                                <p class="pl-3 h4 d-inline"><a href="/base_price_th"><i
+                                    class="fa fa-arrow-right"></i></span></a></p>
                             </div>
                             <hr>
                             <div class="x_content">
@@ -153,7 +155,7 @@
                     </div>
                 </div>
                 <hr>
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
                         <div class="x_panel">
                             <div>
@@ -168,7 +170,7 @@
                         </div>
                     </div>
                 </div>
-                <hr>
+                <hr> --}}
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
                         <div class="x_panel">
@@ -209,12 +211,6 @@
                                                 ຈຳນວນຂາຍໄດ້ (ລາຍການ)
                                             </th>
                                             <th>
-                                                ນ້ຳໜັກຂາຍໄດ້ (kg)
-                                            </th>
-                                            <th>
-                                                ນ້ຳໜັກຂາຍໄດ້ (ແມັດກ້ອນ)
-                                            </th>
-                                            <th>
                                                 ລວມເປັນເງິນ
                                             </th>
                                             <th>
@@ -240,20 +236,6 @@
                                                         @foreach ($import_product_count as $item)
                                                             @if ($item->receiver_branch_id == $branch_sale_total->receiver_branch_id)
                                                                 {{ $item->count_import_product }}
-                                                            @endif
-                                                        @endforeach
-                                                    </td>
-                                                    <td>
-                                                        @foreach ($result_weight as $item)
-                                                            @if ($item->receiver_branch_id == $branch_sale_total->receiver_branch_id)
-                                                                {{ $item->sum_weight_kg }}
-                                                            @endif
-                                                        @endforeach
-                                                    </td>
-                                                    <td>
-                                                        @foreach ($result_weight_m as $item)
-                                                            @if ($item->receiver_branch_id == $branch_sale_total->receiver_branch_id)
-                                                                {{ $item->sum_weight_m }}
                                                             @endif
                                                         @endforeach
                                                     </td>
