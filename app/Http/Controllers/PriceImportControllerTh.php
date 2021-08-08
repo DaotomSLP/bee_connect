@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Change_sale_price_history;
-use App\Models\import_products_th;
+use App\Models\Import_products_th;
 use Illuminate\Http\Request;
 use App\Models\Price_imports_th;
 use App\Models\Sale_import_th;
@@ -92,7 +92,7 @@ class PriceImportControllerTh extends Controller
         import_products_th::where('id', $request->sale_item_id)->update(
             [
                 'sale_price' => $request->new_price,
-                'total_sale_price' => $request->new_price * $request->weight
+                'total_sale_price' => $request->new_price
             ]
         );
 
@@ -101,7 +101,8 @@ class PriceImportControllerTh extends Controller
 
         Sale_import_th::where('id', $request->sale_id)->update(
             [
-                'total' => ($sale_import->total - ($request->old_price * $request->weight)) + ($request->new_price * $request->weight)
+                'total' => ($sale_import->total - ($request->old_price)) + ($request->new_price),
+                'subtotal' => ($sale_import->subtotal - ($request->old_price)) + ($request->new_price)
             ]
         );
 

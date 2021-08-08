@@ -789,7 +789,7 @@ class ImportProductsThController extends Controller
     $result = import_products_th::query();
 
     $result->select('import_products_th.*')
-      ->join('sale_import', 'sale_import_th.id', 'import_products_th.sale_id')
+      ->join('sale_import_th', 'sale_import_th.id', 'import_products_th.sale_id')
       ->where('sale_import_th.id', $request->id);
 
     if ($request->send_date != '') {

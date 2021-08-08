@@ -48,7 +48,6 @@
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ລາຄາຂາຍ</label>
                                             <input type="hidden" id="sale_item_id" name="sale_item_id">
-                                            <input type="hidden" id="weight" name="weight">
                                             <input type="hidden" id="sale_id" name="sale_id">
                                             <input type="hidden" id="old_price" name="old_price">
                                             <input type="number" min="100" id="new_price" class="form-control"
@@ -106,7 +105,7 @@
                                                 </td>
                                                 <td>
                                                     {{ number_format($import_product->sale_price) }}<a type="button"
-                                                        onclick="change_price({{ $import_product->id . ',' . $import_product->sale_price . ',' . $import_product->weight . ',' . $import_product->sale_id }})"
+                                                        onclick="change_price({{ $import_product->id . ',' . $import_product->sale_price . ',' . $import_product->sale_id }})"
                                                         data-toggle="modal" data-target="#new_price_modal">
                                                         <i class="material-icons">create</i>
                                                     </a>
@@ -179,13 +178,11 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        function change_price(id, price, weight, sale_id) {
+        function change_price(id, price, sale_id) {
             $("#new_price").val(price);
             $("#old_price").val(price);
             $("#sale_item_id").val(id);
-            $("#weight").val(weight);
             $("#sale_id").val(sale_id);
         }
-
     </script>
 @endsection
