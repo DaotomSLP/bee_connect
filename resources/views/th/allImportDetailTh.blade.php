@@ -232,7 +232,8 @@
                                                     {{ $import_product->name }}
                                                 </td>
                                                 <td>
-                                                    <p class="font-weight-bold text-danger">{{ number_format($import_product->real_price) }} ບາດ</p>
+                                                    <p class="font-weight-bold text-danger">
+                                                        {{ number_format($import_product->real_price) }} ບາດ</p>
                                                 </td>
                                                 <td>
                                                     {{ $import_product->weight }}
@@ -249,14 +250,12 @@
                                                 <td>
                                                     {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : ($import_product->status == 'waiting' ? 'ລໍຖ້າ' : 'ສຳເລັດ')) }}
                                                 </td>
-                                                {{-- <td>
-                                            {{ number_format($import_product->total_real_price) }}
-                                        </td> --}}
+
                                                 <td>
                                                     {{ number_format($import_product->total_sale_price) }} ບາດ
                                                 </td>
                                                 <td>
-                                                    @if ($import_product->status != 'success' && Auth::user()->is_owner == 1)
+                                                    @if ($import_product->status != 'success' && $import_product->status != 'waiting' && Auth::user()->is_owner == 1)
                                                         @if ($import_product->status != 'success')
                                                             <a href="/deleteImportItemTh/{{ $import_product->id }}">
                                                                 <i class="material-icons">delete_forever</i>

@@ -32,6 +32,8 @@ Route::get('/addImportThPdf/{id}', [ImportProductsThController::class, 'addImpor
 
 Route::get('/deleteImportItemTh/{id}', [ImportProductsThController::class, 'deleteImportItemTh'])->middleware('auth')->name('deleteImportItemTh');
 
+Route::get('/deleteImportItemThForWaiting', [ImportProductsThController::class, 'deleteImportItemThForWaiting'])->middleware('auth')->name('deleteImportItemThForWaiting');
+
 Route::post('/changeImportItemWeightTh', [ImportProductsThController::class, 'changeImportItemWeightTh'])->middleware('auth')->name('changeImportItemWeightTh');
 
 Route::post('/importProductForUserTh', [ImportProductsThController::class, 'insertImportForUserTh'])->middleware('auth')->name('importProductForUserTh');

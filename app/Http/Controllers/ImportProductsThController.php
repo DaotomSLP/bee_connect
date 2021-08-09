@@ -160,13 +160,50 @@ class ImportProductsThController extends Controller
     return view('th.dailyimportTh', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share'));
   }
 
-  public function addImportTh()
+  public function addImportTh(Request $request)
   {
     $provinces = Provinces::all();
     $districts = Districts::all();
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
+    $result = Import_products_th::query();
 
-    return view('th.addImportTh', compact('provinces', 'districts', 'branchs'));
+    $result->select('import_products_th.*', 'receive.branch_name')
+      ->join('branchs As receive', 'import_products_th.receive_branch_id', 'receive.id');
+
+    if ($request->send_date != '') {
+      $result->whereDate('import_products_th.created_at', '=',  $request->send_date);
+    }
+
+    if ($request->product_id != '') {
+      $result->where('import_products_th.code', $request->product_id);
+    }
+
+    if ($request->status != '') {
+      $result->where('import_products_th.status', $request->status);
+    }
+
+    if ($request->receive_branch != '') {
+      $result->where('receive_branch_id', $request->receive_branch);
+    }
+
+    $all_import_products = $result->orderBy('import_products_th.id', 'desc')
+      ->count();
+
+    if ($request->page != '') {
+      $result->offset(($request->page - 1) * 25);
+    }
+
+    $import_products = $result->orderBy('import_products_th.id', 'desc')
+      ->limit(25)
+      ->get();
+
+    $pagination = [
+      'offsets' =>  ceil($all_import_products / 25),
+      'offset' => $request->page ? $request->page : 1,
+      'all' => $all_import_products
+    ];
+
+    return view('th.addImportTh', compact('provinces', 'districts', 'branchs', 'import_products', 'pagination'));
   }
 
   public function addImportProductTh(Request $request)
@@ -695,6 +732,7 @@ class ImportProductsThController extends Controller
       'id' => $import_product->code,
       'date' => date('d-m-Y', strtotime($import_product->created_at)),
       'to' => $receive_branch->branch_name,
+      'detail'=>$import_product->detail
     ];
     $pdf = PDF::loadView('pdf.addImportTh', $data);
     return $pdf->stream('document.pdf');
@@ -972,6 +1010,18 @@ class ImportProductsThController extends Controller
       return response()
         ->json(['error' => '1']);
     }
+  }
+
+  public function deleteImportItemThForWaiting(Request $request)
+  {
+    $id = $request->id;
+    $import_product_data = Import_products_th::where('id', $id)
+      ->orderBy('id', 'DESC')->first();
+
+    $import_product = import_products_th::where('id', $id);
+    $import_product->delete();
+
+    return redirect('addImportTh')->with(['error' => 'insert_success']);
   }
 
   public function deleteImportItemTh($id)
