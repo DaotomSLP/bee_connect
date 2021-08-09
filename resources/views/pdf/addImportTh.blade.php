@@ -4,23 +4,34 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
         @page {
-            margin: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 5px;
         }
 
         p {
             margin: 5px
         }
+
+        .barcodecell {
+            text-align: center;
+            vertical-align: middle;
+        }
     </style>
 </head>
 
 <body>
-    <p style="text-align: center;font-weight: bold;font-size: 13pt;">ໃບນຳສົ່ງສິນຄ້າ</p>
-<!-- 
+
+    <p style="text-align: center;font-weight: bold;font-size: 20pt;">BEE CONNECT</p>
+
+    <p style="text-align: center;font-size: 12pt;">77877877</p>
+    <br>
+    <!-- 
     <p style="font-size: 12pt;font-weight: bold;">ເລກບິນ :
         {{ $id }}
     </p> -->
 
-    <barcode code="{{ $id }}" type="C128B" height="2" />
+    <div class="barcodecell"><barcode code="{{ $id }}" type="C128B" height="2" size="0.7" vertical-align /></div>
     <p style="font-size: 12pt;text-align: center;">
         {{ $id }}
     </p>

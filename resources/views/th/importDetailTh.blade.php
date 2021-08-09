@@ -114,6 +114,31 @@
                 </div>
             @endif
 
+            <!-- Modal -->
+            <div class="modal fade" id="delete_import_product_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="POST" action="/deleteImportItemTh">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title" id="exampleModalLabel">ຕ້ອງການລົບລາຍການ ຫຼືບໍ່?</h2>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <input type="hidden" id="import_id_input" name="id">
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ຕົກລົງ</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                    aria-label="Close">ຍົກເລີກ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col">
                     <div class="x_panel">
@@ -221,7 +246,8 @@
                                                     {{ $import_product->name }}
                                                 </td>
                                                 <td>
-                                                    <p class="font-weight-bold text-danger">{{ number_format($import_product->real_price) }} ບາດ</p>
+                                                    <p class="font-weight-bold text-danger">
+                                                        {{ number_format($import_product->real_price) }} ບາດ</p>
                                                 </td>
                                                 <td>
                                                     {{ $import_product->weight }}
@@ -238,13 +264,16 @@
                                                 <td>
                                                     @if ($import_product->status != 'success' && Auth::user()->is_owner == 1)
                                                         @if ($import_product->status != 'success')
-                                                            <a href="/deleteImportItemTh/{{ $import_product->id }}">
+                                                            <a type="button"
+                                                                onclick="deleteImportItemTh({{ $import_product->id }})"
+                                                                data-toggle="modal"
+                                                                data-target="#delete_import_product_modal">
                                                                 <i class="material-icons">delete_forever</i>
                                                             </a>
                                                         @endif
                                                         {{-- @if ($import_product->weight_type == 'm' && $import_product->status != 'success') --}}
                                                         <a type="button"
-                                                            onclick="change_weight({{ $import_product->lot_id . ',' . $import_product->id .  ',' . $import_product->real_price . ',' }} '{{ $import_product->weight }}')"
+                                                            onclick="change_weight({{ $import_product->lot_id . ',' . $import_product->id . ',' . $import_product->real_price . ',' }} '{{ $import_product->weight }}')"
                                                             data-toggle="modal" data-target="#new_weight_modal">
                                                             <i class="material-icons">create</i>
                                                         </a>
@@ -333,6 +362,10 @@
             $("#weight").val(weight);
             $("#lot_id").val(id);
 
+        }
+
+        function deleteImportItemTh(id) {
+            $("#import_id_input").val(id);
         }
     </script>
 @endsection

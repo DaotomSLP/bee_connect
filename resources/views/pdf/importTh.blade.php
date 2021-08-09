@@ -3,8 +3,33 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
+        #itemtable {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #itemtable td,
+        #itemtable th {
+            border: 1px solid #000;
+            padding: 8px;
+        }
+
+        #itemtable tr:hover {}
+
+        #itemtable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            color: black;
+        }
+
+        td {
+            font-size: 9pt;
+        }
+
         @page {
-            margin: 20px;
+            margin: 10px;
         }
 
         p {
@@ -15,7 +40,9 @@
 </head>
 
 <body>
-    <p style="text-align: center;font-weight: bold;font-size: 13pt;">ໃບນຳສົ່ງສິນຄ້າ</p>
+    <p style="text-align: center;font-weight: bold;font-size: 20pt;">BEE CONNECT</p>
+
+    <p style="text-align: center;font-weight: bold;font-size: 12pt;">ໃບນຳສົ່ງສິນຄ້າ</p>
 
     <p style="font-size: 12pt;font-weight: bold;">ເລກບິນ :
         {{ $id }}
@@ -45,7 +72,34 @@
         </p>
     @endif
 
+    <p style="font-size: 12pt;font-weight: bold;">ລາຍການ :</p>
 
+    <table id="itemtable">
+        <tr>
+            <th>
+                ລ/ດ
+            </th>
+            <th>
+                ລະຫັດເຄື່ອງ
+            </th>
+            <th>
+                ລາຄາ
+            </th>
+        </tr>
+        @foreach ($import_product_data as $key => $item)
+            <tr>
+                <td>
+                    {{ $key }}
+                </td>
+                <td>
+                    {{ $item->code }}
+                </td>
+                <td>
+                    {{ $item->real_price }}
+                </td>
+            </tr>
+        @endforeach
+    </table>
 
     <hr>
     <p style="font-size: 12pt;">ລວມເປັນເງິນ :

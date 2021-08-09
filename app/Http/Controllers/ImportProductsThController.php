@@ -732,7 +732,7 @@ class ImportProductsThController extends Controller
       'id' => $import_product->code,
       'date' => date('d-m-Y', strtotime($import_product->created_at)),
       'to' => $receive_branch->branch_name,
-      'detail'=>$import_product->detail
+      'detail' => $import_product->detail
     ];
     $pdf = PDF::loadView('pdf.addImportTh', $data);
     return $pdf->stream('document.pdf');
@@ -742,7 +742,7 @@ class ImportProductsThController extends Controller
   {
     $lot = Lots_th::find($id);
     $receive_branch = Branchs::find($lot->receiver_branch_id);
-
+    $import_product_data = Import_products_th::where('lot_id', $id)->get();
     $data = [
       'id' => $lot->id,
       'date' => date('d-m-Y', strtotime($lot->created_at)),
@@ -751,6 +751,7 @@ class ImportProductsThController extends Controller
       'price' => $lot->total_main_price,
       'pack_price' => $lot->pack_price,
       'fee' => $lot->fee,
+      'import_product_data' => $import_product_data
     ];
     $pdf = PDF::loadView('pdf.importTh', $data);
     return $pdf->stream('document.pdf');
@@ -1017,23 +1018,28 @@ class ImportProductsThController extends Controller
     $id = $request->id;
     $import_product_data = Import_products_th::where('id', $id)
       ->orderBy('id', 'DESC')->first();
-
+    if ($import_product_data->status != 'waiting') {
+      return redirect('addImportTh')->with(['error' => 'not_insert']);
+    }
     $import_product = import_products_th::where('id', $id);
     $import_product->delete();
 
     return redirect('addImportTh')->with(['error' => 'insert_success']);
   }
 
-  public function deleteImportItemTh($id)
+  public function deleteImportItemTh(Request $request)
   {
+    $id = $request->id;
     $import_product_data = Import_products_th::where('id', $id)
       ->orderBy('id', 'DESC')->first();
+    if ($import_product_data->status != 'sending') {
+      return redirect('addImportTh')->with(['error' => 'not_insert']);
+    }
     $lot = Lots_th::where('id', $import_product_data->lot_id)
       ->orderBy('id', 'DESC')->first();
 
     Lots_th::where('id', $import_product_data->lot_id)->update(
       [
-        'total_base_price' => ($lot->total_base_price - $import_product_data->base_price),
         'total_price' => ($lot->total_price - $import_product_data->real_price),
         'total_main_price' => ($lot->total_main_price - $import_product_data->real_price),
       ]
@@ -1061,7 +1067,6 @@ class ImportProductsThController extends Controller
 
     Lots_th::where('id', $request->lot_id)->update(
       [
-        'total_base_price' => (($lot->total_base_price - $import_product->base_price) + $request->base_price),
         'total_price' => (($lot->total_price - $import_product->real_price) + $request->real_price),
         'total_main_price' => (($lot->total_price - $import_product->real_price) + $request->real_price + ($lot->fee ? $lot->fee : 0) + ($lot->pack_price ? $lot->pack_price : 0)),
       ]
@@ -1070,7 +1075,6 @@ class ImportProductsThController extends Controller
     $import_product = import_products_th::where('id', $request->prod_id)->update(
       [
         'weight' => $request->weight,
-        'base_price' => $request->base_price,
         'real_price' => $request->real_price,
       ]
     );

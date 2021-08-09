@@ -30,7 +30,7 @@ Route::get('/importpdfTh/{id}', [ImportProductsThController::class, 'reportTh'])
 
 Route::get('/addImportThPdf/{id}', [ImportProductsThController::class, 'addImportThPdf'])->middleware('auth')->name('addImportThPdf');
 
-Route::get('/deleteImportItemTh/{id}', [ImportProductsThController::class, 'deleteImportItemTh'])->middleware('auth')->name('deleteImportItemTh');
+Route::post('/deleteImportItemTh', [ImportProductsThController::class, 'deleteImportItemTh'])->middleware('auth')->name('deleteImportItemTh');
 
 Route::get('/deleteImportItemThForWaiting', [ImportProductsThController::class, 'deleteImportItemThForWaiting'])->middleware('auth')->name('deleteImportItemThForWaiting');
 
