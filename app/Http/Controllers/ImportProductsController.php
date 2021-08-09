@@ -42,9 +42,13 @@ class ImportProductsController extends Controller
   public function dailyImport(Request $request)
   {
 
-    
+
     if (Auth::user()->is_thai_admin == 'yes') {
       return redirect('/addImportTh');
+    }
+
+    if (Auth::user()->is_admin_th == 'yes') {
+      return redirect('/importTh');
     }
 
     $to_date_now = date('Y-m-d', strtotime(Carbon::now()));

@@ -14,6 +14,8 @@ Route::get('/importViewTh', [ImportProductsThController::class, 'importViewTh'])
 
 Route::get('/importDetailTh', [ImportProductsThController::class, 'importDetailTh'])->middleware('auth')->name('importDetailTh');
 
+Route::get('/importDetailForUserTh', [ImportProductsThController::class, 'importDetailForUser'])->middleware('auth')->name('importDetailForUserTh');
+
 Route::get('/importProductTrackTh', [ImportProductsThController::class, 'importProductTrackTh'])->middleware('auth')->name('importProductTrackTh');
 
 Route::get('/dailyImportTh', [ImportProductsThController::class, 'dailyImportTh'])->middleware('auth')->name('dailyImportTh');

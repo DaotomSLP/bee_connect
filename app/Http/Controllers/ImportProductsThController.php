@@ -904,7 +904,7 @@ class ImportProductsThController extends Controller
       'all' => $all_import_products
     ];
 
-    return view('th.importDetailForUser', compact('branchs', 'import_products', 'pagination'));
+    return view('th.importDetailForUserTh', compact('branchs', 'import_products', 'pagination'));
   }
 
 
