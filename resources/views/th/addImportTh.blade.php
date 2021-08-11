@@ -7,7 +7,7 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>ນຳເຂົ້າສິນຄ້າ</h3>
+                    <h3>Receive</h3>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -43,19 +43,19 @@
                                         <div class="row">
                                             <div class="col">
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">ລະຫັດສິນຄ້າ</label>
+                                                    <label class="bmd-label-floating">Code</label>
                                                     <input class="form-control form-control-sm" name="code">
                                                 </div>
                                             </div>
                                             <div class="col">
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">ຊື່ສິນຄ້າ</label>
+                                                    <label class="bmd-label-floating">Box Name</label>
                                                     <input class="form-control form-control-sm" name="name">
                                                 </div>
                                             </div>
                                             <div class="col">
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">ລາຍລະອຽດບ່ອນສົ່ງ</label>
+                                                    <label class="bmd-label-floating">Description</label>
                                                     <textarea class="form-control" name="detail"></textarea>
                                                 </div>
                                             </div>
@@ -70,18 +70,18 @@
                             <div class="col">
                                 <div class="x_panel">
                                     <div>
-                                        <h2>ເລຶອກບ່ອນສົ່ງ</h2>
+                                        <h2>Select Destination</h2>
                                     </div>
                                     <div class="x-content">
 
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">ແຂວງ</label>
+                                                    <label class="bmd-label-floating">Province</label>
                                                     <select class="form-control form-control-sm" id="select_province"
                                                         required>
                                                         <option value="">
-                                                            ເລືອກ
+                                                            Select
                                                         </option>
                                                         @foreach ($provinces as $province)
                                                             <option value="{{ $province->id }}">
@@ -93,11 +93,11 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">ເມືອງ</label>
+                                                    <label class="bmd-label-floating">Province</label>
                                                     <select class="form-control form-control-sm" disabled
                                                         id="select_district" required>
                                                         <option value="">
-                                                            ເລືອກ
+                                                            Select
                                                         </option>
                                                         @foreach ($districts as $district)
                                                             <option value="{{ $district->id }}">
@@ -109,11 +109,11 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label class="bmd-label-floating">ສາຂາ</label>
+                                                    <label class="bmd-label-floating">Branch</label>
                                                     <select class="form-control form-control-sm" disabled id="select_branch"
                                                         name="receiver_branch_id" required>
                                                         <option value="">
-                                                            ເລືອກ
+                                                            Select
                                                         </option>
                                                         @foreach ($branchs as $branch)
                                                             <option value="{{ $branch->id }}">
@@ -125,7 +125,7 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
+                                            <button type="submit" class="btn btn-primary pull-right px-5">Save</button>
                                             <div class="clearfix"></div>
                                         </div>
                                     </div>
@@ -144,7 +144,7 @@
                     <form method="GET" action="/deleteImportItemThForWaiting">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h2 class="modal-title" id="exampleModalLabel">ການລົບລາຍການ ຫຼືບໍ່?</h2>
+                                <h2 class="modal-title" id="exampleModalLabel">Do you want to delete ?</h2>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -153,9 +153,9 @@
                             <input type="hidden" id="import_id" name="id">
 
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">ຕົກລົງ</button>
+                                <button type="submit" class="btn btn-primary">Ok</button>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal"
-                                    aria-label="Close">ຍົກເລີກ</button>
+                                    aria-label="Close">Cancel</button>
                             </div>
                         </div>
                     </form>
@@ -168,7 +168,7 @@
                 <div class="col">
                     <div class="x_panel">
                         <div>
-                            <h2>ຄົ້ນຫາ</h2>
+                            <h2>Search</h2>
                         </div>
                         <div class="x_content">
                             <form method="GET" action="/addImportTh">
@@ -177,44 +177,44 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
+                                            <label class="bmd-label-floating">Code</label>
                                             <input class="form-control form-control-sm"
                                                 value="{{ Request::input('product_id') }}" name="product_id">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ສະຖານະ</label>
+                                            <label class="bmd-label-floating">Status</label>
                                             <select class="form-control form-control-sm" id="select_status" name="status">
                                                 <option value="">
-                                                    ເລືອກ
+                                                    Select
                                                 </option>
                                                 <option {{ Request::input('status') == 'waiting' ? 'selected' : '' }}
                                                     value="waiting">
-                                                    ລໍຖ້າ
+                                                    Sending to Laos
                                                 </option>
                                                 <option {{ Request::input('status') == 'sending' ? 'selected' : '' }}
                                                     value="sending">
-                                                    ກຳລັງສົ່ງ
+                                                    Sending to Branch
                                                 </option>
                                                 <option {{ Request::input('status') == 'received' ? 'selected' : '' }}
                                                     value="received">
-                                                    ຮອດແລ້ວ
+                                                    Received in Branch
                                                 </option>
                                                 <option {{ Request::input('status') == 'success' ? 'selected' : '' }}
                                                     value="success">
-                                                    ສຳເລັດ
+                                                    Completed
                                                 </option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
+                                            <label class="bmd-label-floating">Receive Branch</label>
                                             <select class="form-control form-control-sm" id="select_branch"
                                                 name="receive_branch">
                                                 <option value="">
-                                                    ເລືອກ
+                                                    Select
                                                 </option>
                                                 @foreach ($branchs as $branch)
                                                     <option
@@ -228,13 +228,13 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="bmd-label-floating">ວັນທີຮັບ</label>
+                                            <label class="bmd-label-floating">Receive Date</label>
                                             <input class="form-control form-control-sm" type="date"
                                                 value="{{ Request::input('send_date') }}" name="send_date">
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-primary pull-right px-4">ຄົ້ນຫາ</button>
+                                <button type="submit" class="btn btn-sm btn-primary pull-right px-4">Search</button>
                                 <div class="clearfix"></div>
                             </form>
                         </div>
@@ -248,36 +248,33 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header card-header-primary">
-                            <h5 class="card-title ">ລາຍການສົ່ງອອກທັງໝົດຂອງສາຂາ</h5>
+                            <h5 class="card-title ">Receive List</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead class=" text-primary">
                                         <th>
-                                            ລ/ດ
+                                            #
                                         </th>
                                         <th>
-                                            ລະຫັດເຄື່ອງ
+                                            Code
                                         </th>
                                         <th>
-                                            ຊື່ເຄື່ອງ
+                                            Box Name
                                         </th>
                                         <th>
-                                            ຮັບມາວັນທີ່
+                                            Receive Date
                                         </th>
                                         <th>
-                                            ສົ່ງໄປສາຂາ
+                                            Receive Branch
                                         </th>
                                         <th>
-                                            ຂາຍວັນທີ່
+                                            Sale Date
                                         </th>
                                         <th>
-                                            ສະຖານະ
+                                            Status
                                         </th>
-                                        {{-- <th>
-                                        ຕົ້ນທຶນ
-                                    </th> --}}
                                         <th>
 
                                         </th>
@@ -305,7 +302,7 @@
                                                     {{ $import_product->success_at }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : ($import_product->status == 'waiting' ? 'ລໍຖ້າ' : 'ສຳເລັດ')) }}
+                                                    {{ $import_product->status == 'sending' ? 'Sending to Branch' : ($import_product->status == 'received' ? 'Received in Branch' : ($import_product->status == 'waiting' ? 'Sending to Laos' : 'Completed')) }}
                                                 </td>
                                                 {{-- <td>
                                             {{ number_format($import_product->total_real_price) }}

@@ -11,7 +11,7 @@
         <!-- sidebar menu -->
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             <div class="menu_section">
-                <h3>General</h3>
+                {{-- <h3>General</h3> --}}
                 <ul class="nav side-menu">
 
                     @if (Auth::user()->is_tester == 'yes')
@@ -23,12 +23,12 @@
                         @endif
                     @endif
 
-                    @if (Auth::user()->is_admin != 1 && Auth::user()->branch_id == null)
+                    @if (Auth::user()->is_branch == 1)
                         {{-- For Partner --}}
                         <li><a><i class="fa fa-home"></i> ຕ່າງປະເທດ <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
-                                <li class="{{ Request::is('addImportTh') ? 'current-page' : '' }}"><a
-                                        href="/addImportTh">ຮັບສິນຄ້າ</a></li>
+                                <li class="{{ Request::is('dailyImport') ? 'current-page' : '' }}"><a
+                                        href="/dailyImport">ລາຍງານປະຈຳວັນ</a></li>
                             </ul>
                         </li>
                     @elseif(Auth::user()->is_thai_admin == 1)
