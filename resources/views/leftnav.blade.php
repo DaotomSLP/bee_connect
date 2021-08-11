@@ -23,15 +23,8 @@
                         @endif
                     @endif
 
-                    @if (Auth::user()->is_branch == 1)
-                        {{-- For Partner --}}
-                        <li><a><i class="fa fa-home"></i> ຕ່າງປະເທດ <span class="fa fa-chevron-down"></span></a>
-                            <ul class="nav child_menu">
-                                <li class="{{ Request::is('dailyImport') ? 'current-page' : '' }}"><a
-                                        href="/dailyImport">ລາຍງານປະຈຳວັນ</a></li>
-                            </ul>
-                        </li>
-                    @elseif(Auth::user()->is_thai_admin == 1)
+              
+                    @if(Auth::user()->is_thai_admin == 1)
 
                         @include('layouts.thaiAdminMenu')
 
