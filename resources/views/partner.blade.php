@@ -41,23 +41,49 @@
                             <div class="x_content">
                                 <form method="POST" action="/insertPartner">
                                     @csrf
+                                    {{-- <select class="form-control" name="country" required>
+                                                <option value="">
+                                                    ເລືອກປະເທດ
+                                                </option>
+                                                <option value="thai">
+                                                    ໄທ
+                                                </option>
+                                                <option value="ch">
+                                                    ຈີນ
+                                                </option>
+                                            </select> --}}
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="1" name="is_thai" id="thai">
+                                                <label for="thai">ຫຸ້ນສ່ວນຂອງໄທ</label>
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ສ່ວນແບ່ງ(%)</label>
+                                                    <input type="number" max="100" name="thai_percent" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="1" name="is_ch" id="ch">
+                                                <label for="ch">ຫຸ້ນສ່ວນຂອງຈີນ</label>
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ສ່ວນແບ່ງ(%)</label>
+                                                    <input type="number" max="100" name="ch_percent" class="form-control">
+                                                </div>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="bmd-label-floating">ຊື່</label>
-                                                <input type="text" name="name" class="form-control">
+                                                <input type="text" name="name" class="form-control" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="bmd-label-floating">ນາມສະກຸນ</label>
-                                                <input type="text" name="last_name" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="bmd-label-floating">ສ່ວນແບ່ງ(%)</label>
-                                                <input type="number" name="percent" class="form-control" required>
+                                                <input type="text" name="last_name" class="form-control" required>
                                             </div>
                                         </div>
                                     </div>
@@ -162,6 +188,12 @@
                                             ເບີໂທ
                                         </th>
                                         <th>
+                                            ສ່ວນແບ່ງໄທ
+                                        </th>
+                                        <th>
+                                            ສ່ວນແບ່ງຈີນ
+                                        </th>
+                                        <th>
 
                                         </th>
                                         <th>
@@ -179,6 +211,12 @@
                                                 </td>
                                                 <td>
                                                     {{ $user->phone_no }}
+                                                </td>
+                                                <td>
+                                                    {{ ($user->thai_percent ? $user->thai_percent : 0) ."%"}}
+                                                </td>
+                                                <td>
+                                                    {{ ($user->ch_percent ? $user->ch_percent : 0) ."%"}}
                                                 </td>
                                                 @if (Auth::user()->is_owner == 1)
                                                     <td>

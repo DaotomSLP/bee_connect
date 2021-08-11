@@ -143,7 +143,7 @@ class UsersController extends Controller
 
         $result->select('users.*')
             ->where('branch_id', NULL)
-            ->where('is_owner', 0);
+            ->where('is_super_admin', NULL);
 
         if ($request->name != '') {
             $result->where('users.name', $request->name);
@@ -184,24 +184,31 @@ class UsersController extends Controller
 
     public function insertPartner(Request $request)
     {
-        $user = new User;
-        $user->name = $request->name;
-        $user->last_name = $request->last_name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->is_admin = '0';
-        $user->enabled = '1';
-        $user->phone_no = $request->phone_no;
-        $user->is_owner = '0';
-        $user->percent = $request->percent;
+        if ($request->is_thai || $request->is_ch) {
+            $user = new User;
+            $user->name = $request->name;
+            $user->last_name = $request->last_name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->is_admin = '0';
+            $user->enabled = '1';
+            $user->phone_no = $request->phone_no;
+            $user->is_owner = '0';
+            $user->is_thai_partner = $request->is_thai;
+            $user->thai_percent = $request->thai_percent ? $request->thai_percent : 0;
+            $user->is_ch_partner = $request->is_ch;
+            $user->ch_percent = $request->ch_percent ? $request->ch_percent : 0;
 
-        try {
-            if ($user->save()) {
-                return redirect('partner')->with(['error' => 'insert_success']);
-            } else {
+            try {
+                if ($user->save()) {
+                    return redirect('partner')->with(['error' => 'insert_success']);
+                } else {
+                    return redirect('partner')->with(['error' => 'not_insert']);
+                }
+            } catch (\Throwable $th) {
                 return redirect('partner')->with(['error' => 'not_insert']);
             }
-        } catch (\Throwable $th) {
+        } else {
             return redirect('partner')->with(['error' => 'not_insert']);
         }
     }
@@ -215,18 +222,25 @@ class UsersController extends Controller
 
     public function updatePartner(Request $request)
     {
-        $user = [
-            'name' => $request->name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'enabled' => '1',
-            'phone_no' => $request->phone_no,
-            'percent' => $request->percent
-        ];
+        if ($request->is_thai || $request->is_ch) {
+            $user = [
+                'name' => $request->name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'enabled' => '1',
+                'phone_no' => $request->phone_no,
+                'is_thai_partner' => $request->is_thai_partner,
+                'thai_percent' => $request->thai_percent ? $request->thai_percent : 0,
+                'is_ch_partner' => $request->is_ch_partner,
+                'ch_percent' => $request->ch_percent ? $request->ch_percent : 0,
+            ];
 
-        if (User::where('id', $request->id)->update($user)) {
-            return redirect('partner')->with(['error' => 'insert_success']);
+            if (User::where('id', $request->id)->update($user)) {
+                return redirect('partner')->with(['error' => 'insert_success']);
+            } else {
+                return redirect('partner')->with(['error' => 'not_insert']);
+            }
         } else {
             return redirect('partner')->with(['error' => 'not_insert']);
         }
