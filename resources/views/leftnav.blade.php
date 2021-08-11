@@ -19,7 +19,7 @@
                         @if (Auth::user()->is_admin == 1)
                             @include('layouts.adminMenuForTest')
                         @else
-                          @include('layouts.branchMenuForTest')
+                            @include('layouts.branchMenuForTest')
                         @endif
                     @endif
 
@@ -43,6 +43,20 @@
                         {{-- for Admin --}}
 
                         @include('layouts.superAdminMenu')
+
+                    @elseif(Auth::user()->is_ch_partner == 1 )
+
+                        <li
+                            class="{{ Request::is('dailyImport')|| Request::is('/') || Request::is('dailyImport') ? 'current-page' : '' }}">
+                            <a href="/dailyImport">ລາຍງານປະຈຳວັນ (China)</a>
+                        </li>
+
+                    @elseif(Auth::user()->is_thai_partner == 1 )
+
+                        <li
+                            class="{{ Request::is('dailyImportTh') || Request::is('dailyImportTh') ? 'current-page' : '' }}">
+                            <a href="/dailyImportTh">ລາຍງານປະຈຳວັນ (Thailand)</a>
+                        </li>
 
                     @else
 
