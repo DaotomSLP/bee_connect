@@ -230,9 +230,9 @@ class UsersController extends Controller
                 'password' => Hash::make($request->password),
                 'enabled' => '1',
                 'phone_no' => $request->phone_no,
-                'is_thai_partner' => $request->is_thai_partner,
+                'is_thai_partner' => $request->is_thai,
                 'thai_percent' => $request->thai_percent ? $request->thai_percent : 0,
-                'is_ch_partner' => $request->is_ch_partner,
+                'is_ch_partner' => $request->is_ch,
                 'ch_percent' => $request->ch_percent ? $request->ch_percent : 0,
             ];
 
