@@ -76,22 +76,6 @@
                     </div>
                 </div>
             @else
-                @if (Auth::user()->is_admin != 1)
-                    <div class="row">
-                        <div class="col-12 col-mg-4 col-lg-4">
-                            <div class="x_panel">
-                                <div>
-                                    <p class="h4">ສ່ວນແບ່ງ</p>
-                                </div>
-                                <hr>
-                                <div class="x_content">
-                                    <p class="h2">{{ number_format($sum_share) }} ກີບ</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                @endif
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
                         <div class="x_panel">
@@ -185,6 +169,22 @@
 
                 <hr>
 
+                @if (Auth::user()->is_ch_partner == 1)
+                    <div class="row">
+                        <div class="col-12 col-mg-4 col-lg-4">
+                            <div class="x_panel">
+                                <div>
+                                    <p class="h4">ສ່ວນແບ່ງ</p>
+                                </div>
+                                <hr>
+                                <div class="x_content">
+                                    <p class="h2">{{ number_format($sum_share) }} ກີບ</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                @endif
 
                 <div class="row">
                     <div class="col-md-12">
