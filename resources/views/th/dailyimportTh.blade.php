@@ -39,7 +39,7 @@
             </div>
 
             <hr>
-            @if (Auth::user()->branch_id != null)
+            @if (Auth::user()->is_branch == 1)
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
                         <div class="x_panel">
@@ -76,22 +76,6 @@
                     </div>
                 </div>
             @else
-                @if (Auth::user()->is_admin != 1)
-                    <div class="row">
-                        <div class="col-12 col-mg-4 col-lg-4">
-                            <div class="x_panel">
-                                <div>
-                                    <p class="h4">ສ່ວນແບ່ງ</p>
-                                </div>
-                                <hr>
-                                <div class="x_content">
-                                    <p class="h2">{{ number_format($sum_share) }} ບາດ</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                @endif
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
                         <div class="x_panel">
@@ -109,7 +93,7 @@
                             <div>
                                 <p class="h4 d-inline">ຕົ້ນທຶນ</p>
                                 <p class="pl-3 h4 d-inline"><a href="/base_price_th"><i
-                                    class="fa fa-arrow-right"></i></span></a></p>
+                                            class="fa fa-arrow-right"></i></span></a></p>
                             </div>
                             <hr>
                             <div class="x_content">
@@ -187,6 +171,22 @@
 
                 <hr>
 
+                @if (Auth::user()->is_thai_partner == 1)
+                    <div class="row">
+                        <div class="col-12 col-mg-4 col-lg-4">
+                            <div class="x_panel">
+                                <div>
+                                    <p class="h4">ສ່ວນແບ່ງ</p>
+                                </div>
+                                <hr>
+                                <div class="x_content">
+                                    <p class="h2">{{ number_format($sum_share) }} ບາດ</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                @endif
 
                 <div class="row">
                     <div class="col-md-12">
