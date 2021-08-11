@@ -48,7 +48,7 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_real_price) }} ກີບ</p>
+                                <p class="h2">{{ number_format($sum_real_price) }} ບາດ</p>
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_base_price) }} ກີບ</p>
+                                <p class="h2">{{ number_format($sum_base_price) }} ບາດ</p>
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_sale_profit) }} ກີບ</p>
+                                <p class="h2">{{ number_format($sum_sale_profit) }} ບາດ</p>
                             </div>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                                 </div>
                                 <hr>
                                 <div class="x_content">
-                                    <p class="h2">{{ number_format($sum_share) }} ກີບ</p>
+                                    <p class="h2">{{ number_format($sum_share) }} ບາດ</p>
                                 </div>
                             </div>
                         </div>
@@ -100,7 +100,7 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_real_price) }} ກີບ</p>
+                                <p class="h2">{{ number_format($sum_real_price) }} ບາດ</p>
                             </div>
                         </div>
                     </div>
@@ -113,7 +113,7 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_base_price) }} ກີບ</p>
+                                <p class="h2">{{ number_format($sum_base_price) }} ບາດ</p>
                             </div>
                         </div>
                     </div>
@@ -124,7 +124,7 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_sale_profit) }} ກີບ</p>
+                                <p class="h2">{{ number_format($sum_sale_profit) }} ບາດ</p>
                             </div>
                         </div>
                     </div>
@@ -138,7 +138,7 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_fee_price) }} ກີບ</p>
+                                <p class="h2">{{ number_format($sum_fee_price) }} ບາດ</p>
                             </div>
                         </div>
                     </div>
@@ -149,7 +149,7 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_pack_price) }} ກີບ</p>
+                                <p class="h2">{{ number_format($sum_pack_price) }} ບາດ</p>
                             </div>
                         </div>
                     </div>
@@ -165,13 +165,13 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_expenditure) }} ກີບ</p>
+                                <p class="h2">{{ number_format($sum_expenditure) }} ບາດ</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <hr> --}}
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
                         <div class="x_panel">
                             <div>
@@ -179,11 +179,11 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_profit) }} ກີບ</p>
+                                <p class="h2">{{ number_format($sum_profit) }} ບາດ</p>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <hr>
 
@@ -240,19 +240,19 @@
                                                         @endforeach
                                                     </td>
                                                     <td>
-                                                        {{ number_format($branch_sale_total->branch_total_price) }} ກີບ
+                                                        {{ number_format($branch_sale_total->branch_total_price) }} ບາດ
                                                     </td>
                                                     <td>
                                                         @foreach ($result_unpaid as $item)
                                                             @if ($item->receiver_branch_id == $branch_sale_total->receiver_branch_id)
-                                                                {{ number_format($item->branch_total_price) }} ກີບ
+                                                                {{ number_format($item->branch_total_price) }} ບາດ
                                                             @endif
                                                         @endforeach
                                                     </td>
                                                     <td>
                                                         @foreach ($result_paid as $item)
                                                             @if ($item->receiver_branch_id == $branch_sale_total->receiver_branch_id)
-                                                                {{ number_format($item->branch_total_price) }} ກີບ
+                                                                {{ number_format($item->branch_total_price) }} ບາດ
                                                             @endif
                                                         @endforeach
                                                     </td>

@@ -43,11 +43,11 @@ class ImportProductsController extends Controller
   {
 
 
-    if (Auth::user()->is_thai_admin == 'yes') {
+    if (Auth::user()->is_thai_admin == 1) {
       return redirect('/addImportTh');
     }
 
-    if (Auth::user()->is_admin_th == 'yes') {
+    if (Auth::user()->is_thai_admin_in_lao == 1) {
       return redirect('/importTh');
     }
 
