@@ -19,6 +19,11 @@ class BranchController extends Controller
 
     public function index()
     {
+
+        if(Auth::user()->is_admin != 1){
+            return redirect('access_denied');
+        }
+
         $provinces = Provinces::all();
         $districts = Districts::all();
         $pagination = [

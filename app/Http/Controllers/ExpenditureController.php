@@ -17,6 +17,11 @@ class ExpenditureController extends Controller
      */
     public function index(Request $request)
     {
+
+        if(Auth::user()->is_admin != 1){
+            return redirect('access_denied');
+        }
+
         $result = Expenditure::query();
         $date_now = date('Y-m-d', strtotime(Carbon::now()));
 

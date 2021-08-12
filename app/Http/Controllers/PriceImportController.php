@@ -26,6 +26,10 @@ class PriceImportController extends Controller
 
     public function priceImport(Request $request)
     {
+        if(Auth::user()->is_admin != 1){
+            return redirect('access_denied');
+          }
+
         $pagination = [
             'offsets' =>  ceil(sizeof(Price_imports::all()) / 10),
             'offset' => 1,
@@ -121,6 +125,11 @@ class PriceImportController extends Controller
 
     public function saleImportPrice(Request $request)
     {
+
+        if(Auth::user()->is_branch != 1){
+            return redirect('access_denied');
+          }
+
         $pagination = [
             'offsets' =>  ceil(sizeof(Price_imports::all()) / 10),
             'offset' => 1,

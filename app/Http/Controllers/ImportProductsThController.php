@@ -162,6 +162,11 @@ class ImportProductsThController extends Controller
 
   public function addImportTh(Request $request)
   {
+
+    if(Auth::user()->is_thai_admin != 1){
+      return redirect('access_denied');
+    }
+
     $provinces = Provinces::all();
     $districts = Districts::all();
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
@@ -208,6 +213,11 @@ class ImportProductsThController extends Controller
 
   public function addImportProductTh(Request $request)
   {
+
+    if(Auth::user()->is_thai_admin != 1){
+      return redirect('access_denied');
+    }
+
     $imp_th_id = import_products_th::select('id')->orderBy('id', 'desc')->first();
     $import_products_th = new import_products_th;
     $import_products_th->name = $request->name;
@@ -229,6 +239,11 @@ class ImportProductsThController extends Controller
 
   public function saleImportTh(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     $sale_price_gram = Sale_prices::where('weight_type', 'kg')
       ->where('branch_id',  Auth::user()->branch_id)
       ->orderBy('id', 'DESC')->first();
@@ -256,6 +271,11 @@ class ImportProductsThController extends Controller
 
   public function importProductTh(Request $request)
   {
+
+    if(Auth::user()->is_admin != 1){
+      return redirect('access_denied');
+    }
+
     if ($request->item_id) {
 
       $sum_price = 0;
@@ -348,6 +368,11 @@ class ImportProductsThController extends Controller
 
   public function insertImportForUserTh(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     if ($request->item_id) {
       $count = 0;
       foreach ($request->item_id as $product_code) {
@@ -380,6 +405,11 @@ class ImportProductsThController extends Controller
 
   public function insertSaleImportTh(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     if ($request->items) {
       $sum_price = 0;
 
@@ -484,6 +514,11 @@ class ImportProductsThController extends Controller
 
   public function insertSaleImportForRiderTh(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     if ($request->items) {
       $sum_price = 0;
 
@@ -589,6 +624,11 @@ class ImportProductsThController extends Controller
 
   public function importViewTh(Request $request)
   {
+    
+    if(Auth::user()->is_admin != 1){
+      return redirect('access_denied');
+    }
+
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
     $result = Lots_th::query();
 
@@ -642,6 +682,11 @@ class ImportProductsThController extends Controller
 
   public function saleViewTh(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     $result = Sale_import_th::query();
 
     $result->select('sale_import_th.*')->where('branch_id', Auth::user()->branch_id);
@@ -675,6 +720,11 @@ class ImportProductsThController extends Controller
 
   public function importViewForUserTh(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
     $result = Lots_th::query();
 
@@ -776,6 +826,11 @@ class ImportProductsThController extends Controller
 
   public function importDetailTh(Request $request)
   {
+
+    if(Auth::user()->is_admin != 1){
+      return redirect('access_denied');
+    }
+
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
     $result = import_products_th::query();
@@ -825,6 +880,10 @@ class ImportProductsThController extends Controller
   public function saleDetailTh(Request $request)
   {
 
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     $result = import_products_th::query();
 
     $result->select('import_products_th.*')
@@ -861,6 +920,11 @@ class ImportProductsThController extends Controller
 
   public function importDetailForUser(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
     $result = import_products_th::query();
@@ -910,6 +974,11 @@ class ImportProductsThController extends Controller
 
   public function importProductTrackTh(Request $request)
   {
+
+    if(Auth::user()->is_admin != 1){
+      return redirect('access_denied');
+    }
+
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
     $result = Import_products_th::query();
@@ -955,6 +1024,10 @@ class ImportProductsThController extends Controller
 
   public function importProductTrackForUserTh(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
 
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
@@ -1015,6 +1088,11 @@ class ImportProductsThController extends Controller
 
   public function deleteImportItemThForWaiting(Request $request)
   {
+
+    if(Auth::user()->is_thai_admin != 1){
+      return redirect('access_denied');
+    }
+
     $id = $request->id;
     $import_product_data = Import_products_th::where('id', $id)
       ->orderBy('id', 'DESC')->first();
@@ -1029,6 +1107,11 @@ class ImportProductsThController extends Controller
 
   public function deleteImportItemTh(Request $request)
   {
+
+    if(Auth::user()->is_owner != 1){
+      return redirect('access_denied');
+    }
+
     $id = $request->id;
     $import_product_data = Import_products_th::where('id', $id)
       ->orderBy('id', 'DESC')->first();
@@ -1060,6 +1143,10 @@ class ImportProductsThController extends Controller
   public function changeImportItemWeightTh(Request $request)
   {
 
+    if(Auth::user()->is_owner != 1){
+      return redirect('access_denied');
+    }
+
     $import_product = import_products_th::where('id', $request->prod_id)->first();
 
     $lot = Lots_th::where('id', $request->lot_id)
@@ -1084,6 +1171,11 @@ class ImportProductsThController extends Controller
 
   public function deleteLotTh(Request $request)
   {
+    
+    if(Auth::user()->is_owner != 1){
+      return redirect('access_denied');
+    }
+
     $lot = lots_th::where('id', $request->id);
     $lot->delete();
     $import_products = import_products_th::where('lot_id', $request->id);
@@ -1093,6 +1185,11 @@ class ImportProductsThController extends Controller
 
   public function paidLotTh(Request $request)
   {
+
+    if(Auth::user()->is_admin != 1){
+      return redirect('access_denied');
+    }
+
     $lot = Lots_th::where('id', $request->id)->update(
       [
         'payment_status' => 'paid'
@@ -1103,6 +1200,10 @@ class ImportProductsThController extends Controller
 
   public function changeImportWeightTh(Request $request)
   {
+
+    if(Auth::user()->is_owner != 1){
+      return redirect('access_denied');
+    }
 
     $base_price_kg = $request->lot_base_price_kg ? $request->lot_base_price_kg : 0;
     $real_price_kg = $request->lot_real_price_kg ? $request->lot_real_price_kg : 0;
@@ -1132,6 +1233,10 @@ class ImportProductsThController extends Controller
 
   public function base_price_th(Request $request)
   {
+
+    if(Auth::user()->is_admin != 1){
+      return redirect('access_denied');
+    }
 
     if ($request->date_search != '') {
       $date = date('Y-m-d H:i:s', strtotime($request->date_search));
@@ -1175,6 +1280,11 @@ class ImportProductsThController extends Controller
 
   public function addBasePriceTh(Request $request)
   {
+
+    if(Auth::user()->is_admin != 1){
+      return redirect('access_denied');
+    }
+
     $base_price_th = new Base_price_th;
     $base_price_th->created_at = $request->date;
     $base_price_th->price = $request->price;

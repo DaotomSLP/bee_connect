@@ -15,6 +15,11 @@ class SaleImportProductsController extends Controller
 {
   public function saleImport(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     $sale_price_gram = Sale_prices::where('weight_type', 'kg')
       ->where('branch_id',  Auth::user()->branch_id)
       ->orderBy('id', 'DESC')->first();
@@ -29,6 +34,11 @@ class SaleImportProductsController extends Controller
 
   public function insertSaleImport(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     if ($request->item_id) {
 
       $sum_price = 0;
@@ -130,6 +140,11 @@ class SaleImportProductsController extends Controller
 
   public function saleView(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     $result = Sale_import::query();
 
     $result->select('sale_import.*')->where('branch_id', Auth::user()->branch_id);
@@ -163,6 +178,11 @@ class SaleImportProductsController extends Controller
 
   public function salereport($id)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
+
     $sale = Sale_import::find($id);
     $items = Import_products::where('sale_id', $id)->get();
 
@@ -179,6 +199,10 @@ class SaleImportProductsController extends Controller
 
   public function saleDetail(Request $request)
   {
+
+    if(Auth::user()->is_branch != 1){
+      return redirect('access_denied');
+    }
 
     $result = Import_products::query();
 

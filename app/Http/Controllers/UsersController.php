@@ -22,6 +22,10 @@ class UsersController extends Controller
     public function index(Request $request)
     {
 
+        if(Auth::user()->is_admin != 1){
+            return redirect('access_denied');
+        }
+
         $result = User::query();
 
         $result->select('users.*', 'branchs.branch_name')
@@ -139,6 +143,10 @@ class UsersController extends Controller
     public function partner(Request $request)
     {
 
+        if(Auth::user()->is_admin != 1){
+            return redirect('access_denied');
+        }
+
         $result = User::query();
 
         $result->select('users.*')
@@ -250,6 +258,10 @@ class UsersController extends Controller
     public function admin(Request $request)
     {
 
+        if(Auth::user()->is_owner != 1){
+            return redirect('access_denied');
+        }
+
         $result = User::query();
 
         $result->select('users.*')
@@ -339,5 +351,9 @@ class UsersController extends Controller
         } else {
             return redirect('admin')->with(['error' => 'not_insert']);
         }
+    }
+
+    public function access_denied(){
+        return view('accessDenied');
     }
 }

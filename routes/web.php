@@ -27,6 +27,8 @@ require('ch_routes_test.php');
 
 Auth::routes();
 
+Route::get('/access_denied', [UsersController::class, 'access_denied'])->middleware('auth')->name('access_denied');
+
 Route::get('/send', [ProductController::class, 'send'])->middleware('auth')->name('send');
 
 Route::get('/allProducts', [ProductController::class, 'allProducts'])->middleware('auth')->name('allProducts');
