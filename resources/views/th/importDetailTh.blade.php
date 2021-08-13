@@ -253,7 +253,11 @@
                                                     {{ $import_product->weight }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->created_at ? date('d-m-Y-H:i', strtotime($import_product->created_at)) : '' }}
+                                                    <?php 
+                                                        $date = date_create(date('d-m-Y-H:i', strtotime($import_product->created_at)), timezone_open('Pacific/Nauru'));
+                                                        date_timezone_set($date, timezone_open('Asia/Vientiane'));
+                                                        echo($import_product->created_at ? date_format($date,'d-m-Y-H:i') : "");
+                                                    ?>
                                                 </td>
                                                 <td>
                                                     {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ສົ່ງຮອດສາຂາ' : ($import_product->status == 'waiting' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ')) }}

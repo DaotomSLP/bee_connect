@@ -97,7 +97,11 @@
                                                 </td>
 
                                                 <td>
-                                                    {{ date('d-m-Y', strtotime($sale_import->created_at)) }}
+                                                    <?php 
+                                                        $date = date_create(date('d-m-Y-H:i', strtotime($import_product->created_at)), timezone_open('Pacific/Nauru'));
+                                                        date_timezone_set($date, timezone_open('Asia/Vientiane'));
+                                                        echo($sale_import->created_at ? date_format($date,'d-m-Y-H:i') : "");
+                                                    ?>
                                                 </td>
                                                 <td>
                                                     {{ number_format($sale_import->subtotal) }} ບາດ
