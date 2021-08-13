@@ -43,17 +43,21 @@ class ImportProductsThController extends Controller
 
   public function dailyImportTh(Request $request)
   {
-    $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
+    $to_date_now = date('Y-m-d', strtotime(date_timezone_set(Carbon::now(), timezone_open('Asia/Vientiane'))));
 
     if ($request->date != '') {
       $date = date('Y-m-d H:i:s', strtotime($request->date));
-      $to_date = date('Y-m-d H:i:s',  strtotime($request->to_date)) == Carbon::today() ? Carbon::tomorrow() : date('Y-m-d H:i:s',  strtotime($request->to_date));
+      $date = date_create($date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
+      $to_date = $date == Carbon::today() ? Carbon::tomorrow() : date('Y-m-d H:i:s',  strtotime($request->to_date));
       $date_now = date('Y-m-d', strtotime($request->date));
       $to_date_now = date('Y-m-d',  strtotime($request->to_date));
     } else {
       $date = Carbon::today();
-      $to_date = Carbon::tomorrow();
-      $date_now = date('Y-m-d', strtotime(Carbon::now()));
+      $date = date_create($date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
+      $to_date = $date;
+      $date_now = date('Y-m-d', strtotime(date_timezone_set(Carbon::now(), timezone_open('Asia/Vientiane'))));
     }
 
     $branch_id = Auth::user()->branch_id;
@@ -176,7 +180,9 @@ class ImportProductsThController extends Controller
       ->join('branchs As receive', 'import_products_th.receive_branch_id', 'receive.id');
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products_th.created_at', '=',  $request->send_date);
+      $date = date_create($request->send_date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
+      $result->whereDate('import_products_th.created_at', '=',  $date);
     }
 
     if ($request->product_id != '') {
@@ -643,7 +649,9 @@ class ImportProductsThController extends Controller
     // }
 
     if ($request->send_date != '') {
-      $result->whereDate('lot_th.created_at', '=',  $request->send_date);
+      $date = date_create($request->send_date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
+      $result->whereDate('lot_th.created_at', '=',  $date);
     }
     if ($request->id != '') {
       $result->where('lot_th.id', $request->id);
@@ -692,7 +700,9 @@ class ImportProductsThController extends Controller
     $result->select('sale_import_th.*')->where('branch_id', Auth::user()->branch_id);
 
     if ($request->send_date != '') {
-      $result->whereDate('sale_import_th.created_at', '=', $request->send_date);
+      $date = date_create($request->send_date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
+      $result->whereDate('sale_import_th.created_at', '=', $date);
     }
     if ($request->id != '') {
       $result->where('sale_import_th.id', $request->id);
@@ -740,7 +750,9 @@ class ImportProductsThController extends Controller
     // }
 
     if ($request->send_date != '') {
-      $result->whereDate('lot_th.created_at', '=',  $request->send_date);
+      $date = date_create($request->send_date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
+      $result->whereDate('lot_th.created_at', '=',  $date);
     }
     if ($request->id != '') {
       $result->where('lot_th.id', $request->id);
@@ -839,7 +851,9 @@ class ImportProductsThController extends Controller
       ->where('lot_id', $request->id);
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products_th.created_at', '=',  $request->send_date);
+      $date = date_create($request->send_date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
+      $result->whereDate('import_products_th.created_at', '=',  $date);
     }
 
     if ($request->product_id != '') {
@@ -891,7 +905,9 @@ class ImportProductsThController extends Controller
       ->where('sale_import_th.id', $request->id);
 
     if ($request->send_date != '') {
-      $result->whereDate('sale_import_th.created_at', '=',  $request->send_date);
+      $date = date_create($request->send_date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
+      $result->whereDate('sale_import_th.created_at', '=',  $date);
     }
 
     if ($request->product_id != '') {
@@ -936,7 +952,9 @@ class ImportProductsThController extends Controller
       ->where('lot_th.receiver_branch_id', Auth::user()->branch_id);
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products_th.created_at', '=',  $request->send_date);
+      $date = date_create($request->send_date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
+      $result->whereDate('import_products_th.created_at', '=',  $date);
     }
 
     if ($request->product_id != '') {
@@ -987,7 +1005,9 @@ class ImportProductsThController extends Controller
       ->join('branchs As receive', 'import_products_th.receive_branch_id', 'receive.id');
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products_th.created_at', '=',  $request->send_date);
+      $date = date_create($request->send_date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
+      $result->whereDate('import_products_th.created_at', '=',  $date);
     }
 
     if ($request->product_id != '') {
@@ -1037,7 +1057,9 @@ class ImportProductsThController extends Controller
       ->join('branchs As receive', 'import_products_th.receive_branch_id', 'receive.id');
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products_th.received_at', '=',  $request->send_date);
+      $date = date_create($request->send_date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
+      $result->whereDate('import_products_th.received_at', '=',  $date);
     }
 
     if ($request->product_id != '') {
@@ -1240,10 +1262,14 @@ class ImportProductsThController extends Controller
 
     if ($request->date_search != '') {
       $date = date('Y-m-d H:i:s', strtotime($request->date_search));
+      $date = date_create($date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Africa/Accra'));
       $to_date = date('Y-m-d H:i:s', strtotime("+1 day", strtotime($request->date_search)));
       $date_now = date('Y-m-d', strtotime($request->date));
     } else {
       $date = Carbon::today();
+      $date = date_create($date, timezone_open('Asia/Vientiane'));
+      date_timezone_set($date, timezone_open('Pacific/Nauru'));
       $to_date = Carbon::tomorrow();
       $date_now = date('Y-m-d', strtotime(Carbon::now()));
     }

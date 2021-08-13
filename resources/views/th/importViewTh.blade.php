@@ -318,7 +318,7 @@
 
                                                 <td>
                                                     <?php 
-                                                        $date = date_create(date('d-m-Y-H:i', strtotime($import_product->created_at)), timezone_open('Pacific/Nauru'));
+                                                        $date = date_create(date('d-m-Y-H:i', strtotime($lot->created_at)), timezone_open('Pacific/Nauru'));
                                                         date_timezone_set($date, timezone_open('Asia/Vientiane'));
                                                         echo($lot->created_at ? date_format($date,'d-m-Y-H:i') : "");
                                                     ?>
