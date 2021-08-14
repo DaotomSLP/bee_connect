@@ -134,82 +134,85 @@
                             <h2>ຄົ້ນຫາ</h2>
                         </div>
                         <div class="x_content">
-                            <form method="GET" action="/importViewTh">
-                                {{-- @csrf --}}
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ເລກບິນ</label>
-                                            <input class="form-control form-control-sm" value="{{ Request::input('id') }}"
-                                                name="id">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ສະຖານະ</label>
-                                            <select class="form-control form-control-sm" id="select_status" name="status">
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                <option {{ Request::input('status') == 'sending' ? 'selected' : '' }}
-                                                    value="sending">
-                                                    ກຳລັງສົ່ງ
-                                                </option>
-                                                <option {{ Request::input('status') == 'received' ? 'selected' : '' }}
-                                                    value="received">
-                                                    ຮອດແລ້ວ
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ສະຖານະການຈ່າຍເງິນ</label>
-                                            <select class="form-control form-control-sm" id="select_status"
-                                                name="payment_status">
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                <option
-                                                    {{ Request::input('payment_status') == 'not_paid' ? 'selected' : '' }}
-                                                    value="not_paid">
-                                                    ຍັງບໍ່ຈ່າຍ
-                                                </option>
-                                                <option {{ Request::input('payment_status') == 'paid' ? 'selected' : '' }}
-                                                    value="paid">
-                                                    ຈ່າຍແລ້ວ
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
-                                            <select class="form-control form-control-sm" id="select_branch"
-                                                name="receive_branch">
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                @foreach ($branchs as $branch)
-                                                    <option
-                                                        {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
-                                                        value="{{ $branch->id }}">
-                                                        {{ $branch->branch_name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ວັນທີສົ່ງ</label>
-                                            <input class="form-control form-control-sm" type="date"
-                                                value="{{ Request::input('send_date') }}" name="send_date">
-                                        </div>
+                            @if (Auth::user()->is_admin == 1)
+                                <form method="GET" action="/importViewTh">
+                                @else
+                                    <form method="GET" action="/importViewForUserTh">
+                            @endif
+                            {{-- @csrf --}}
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating">ເລກບິນ</label>
+                                        <input class="form-control form-control-sm" value="{{ Request::input('id') }}"
+                                            name="id">
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-primary pull-right px-4">ຄົ້ນຫາ</button>
-                                <div class="clearfix"></div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating">ສະຖານະ</label>
+                                        <select class="form-control form-control-sm" id="select_status" name="status">
+                                            <option value="">
+                                                ເລືອກ
+                                            </option>
+                                            <option {{ Request::input('status') == 'sending' ? 'selected' : '' }}
+                                                value="sending">
+                                                ກຳລັງສົ່ງ
+                                            </option>
+                                            <option {{ Request::input('status') == 'received' ? 'selected' : '' }}
+                                                value="received">
+                                                ຮອດແລ້ວ
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating">ສະຖານະການຈ່າຍເງິນ</label>
+                                        <select class="form-control form-control-sm" id="select_status"
+                                            name="payment_status">
+                                            <option value="">
+                                                ເລືອກ
+                                            </option>
+                                            <option {{ Request::input('payment_status') == 'not_paid' ? 'selected' : '' }}
+                                                value="not_paid">
+                                                ຍັງບໍ່ຈ່າຍ
+                                            </option>
+                                            <option {{ Request::input('payment_status') == 'paid' ? 'selected' : '' }}
+                                                value="paid">
+                                                ຈ່າຍແລ້ວ
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
+                                        <select class="form-control form-control-sm" id="select_branch"
+                                            name="receive_branch">
+                                            <option value="">
+                                                ເລືອກ
+                                            </option>
+                                            @foreach ($branchs as $branch)
+                                                <option
+                                                    {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
+                                                    value="{{ $branch->id }}">
+                                                    {{ $branch->branch_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating">ວັນທີສົ່ງ</label>
+                                        <input class="form-control form-control-sm" type="date"
+                                            value="{{ Request::input('send_date') }}" name="send_date">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-primary pull-right px-4">ຄົ້ນຫາ</button>
+                            <div class="clearfix"></div>
                             </form>
                         </div>
                     </div>
@@ -317,7 +320,7 @@
                                                 @endif
 
                                                 <td>
-                                                    {{$lot->created_at}}
+                                                    {{ $lot->created_at }}
                                                 </td>
                                                 {{-- <td>
                                                     {{ $lot->weight_kg }}
