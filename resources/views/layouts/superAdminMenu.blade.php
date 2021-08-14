@@ -36,10 +36,9 @@
 {{-- Thai --}}
 <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span class="fa fa-chevron-down"></span></a>
     <ul class="nav child_menu">
-        {{-- <li
-                                                      class="{{ Request::is('addImportTh') || Request::is('addImportTh/*') ? 'current-page' : '' }}">
-                                                      <a href="/addImportTh">ຮັບສິນຄ້າ(ສາງໄທ)</a>
-                                                  </li> --}}
+        {{-- <li class="{{ Request::is('addImportTh') || Request::is('addImportTh/*') ? 'current-page' : '' }}">
+            <a href="/addImportTh">ຮັບສິນຄ້າ(ສາງໄທ)</a>
+        </li> --}}
         <li class="{{ Request::is('importTh') || Request::is('importTh/*') ? 'current-page' : '' }}">
             <a href="/importTh">ນຳເຂົ້າສິນຄ້າ</a>
         </li>
@@ -54,14 +53,20 @@
         <li class="{{ Request::is('dailyImportTh') || Request::is('base_price_th') ? 'current-page' : '' }}">
             <a href="/dailyImportTh">ລາຍງານປະຈຳວັນ</a>
         </li>
+        <li class="{{ Request::is('money_th') || Request::is('money_th') ? 'current-page' : '' }}">
+            <a href="/money_th">ຜົນຕອບແທນ</a>
+        </li>
+        <li class="{{ Request::is('withdraw_th') || Request::is('withdraw_th') ? 'current-page' : '' }}">
+            <a href="/withdraw_th">ຖອນເງິນ</a>
+        </li>
     </ul>
 </li>
 
 {{-- setting --}}
 <li><a><i class="fa fa-desktop"></i> ຕັ້ງຄ່າລະບົບ <span class="fa fa-chevron-down"></span></a>
     <ul class="nav child_menu">
-        <li
-            {{ Request::is('expenditure') || Request::is('expenditure/*') || Request::is('editBranch/*') ? 'current-page' : '' }}>
+        <li {{ Request::is('expenditure') || Request::is('expenditure/*') || Request::is('editBranch/*')
+            ? 'current-page' : '' }}>
             <a href="/expenditure">ເພີ່ມລາຍຈ່າຍ</a>
         </li>
         <li
@@ -79,10 +84,10 @@
         </li>
 
         @if (Auth::user()->is_owner == 1)
-            <li
-                class="{{ Request::is('admin') || Request::is('admin/*') || Request::is('editAdmin/*') ? 'current-page' : '' }}">
-                <a href="/admin">ແອັດມິນ</a>
-            </li>
+        <li
+            class="{{ Request::is('admin') || Request::is('admin/*') || Request::is('editAdmin/*') ? 'current-page' : '' }}">
+            <a href="/admin">ແອັດມິນ</a>
+        </li>
         @endif
     </ul>
 </li>

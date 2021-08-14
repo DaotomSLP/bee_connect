@@ -113,18 +113,10 @@
                                                     {{ $import_product->code }}
                                                 </td>
                                                 <td>
-                                                    <?php 
-                                                        $date = date_create(date('d-m-Y-H:i', strtotime($import_product->received_at)), timezone_open('Pacific/Nauru'));
-                                                        date_timezone_set($date, timezone_open('Asia/Vientiane'));
-                                                        echo($import_product->received_at ? date_format($date,'d-m-Y-H:i') : "");
-                                                    ?>
+                                                   {{$import_product->received_at}}
                                                 </td>
                                                 <td>
-                                                    <?php 
-                                                        $date = date_create(date('d-m-Y-H:i', strtotime($import_product->success_at)), timezone_open('Pacific/Nauru'));
-                                                        date_timezone_set($date, timezone_open('Asia/Vientiane'));
-                                                        echo($import_product->success_at ? date_format($date,'d-m-Y-H:i') : "");
-                                                    ?>
+                                                    {{$import_product->success_at}}
                                                 </td>
                                                 <td>
                                                     {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
