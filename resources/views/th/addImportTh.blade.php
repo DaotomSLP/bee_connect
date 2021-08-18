@@ -143,11 +143,9 @@
                 <div class="modal-dialog" role="document">
                     <form method="GET" action="/deleteImportItemThForWaiting">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h2 class="modal-title" id="exampleModalLabel">Do you want to delete ?</h2>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                            <div>
+                                <h2 class="text-center" id="exampleModalLabel"><i
+                                    class="material-icons h1">delete_forever</i><br>Do you want to delete ?</h2>
                             </div>
 
                             <input type="hidden" id="import_id" name="id">

@@ -103,11 +103,9 @@
                     <form method="POST" action="/deleteImportItemTh">
                         @csrf
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h2 class="modal-title" id="exampleModalLabel">ຕ້ອງການລົບລາຍການ ຫຼືບໍ່?</h2>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                            <div>
+                                <h2 class="text-center" id="exampleModalLabel"><i
+                                        class="material-icons h1">delete_forever</i><br>ຕ້ອງການລົບລາຍການນີ້ ຫຼືບໍ່?</h2>
                             </div>
 
                             <input type="hidden" id="import_id_input" name="id">

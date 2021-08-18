@@ -47,6 +47,7 @@ Route::post('/getImportProduct', [ImportProductsController::class, 'getImportPro
 Route::get('/deleteLot', [ImportProductsController::class, 'deleteLot'])->middleware('auth')->name('deleteLot');
 
 Route::get('/paidLot', [ImportProductsController::class, 'paidLot'])->middleware('auth')->name('paidLot');
+
 Route::get('/addChinaProduct', [ImportProductsController::class, 'addChinaProduct'])->middleware('auth')->name('addChinaProduct');
 
 Route::post('/checkImportProduct', [ImportProductsController::class, 'checkImportProduct'])->middleware('auth')->name('checkImportProduct');

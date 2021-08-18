@@ -81,14 +81,33 @@
                     <form method="GET" action="/deleteLot">
                         @csrf
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h2 class="modal-title" id="exampleModalLabel">ຕ້ອງການລົບລາຍການ ຫຼືບໍ່?</h2>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                            <div>
+                                <h2 class="text-center" id="exampleModalLabel"><i class="material-icons h1">delete_forever</i><br>ຕ້ອງການລົບລາຍການນີ້ ຫຼືບໍ່?</h2>
                             </div>
 
                             <input type="hidden" id="lot_id_input" name="id">
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ຕົກລົງ</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                    aria-label="Close">ຍົກເລີກ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="paid_lot_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="GET" action="/paidLot">
+                        @csrf
+                        <div class="modal-content">
+                            <div>
+                                <h2 class="text-center" id="exampleModalLabel"><i class="material-icons h1">paid</i><br>ຕ້ອງການຈ່າຍເງິນໃຫ້ກັບລາຍການນີ້ ຫຼືບໍ່?</h2>
+                            </div>
+
+                            <input type="hidden" id="paid_lot_id_input" name="id">
 
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">ຕົກລົງ</button>
@@ -340,12 +359,13 @@
                                                 </td>
                                                 <td>
                                                     <a
-                                                            href="/{{ Auth::user()->is_admin == 1 ? 'serviceChargeDetail' : 'serviceChargeDetailForUser' }}?id={{ $lot->id }}">
-                                                             {{ number_format($lot->service_charge) }} ກີບ
-                                                        </a>
+                                                        href="/{{ Auth::user()->is_admin == 1 ? 'serviceChargeDetail' : 'serviceChargeDetailForUser' }}?id={{ $lot->id }}">
+                                                        {{ number_format($lot->service_charge) }} ກີບ
+                                                    </a>
                                                 </td>
                                                 <td>
-                                                    <p class="text-danger font-weight-bold">{{ number_format($lot->total_main_price) }} ກີບ</p>
+                                                    <p class="text-danger font-weight-bold">
+                                                        {{ number_format($lot->total_main_price) }} ກີບ</p>
                                                 </td>
                                                 @if (Auth::user()->is_admin == 1)
                                                     <td>
@@ -405,7 +425,9 @@
                                                 <td>
                                                     @if ($lot->payment_status == 'not_paid' && Auth::user()->is_admin == 1)
 
-                                                        <a href="/paidLot?id={{ $lot->id }}">
+                                                        {{-- <a href="/paidLot?id={{ $lot->id }}"> --}}
+                                                        <a type="button" onclick="paidLot({{ $lot->id }})"
+                                                            data-toggle="modal" data-target="#paid_lot_modal">
                                                             ຈ່າຍເງິນ
                                                         </a>
 
@@ -500,5 +522,8 @@
             $("#lot_id_input").val(id);
         }
 
+        function paidLot(id) {
+            $("#paid_lot_id_input").val(id);
+        }
     </script>
 @endsection

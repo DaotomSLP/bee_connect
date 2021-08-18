@@ -81,14 +81,35 @@
                     <form method="GET" action="/deleteLotTh">
                         @csrf
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h2 class="modal-title" id="exampleModalLabel">ຕ້ອງການລົບລາຍການ ຫຼືບໍ່?</h2>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                            <div>
+                                <h2 class="text-center" id="exampleModalLabel"><i
+                                        class="material-icons h1">delete_forever</i><br>ຕ້ອງການລົບລາຍການນີ້ ຫຼືບໍ່?</h2>
                             </div>
 
                             <input type="hidden" id="lot_id_input" name="id">
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ຕົກລົງ</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                    aria-label="Close">ຍົກເລີກ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="paid_lot_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="GET" action="/paidLotTh">
+                        @csrf
+                        <div class="modal-content">
+                            <div>
+                                <h2 class="text-center" id="exampleModalLabel"><i
+                                        class="material-icons h1">paid</i><br>ຕ້ອງການຈ່າຍເງິນໃຫ້ກັບລາຍການນີ້ ຫຼືບໍ່?</h2>
+                            </div>
+
+                            <input type="hidden" id="paid_lot_id_input" name="id">
 
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">ຕົກລົງ</button>
@@ -174,7 +195,8 @@
                                             <option value="">
                                                 ເລືອກ
                                             </option>
-                                            <option {{ Request::input('payment_status') == 'not_paid' ? 'selected' : '' }}
+                                            <option
+                                                {{ Request::input('payment_status') == 'not_paid' ? 'selected' : '' }}
                                                 value="not_paid">
                                                 ຍັງບໍ່ຈ່າຍ
                                             </option>
@@ -247,12 +269,12 @@
                                             ຮັບມາວັນທີ່
                                         </th>
                                         {{-- <th>
-                                            kg
-                                        </th> --}}
+                                        kg
+                                    </th> --}}
                                         @if (Auth::user()->is_admin == 1)
                                             {{-- <th>
-                                                ລວມຕົ້ນທຶນ
-                                            </th> --}}
+                                        ລວມຕົ້ນທຶນ
+                                    </th> --}}
                                             <th>
                                                 ລວມລາຄາເຄື່ອງ
                                             </th>
@@ -296,7 +318,7 @@
                                         </th>
                                         {{-- <th>
 
-                                        </th> --}}
+                                    </th> --}}
                                         <th>
 
                                         </th>
@@ -323,12 +345,12 @@
                                                     {{ $lot->created_at }}
                                                 </td>
                                                 {{-- <td>
-                                                    {{ $lot->weight_kg }}
-                                                </td> --}}
+                                            {{ $lot->weight_kg }}
+                                        </td> --}}
                                                 @if (Auth::user()->is_admin == 1)
                                                     {{-- <td>
-                                                        {{ number_format($lot->total_base_price) }} ບາດ
-                                                    </td> --}}
+                                            {{ number_format($lot->total_base_price) }} ບາດ
+                                        </td> --}}
                                                 @endif
                                                 <td>
                                                     {{ number_format($lot->total_price) }} ບາດ
@@ -344,11 +366,11 @@
                                                         {{ number_format($lot->total_main_price) }} ບາດ</p>
                                                 </td>
                                                 {{-- @if (Auth::user()->is_admin == 1)
-                                                    <td>
-                                                        {{ number_format($lot->total_price - $lot->total_base_price) }}
-                                                        ບາດ
-                                                    </td>
-                                                @endif --}}
+                                        <td>
+                                            {{ number_format($lot->total_price - $lot->total_base_price) }}
+                                            ບາດ
+                                        </td>
+                                        @endif --}}
 
                                                 @if (Auth::user()->is_admin != 1)
                                                     <td>
@@ -382,14 +404,14 @@
                                                     @endif
                                                 </td>
                                                 {{-- <td>
-                                                    @if ($lot->status != 'success' && Auth::user()->is_owner == 1)
-                                                        <a type="button"
-                                                            onclick="change_weight({{ $lot->id . ',' . ($lot->lot_base_price_kg ? $lot->lot_base_price_kg : 0) . ',' . ($lot->lot_real_price_kg ? $lot->lot_real_price_kg : 0) . ',' . ($lot->lot_base_price_m ? $lot->lot_base_price_m : 0) . ',' . ($lot->lot_real_price_m ? $lot->lot_real_price_m : 0) . ',' . ($lot->weight_kg ? $lot->weight_kg : 0) . ',' . ($lot->fee ? $lot->fee : 0) . ',' . ($lot->pack_price ? $lot->pack_price : 0) }})"
-                                                            data-toggle="modal" data-target="#new_weight_modal">
-                                                            <i class="material-icons">create</i>
-                                                        </a>
-                                                    @endif
-                                                </td> --}}
+                                            @if ($lot->status != 'success' && Auth::user()->is_owner == 1)
+                                            <a type="button"
+                                                onclick="change_weight({{ $lot->id . ',' . ($lot->lot_base_price_kg ? $lot->lot_base_price_kg : 0) . ',' . ($lot->lot_real_price_kg ? $lot->lot_real_price_kg : 0) . ',' . ($lot->lot_base_price_m ? $lot->lot_base_price_m : 0) . ',' . ($lot->lot_real_price_m ? $lot->lot_real_price_m : 0) . ',' . ($lot->weight_kg ? $lot->weight_kg : 0) . ',' . ($lot->fee ? $lot->fee : 0) . ',' . ($lot->pack_price ? $lot->pack_price : 0) }})"
+                                                data-toggle="modal" data-target="#new_weight_modal">
+                                                <i class="material-icons">create</i>
+                                            </a>
+                                            @endif
+                                        </td> --}}
                                                 <td>
                                                     @if (Auth::user()->is_admin == 1)
                                                         <a href="/importpdfTh/{{ $lot->id }}" target="_blank">
@@ -401,7 +423,8 @@
                                                 <td>
                                                     @if ($lot->payment_status == 'not_paid' && Auth::user()->is_admin == 1)
 
-                                                        <a href="/paidLotTh?id={{ $lot->id }}">
+                                                        <a type="button" onclick="paidLot({{ $lot->id }})"
+                                                            data-toggle="modal" data-target="#paid_lot_modal">
                                                             ຈ່າຍເງິນ
                                                         </a>
 
@@ -493,6 +516,10 @@
 
         function deleteLot(id) {
             $("#lot_id_input").val(id);
+        }
+
+        function paidLot(id) {
+            $("#paid_lot_id_input").val(id);
         }
     </script>
 @endsection
