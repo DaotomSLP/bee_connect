@@ -30,6 +30,12 @@
         <li class="{{ Request::is('priceImport') || Request::is('priceImport/*') ? 'current-page' : '' }}">
             <a href="/priceImport">ຕັ້ງຄ່າລາຄາ</a>
         </li>
+        <li class="{{ Request::is('money_ch') || Request::is('money_ch') ? 'current-page' : '' }}">
+            <a href="/money_ch">ຜົນຕອບແທນ</a>
+        </li>
+        <li class="{{ Request::is('withdraw_ch') || Request::is('withdraw_ch') ? 'current-page' : '' }}">
+            <a href="/withdraw_ch">ຖອນເງິນ</a>
+        </li>
     </ul>
 </li>
 

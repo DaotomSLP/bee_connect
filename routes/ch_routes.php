@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImportProductsController;
 use App\Http\Controllers\PriceImportController;
 use Illuminate\Support\Facades\Route;
@@ -77,3 +78,13 @@ Route::post('/addSalePriceImport​', [PriceImportController::class, 'insertSale
 Route::post('/editSalePrice', [PriceImportController::class, 'editSalePrice'])->middleware('auth')->name('editSalePrice');
 
 Route::get('/saleImportPrice', [PriceImportController::class, 'saleImportPrice'])->middleware('auth')->name('saleImportPrice');
+
+Route::get('/money_ch', [ImportProductsController::class, 'money_ch'])->middleware('auth')->name('money_ch');
+
+Route::get('/withdraw_ch', [ImportProductsController::class, 'withdraw_ch'])->middleware('auth')->name('withdraw_ch');
+
+Route::get('/withdraw_detail_ch/{id}', [ImportProductsController::class, 'withdraw_detail_ch'])->middleware('auth')->name('withdraw_detail_ch');
+
+Route::post('/addWithDrawCh', [ImportProductsController::class, 'addWithDrawTh'])->middleware('auth')->name('addWithDrawTh');
+
+Route::get('/tracking',[HomeController::class,'tracking'])->name('tracking');

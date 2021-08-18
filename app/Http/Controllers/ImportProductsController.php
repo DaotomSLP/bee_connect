@@ -6,10 +6,13 @@ use App\Models\Branchs;
 use App\Models\Districts;
 use App\Models\Expenditure;
 use App\Models\Import_products;
+use App\Models\IncomeCh;
 use App\Models\Lots;
 use App\Models\Price_imports;
 use App\Models\Provinces;
 use App\Models\Service_charge;
+use App\Models\User;
+use App\Models\WithdrawCh;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -190,7 +193,7 @@ class ImportProductsController extends Controller
   public function insertImport(Request $request)
   {
 
-    if(Auth::user()->is_admin != 1){
+    if (Auth::user()->is_admin != 1) {
       return redirect('access_denied');
     }
 
@@ -310,7 +313,7 @@ class ImportProductsController extends Controller
   public function insertImportForUser(Request $request)
   {
 
-    if(Auth::user()->is_branch != 1){
+    if (Auth::user()->is_branch != 1) {
       return redirect('access_denied');
     }
 
@@ -348,7 +351,7 @@ class ImportProductsController extends Controller
   public function importView(Request $request)
   {
 
-    if(Auth::user()->is_admin != 1){
+    if (Auth::user()->is_admin != 1) {
       return redirect('access_denied');
     }
 
@@ -430,7 +433,7 @@ class ImportProductsController extends Controller
   public function importViewForUser(Request $request)
   {
 
-    if(Auth::user()->is_branch != 1){
+    if (Auth::user()->is_branch != 1) {
       return redirect('access_denied');
     }
 
@@ -504,7 +507,7 @@ class ImportProductsController extends Controller
   public function importDetail(Request $request)
   {
 
-    if(Auth::user()->is_admin != 1){
+    if (Auth::user()->is_admin != 1) {
       return redirect('access_denied');
     }
 
@@ -557,7 +560,7 @@ class ImportProductsController extends Controller
   public function importDetailForUser(Request $request)
   {
 
-    if(Auth::user()->is_branch != 1){
+    if (Auth::user()->is_branch != 1) {
       return redirect('access_denied');
     }
 
@@ -611,7 +614,7 @@ class ImportProductsController extends Controller
   public function importProductTrack(Request $request)
   {
 
-    if(Auth::user()->is_admin != 1){
+    if (Auth::user()->is_admin != 1) {
       return redirect('access_denied');
     }
 
@@ -662,7 +665,7 @@ class ImportProductsController extends Controller
   public function serviceChargeDetail(Request $request)
   {
 
-    if(Auth::user()->is_admin != 1){
+    if (Auth::user()->is_admin != 1) {
       return redirect('access_denied');
     }
 
@@ -673,7 +676,7 @@ class ImportProductsController extends Controller
   public function editServiceCharge(Request $request)
   {
 
-    if(Auth::user()->is_admin != 1){
+    if (Auth::user()->is_admin != 1) {
       return redirect('access_denied');
     }
 
@@ -696,7 +699,7 @@ class ImportProductsController extends Controller
   public function importProductTrackForUser(Request $request)
   {
 
-    if(Auth::user()->is_branch != 1){
+    if (Auth::user()->is_branch != 1) {
       return redirect('access_denied');
     }
 
@@ -760,7 +763,7 @@ class ImportProductsController extends Controller
 
   public function receiveImport(Request $request)
   {
-    
+
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
     $result = Import_products::query();
@@ -807,7 +810,7 @@ class ImportProductsController extends Controller
   public function deleteImportItem(Request $request)
   {
 
-    if(Auth::user()->is_owner != 1){
+    if (Auth::user()->is_owner != 1) {
       return redirect('access_denied');
     }
 
@@ -836,7 +839,7 @@ class ImportProductsController extends Controller
   public function changeImportItemWeight(Request $request)
   {
 
-    if(Auth::user()->is_owner != 1){
+    if (Auth::user()->is_owner != 1) {
       return redirect('access_denied');
     }
 
@@ -865,7 +868,7 @@ class ImportProductsController extends Controller
   public function deleteLot(Request $request)
   {
 
-    if(Auth::user()->is_owner != 1){
+    if (Auth::user()->is_owner != 1) {
       return redirect('access_denied');
     }
 
@@ -879,7 +882,7 @@ class ImportProductsController extends Controller
   public function paidLot(Request $request)
   {
 
-    if(Auth::user()->is_admin != 1){
+    if (Auth::user()->is_admin != 1) {
       return redirect('access_denied');
     }
 
@@ -894,7 +897,7 @@ class ImportProductsController extends Controller
   public function changeImportWeight(Request $request)
   {
 
-    if(Auth::user()->is_owner != 1){
+    if (Auth::user()->is_owner != 1) {
       return redirect('access_denied');
     }
 
@@ -920,6 +923,13 @@ class ImportProductsController extends Controller
         'lot_real_price_m' => $real_price_m,
       ]
     );
+
+    $sum_price = Lots::where('id', $request->id)->sum('total_main_price');
+
+    $income_th = new IncomeCh();
+    $income_th->price = $sum_price;
+    $income_th->lot_id = $request->id;
+    $income_th->save();
 
     return redirect('importView')->with(['error' => 'insert_success']);
   }
@@ -977,5 +987,131 @@ class ImportProductsController extends Controller
     ];
 
     return view('successImport', compact('products', 'pagination', 'branchs'));
+  }
+
+  public function money_ch(Request $request)
+  {
+    if (Auth::user()->is_owner != 1) {
+      return redirect('access_denied');
+    }
+
+    $sum_income = 0;
+    $sum_incomeIncomeCh = IncomeCh::sum('price');
+    $sum_withdraw = WithdrawCh::sum('price');
+
+    $result = User::query();
+
+    $result
+      ->select('users.name', 'users.last_name', 'users.thai_percent')
+      ->where('is_ch_partner', 1)
+      ->groupBy('users.id')
+      ->groupBy('users.name')
+      ->groupBy('users.thai_percent')
+      ->groupBy('users.last_name');
+
+    if ($request->product_id != '') {
+      $result->where('users.name', $request->name);
+    }
+
+    if ($request->status != '') {
+      $result->where('users.last_name', $request->last_name);
+    }
+
+    $all_users = $result->orderBy('users.id', 'desc')->count();
+
+    if ($request->page != '') {
+      $result->offset(($request->page - 1) * 25);
+    }
+
+    $users = $result
+      ->orderBy('users.id', 'desc')
+      ->limit(25)
+      ->get();
+
+    $pagination = [
+      'offsets' => ceil($all_users / 25),
+      'offset' => $request->page ? $request->page : 1,
+      'all' => $all_users,
+    ];
+
+    return view('moneyCh', compact('sum_income', 'all_users', 'users', 'pagination', 'sum_withdraw'));
+  }
+
+  public function withdraw_ch(Request $request)
+  {
+    if (Auth::user()->is_owner != 1) {
+      return redirect('access_denied');
+    }
+
+    $sum_income = 0;
+    $sum_income = IncomeCh::sum('price');
+
+    $result = WithdrawCh::query();
+
+    $result->select('withdraw_ch.*');
+
+    $all_withdraws = $result->orderBy('id', 'desc')->count();
+
+    if ($request->page != '') {
+      $result->offset(($request->page - 1) * 25);
+    }
+
+    $withdraws = $result
+      ->orderBy('id', 'desc')
+      ->limit(25)
+      ->get();
+
+    $pagination = [
+      'offsets' => ceil($all_withdraws / 25),
+      'offset' => $request->page ? $request->page : 1,
+      'all' => $all_withdraws,
+    ];
+
+    return view('withdraw_ch', compact('sum_income', 'all_withdraws', 'withdraws', 'pagination'));
+  }
+
+  public function withdraw_detail_ch($id)
+  {
+    if (Auth::user()->is_owner != 1) {
+      return redirect('access_denied');
+    }
+
+    $sum_withdraw_chIncomeCh = 0;
+    $sum_withdraw_ch = WithdrawCh::where('id', $id)->sum('price');
+
+    $result = User::query();
+
+    $result->select('users.*')->where('is_ch_partner', 1);
+
+    $all_users = $result->orderBy('id', 'desc')->count();
+
+    $users = $result->orderBy('id', 'desc')->get();
+    $new_users = [];
+    foreach ($users as $key => $user) {
+      $n['id'] = $user->id;
+      $n['name'] = $user->name;
+      $n['last_name'] = $user->last_name;
+      $n['price'] = ($sum_withdraw_ch / 100) * $user->thai_percent;
+
+      array_push($new_users, $n);
+    }
+
+    $users = $new_users;
+
+    return view('withdraw_detail_ch', compact('all_users', 'users'));
+  }
+  
+  public function addWithDrawChWithdrawCh(Request $request)
+  {
+    date_default_timezone_set('Asia/Bangkok');
+    $date_now = date('Y-m-d H:iIncomeCh:s', time());
+
+    $withdraw = new WithdrawCh();
+    $withdraw->price = $request->price;
+    $withdraw->updated_at = $date_now;
+    $withdraw->created_at = $date_now;
+    $withdraw->save();
+
+    return redirect('withdraw_ch');
   }
 }
