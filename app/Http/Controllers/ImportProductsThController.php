@@ -358,6 +358,7 @@ class ImportProductsThController extends Controller
 
                     // $product["base_price"] = $request->base_price[$count];
                     $product['real_price'] = $request->price[$count];
+                    $product['receive_bc_at'] = $date_now;
                     // $product["total_base_price"] = $request->base_price[$count];
                     $product['total_real_price'] = $request->price[$count];
                     $product['total_sale_price'] = 0;

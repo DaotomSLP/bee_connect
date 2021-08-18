@@ -16,6 +16,12 @@ body {
   font-family: 'NotoSansLao' !important;
 }
 
+
+.container-custom{
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
 :root {
   --blue: #3490dc;
   --indigo: #6574cd;

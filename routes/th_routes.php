@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ImportProductsThController;
 use App\Http\Controllers\PriceImportControllerTh;
@@ -81,6 +82,12 @@ Route::get('/withdraw_th', [ImportProductsThController::class, 'withdraw_th'])->
 Route::get('/withdraw_detail_th/{id}', [ImportProductsThController::class, 'withdraw_detail_th'])->middleware('auth')->name('withdraw_detail_th');
 
 Route::post('/addWithDrawTh', [ImportProductsThController::class, 'addWithDrawTh'])->middleware('auth')->name('addWithDrawTh');
+
+Route::get('/trackingTh', [HomeController::class, 'trackingTh'])->name('trackingTh');
+
+Route::post('/searchTrackingTh', [HomeController::class, 'searchTrackingTh'])->name('searchTrackingTh');
+
+
 
 
 

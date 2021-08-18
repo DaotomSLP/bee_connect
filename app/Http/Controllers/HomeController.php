@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Expenditure;
 use App\Models\Import_products;
+use App\Models\Import_products_th;
 use App\Models\Lots;
 use App\Models\Lots_th;
 use Illuminate\Http\Request;
@@ -120,5 +121,25 @@ class HomeController extends Controller
         }
 
         return view('home', compact('sum_delivery_received', 'sum_delivery_sending', 'sum_receive_sending', 'sum_price', 'branch_money', 'sum_received', 'sum_success', 'date_now', 'to_date_now', 'sum_delivery_success', 'sum_expenditure'));
+    }
+
+    public function trackingTh()
+    {
+        return view('trackingTh');
+    }
+
+
+    public function searchTrackingTh(Request $request)
+    {
+        $results = [];
+        $results = Import_products_th::where('code', 'like', '%' . $request->search . '%')->get();
+
+        if ($results) {
+            return response()
+                ->json($results);
+        } else {
+            return response()
+                ->json(['error' => '1']);
+        }
     }
 }
