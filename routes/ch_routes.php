@@ -85,6 +85,6 @@ Route::get('/withdraw_ch', [ImportProductsController::class, 'withdraw_ch'])->mi
 
 Route::get('/withdraw_detail_ch/{id}', [ImportProductsController::class, 'withdraw_detail_ch'])->middleware('auth')->name('withdraw_detail_ch');
 
-Route::post('/addWithDrawCh', [ImportProductsController::class, 'addWithDrawTh'])->middleware('auth')->name('addWithDrawTh');
+Route::post('/addWithDrawCh', [ImportProductsController::class, 'addWithDrawCh'])->middleware('auth')->name('addWithDrawCh');
 
 Route::get('/tracking',[HomeController::class,'tracking'])->name('tracking');

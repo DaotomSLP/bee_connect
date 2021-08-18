@@ -886,11 +886,18 @@ class ImportProductsController extends Controller
       return redirect('access_denied');
     }
 
-    $lot = lots::where('id', $request->id)->update(
+    lots::where('id', $request->id)->update(
       [
         'payment_status' => 'paid'
       ]
     );
+
+    $sum_price = Lots::where('id', $request->id)->sum('total_main_price');
+
+    $income_ch = new IncomeCh();
+    $income_ch->price = $sum_price;
+    $income_ch->lot_id = $request->id;
+    $income_ch->save();
     return redirect('importView')->with(['error' => 'insert_success']);
   }
 
@@ -923,13 +930,6 @@ class ImportProductsController extends Controller
         'lot_real_price_m' => $real_price_m,
       ]
     );
-
-    $sum_price = Lots::where('id', $request->id)->sum('total_main_price');
-
-    $income_th = new IncomeCh();
-    $income_th->price = $sum_price;
-    $income_th->lot_id = $request->id;
-    $income_th->save();
 
     return redirect('importView')->with(['error' => 'insert_success']);
   }
@@ -996,7 +996,7 @@ class ImportProductsController extends Controller
     }
 
     $sum_income = 0;
-    $sum_incomeIncomeCh = IncomeCh::sum('price');
+    $sum_income = IncomeCh::sum('price');
     $sum_withdraw = WithdrawCh::sum('price');
 
     $result = User::query();
@@ -1100,11 +1100,11 @@ class ImportProductsController extends Controller
 
     return view('withdraw_detail_ch', compact('all_users', 'users'));
   }
-  
-  public function addWithDrawChWithdrawCh(Request $request)
+
+  public function addWithDrawCh(Request $request)
   {
     date_default_timezone_set('Asia/Bangkok');
-    $date_now = date('Y-m-d H:iIncomeCh:s', time());
+    $date_now = date('Y-m-d H:i:s', time());
 
     $withdraw = new WithdrawCh();
     $withdraw->price = $request->price;
