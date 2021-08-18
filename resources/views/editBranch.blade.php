@@ -98,7 +98,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
-    var district_lists = <? php echo json_encode($districts); ?> ;;
+    var district_lists = <?php echo(json_encode($districts)); ?> ;;
     $("#select_province").on("change", function () {
         let province_id = this.value;
         let district_options = "<option value=''>ເລືອກ</option>";

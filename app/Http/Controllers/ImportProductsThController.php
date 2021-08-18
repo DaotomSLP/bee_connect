@@ -51,7 +51,14 @@ class ImportProductsThController extends Controller
         $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
 
         if ($request->date != '') {
-            $date = $request->date == Carbon::today()->toDateString() ? [Carbon::now()->subDays(1)->toDateString()] : $request->to_date;
+            $date =
+                $request->date == Carbon::today()->toDateString()
+                    ? [
+                        Carbon::now()
+                            ->subDays(1)
+                            ->toDateString(),
+                    ]
+                    : $request->to_date;
             $to_date = $request->to_date == Carbon::today()->toDateString() ? [Carbon::tomorrow()->toDateString()] : $request->to_date;
             $date_now = date('Y-m-d', strtotime($request->date));
             $to_date_now = date('Y-m-d', strtotime($request->to_date));
@@ -1320,8 +1327,7 @@ class ImportProductsThController extends Controller
         $result = User::query();
 
         $result
-            ->select('users.name', 'users.last_name', 'users.thai_percent', DB::raw('SUM(withdraw_th.price) AS sum_price'))
-            ->leftjoin('withdraw_th', 'users.id', 'withdraw_th.partner_id')
+            ->select('users.name', 'users.last_name', 'users.thai_percent')
             ->where('is_thai_partner', 1)
             ->groupBy('users.id')
             ->groupBy('users.name')
@@ -1365,29 +1371,18 @@ class ImportProductsThController extends Controller
         $sum_income = 0;
         $sum_income = IncomeTh::sum('price');
 
-        $result = User::query();
+        $result = WithdrawTh::query();
 
-        $result
-            ->select('users.name', 'users.last_name', 'withdraw_th.*')
-            ->join('withdraw_th', 'users.id', 'withdraw_th.partner_id')
-            ->where('is_thai_partner', 1);
+        $result->select('withdraw_th.*');
 
-        if ($request->product_id != '') {
-            $result->where('users.name', $request->name);
-        }
-
-        if ($request->status != '') {
-            $result->where('users.last_name', $request->last_name);
-        }
-
-        $all_withdraws = $result->orderBy('users.id', 'desc')->count();
+        $all_withdraws = $result->orderBy('id', 'desc')->count();
 
         if ($request->page != '') {
             $result->offset(($request->page - 1) * 25);
         }
 
         $withdraws = $result
-            ->orderBy('users.id', 'desc')
+            ->orderBy('id', 'desc')
             ->limit(25)
             ->get();
 
@@ -1397,9 +1392,38 @@ class ImportProductsThController extends Controller
             'all' => $all_withdraws,
         ];
 
-        $users = User::where('is_thai_partner', 1)->get();
+        return view('th.withdraw_th', compact('sum_income', 'all_withdraws', 'withdraws', 'pagination'));
+    }
 
-        return view('th.withdraw_th', compact('sum_income', 'all_withdraws', 'withdraws', 'users', 'pagination'));
+    public function withdraw_detail_th($id)
+    {
+        if (Auth::user()->is_owner != 1) {
+            return redirect('access_denied');
+        }
+
+        $sum_withdraw_th = 0;
+        $sum_withdraw_th = WithdrawTh::where('id', $id)->sum('price');
+
+        $result = User::query();
+
+        $result->select('users.*')->where('is_thai_partner', 1);
+
+        $all_users = $result->orderBy('id', 'desc')->count();
+
+        $users = $result->orderBy('id', 'desc')->get();
+        $new_users = [];
+        foreach ($users as $key => $user) {
+            $n['id'] = $user->id;
+            $n['name'] = $user->name;
+            $n['last_name'] = $user->last_name;
+            $n['price'] = ($sum_withdraw_th / 100) * $user->thai_percent;
+
+            array_push($new_users, $n);
+        }
+
+        $users = $new_users;
+
+        return view('th.withdraw_detail_th', compact( 'all_users', 'users'));
     }
 
     public function addWithDrawTh(Request $request)
@@ -1409,7 +1433,6 @@ class ImportProductsThController extends Controller
 
         $withdraw = new WithdrawTh();
         $withdraw->price = $request->price;
-        $withdraw->partner_id = $request->partner;
         $withdraw->updated_at = $date_now;
         $withdraw->created_at = $date_now;
         $withdraw->save();

@@ -5,27 +5,27 @@
     <!-- page content -->
     <div class="right_col" role="main">
         {{-- <div class="">
-            <div class="page-title">
-                <div class="title_left">
-                    <h3>ລາຍງານຜົນໄດ້ຮັບ</h3>
-                </div>
+        <div class="page-title">
+            <div class="title_left">
+                <h3>ລາຍງານຜົນໄດ້ຮັບ</h3>
             </div>
-            <div class="clearfix"></div>
-            <hr>
-            <div class="row">
-                <div class="col-12 col-mg-4 col-lg-4">
-                    <div class="x_panel">
-                        <div>
-                            <p class="h4">ຈຳນວນເງິນທີ່ໄດ້ຮັບ</p>
-                        </div>
-                        <hr>
-                        <div class="x_content">
-                            <p class="h2">{{ number_format($sum_income) }} ບາດ</p>
-                        </div>
+        </div>
+        <div class="clearfix"></div>
+        <hr>
+        <div class="row">
+            <div class="col-12 col-mg-4 col-lg-4">
+                <div class="x_panel">
+                    <div>
+                        <p class="h4">ຈຳນວນເງິນທີ່ໄດ້ຮັບ</p>
+                    </div>
+                    <hr>
+                    <div class="x_content">
+                        <p class="h2">{{ number_format($sum_income) }} ບາດ</p>
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
+    </div> --}}
         <div class="x_panel">
             <div>
                 <h2 class="card-title ">ເພີ່ມການເບີກເງິນ</h2>
@@ -34,21 +34,6 @@
                 <form method="POST" action="/addWithDrawTh">
                     @csrf
                     <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label class="bmd-label-floating">ຫຸ້ນສ່ວນ</label>
-                                <select class="form-control form-control-sm" name="partner" required>
-                                    <option value="">
-                                        Select
-                                    </option>
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}">
-                                            {{ $user->name }} {{ $user->last_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
                         <div class="col">
                             <div class="form-group">
                                 <label class="bmd-label-floating">ຈຳນວນເງິນ</label>
@@ -79,10 +64,10 @@
                                         ລ/ດ
                                     </th>
                                     <th>
-                                        ຊື່ ແລະ ນາມສະກຸນ
+                                        ຈຳນວນເງິນ
                                     </th>
                                     <th>
-                                        ຈຳນວນເງິນ
+                                        ວັນທີ
                                     </th>
                                     <th>
                                         ວັນທີ
@@ -95,17 +80,13 @@
                                                 {{ $key + 1 }}
                                             </td>
                                             <td>
-                                                {{ $withdraw->name }} {{ $withdraw->last_name }}
-                                            </td>
-                                            <td>
                                                 {{ $withdraw->price }}
                                             </td>
                                             <td>
-                                                <?php
-                                                $date = date_create(date('d-m-Y-H:i', strtotime($withdraw->created_at)), timezone_open('Pacific/Nauru'));
-                                                date_timezone_set($date, timezone_open('Asia/Vientiane'));
-                                                echo $withdraw->created_at ? date_format($date, 'd-m-Y-H:i') : '';
-                                                ?>
+                                                {{ $withdraw->created_at }}
+                                            </td>
+                                            <td>
+                                                <a href="/withdraw_detail_th/{{$withdraw->id}}">ລາຍລະອຽດ</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -131,8 +112,8 @@
                     <a class="page-link"
                         href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page=1">1</a>
                 </li>
-                @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                    @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++) @if ($j % 10 == 0 && $j > 1) <li
+                    class="page-item
                     {{ $pagination['offset'] == $j ? 'active' : '' }}">
                     <a class="page-link"
                     href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>

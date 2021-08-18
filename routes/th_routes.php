@@ -78,6 +78,8 @@ Route::get('/money_th', [ImportProductsThController::class, 'money_th'])->middle
 
 Route::get('/withdraw_th', [ImportProductsThController::class, 'withdraw_th'])->middleware('auth')->name('withdraw_th');
 
+Route::get('/withdraw_detail_th/{id}', [ImportProductsThController::class, 'withdraw_detail_th'])->middleware('auth')->name('withdraw_detail_th');
+
 Route::post('/addWithDrawTh', [ImportProductsThController::class, 'addWithDrawTh'])->middleware('auth')->name('addWithDrawTh');
 
 

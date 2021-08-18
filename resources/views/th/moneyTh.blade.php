@@ -85,7 +85,7 @@
                                                 {{ number_format(($sum_income * ($user->thai_percent ? $user->thai_percent : 0)) / 100) }}
                                             </td>
                                             <td>
-                                                {{ number_format($user->sum_price ? $user->sum_price : 0) }} ບາດ
+                                                {{ number_format(($sum_withdraw * ($user->thai_percent ? $user->thai_percent : 0)) / 100) }}
                                             </td>
                                         </tr>
                                     @endforeach
