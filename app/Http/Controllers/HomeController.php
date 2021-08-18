@@ -134,6 +134,17 @@ class HomeController extends Controller
         $results = [];
         $results = Import_products_th::where('code', 'like', '%' . $request->search . '%')->get();
 
+        foreach ($results as $key => $value) {
+            $new_results[$key]['code'] = $value->code;
+            $new_results[$key]['created_at'] =  $value->created_at ? date_format($value->created_at, 'Y-m-d H:i:s') : null;
+            $new_results[$key]['updated_at'] = $value->updated_at ? date_format($value->updated_at, 'Y-m-d H:i:s') : null;
+            $new_results[$key]['receive_bc_at'] = $value->receive_bc_at;
+            $new_results[$key]['received_at'] = $value->received_at;
+            $new_results[$key]['success_at'] = $value->success_at;
+        }
+
+        $results = $new_results;
+
         if ($results) {
             return response()
                 ->json($results);
