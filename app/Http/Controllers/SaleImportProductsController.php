@@ -71,6 +71,7 @@ class SaleImportProductsController extends Controller
               'success_at' => Carbon::now(),
               'sale_id' => $sale_import->id,
               'weight' => $request->weight[$count],
+              'weight_branch' => $request->weight[$count],
               'sale_price' => $request->sale_price[$count],
               'total_base_price' => ($lot->total_base_price_kg / $lot->weight_kg) * $request->weight[$count],
               'total_real_price' => ($lot->total_unit_kg / $lot->weight_kg) * $request->weight[$count],
@@ -82,7 +83,7 @@ class SaleImportProductsController extends Controller
               'success_at' => Carbon::now(),
               'sale_id' => $sale_import->id,
               'sale_price' => $request->sale_price[$count],
-              'weight' => $request->weight[$count],
+              'weight_branch' => $request->weight[$count],
               'total_sale_price' =>  $request->sale_price[$count] * $request->weight[$count]
             ];
           }

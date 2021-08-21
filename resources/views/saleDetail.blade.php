@@ -101,7 +101,7 @@
                                                     {{ $import_product->code }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->weight }}
+                                                    {{ $import_product->weight_branch }}
                                                     {{ $import_product->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກິໂລກຼາມ' }}
                                                 </td>
                                                 <td>

@@ -195,8 +195,7 @@
                                             <option value="">
                                                 ເລືອກ
                                             </option>
-                                            <option
-                                                {{ Request::input('payment_status') == 'not_paid' ? 'selected' : '' }}
+                                            <option {{ Request::input('payment_status') == 'not_paid' ? 'selected' : '' }}
                                                 value="not_paid">
                                                 ຍັງບໍ່ຈ່າຍ
                                             </option>
@@ -207,24 +206,28 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
-                                        <select class="form-control form-control-sm" id="select_branch"
-                                            name="receive_branch">
-                                            <option value="">
-                                                ເລືອກ
-                                            </option>
-                                            @foreach ($branchs as $branch)
-                                                <option
-                                                    {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
-                                                    value="{{ $branch->id }}">
-                                                    {{ $branch->branch_name }}
+
+                                @if (Auth::user()->is_admin == 1)
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
+                                            <select class="form-control form-control-sm" id="select_branch"
+                                                name="receive_branch">
+                                                <option value="">
+                                                    ເລືອກ
                                                 </option>
-                                            @endforeach
-                                        </select>
+                                                @foreach ($branchs as $branch)
+                                                    <option
+                                                        {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
+                                                        value="{{ $branch->id }}">
+                                                        {{ $branch->branch_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
+
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label class="bmd-label-floating">ວັນທີສົ່ງ</label>

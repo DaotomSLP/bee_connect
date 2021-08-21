@@ -82,7 +82,8 @@
                         @csrf
                         <div class="modal-content">
                             <div>
-                                <h2 class="text-center" id="exampleModalLabel"><i class="material-icons h1">delete_forever</i><br>ຕ້ອງການລົບລາຍການນີ້ ຫຼືບໍ່?</h2>
+                                <h2 class="text-center" id="exampleModalLabel"><i
+                                        class="material-icons h1">delete_forever</i><br>ຕ້ອງການລົບລາຍການນີ້ ຫຼືບໍ່?</h2>
                             </div>
 
                             <input type="hidden" id="lot_id_input" name="id">
@@ -104,7 +105,8 @@
                         @csrf
                         <div class="modal-content">
                             <div>
-                                <h2 class="text-center" id="exampleModalLabel"><i class="material-icons h1">paid</i><br>ຕ້ອງການຈ່າຍເງິນໃຫ້ກັບລາຍການນີ້ ຫຼືບໍ່?</h2>
+                                <h2 class="text-center" id="exampleModalLabel"><i
+                                        class="material-icons h1">paid</i><br>ຕ້ອງການຈ່າຍເງິນໃຫ້ກັບລາຍການນີ້ ຫຼືບໍ່?</h2>
                             </div>
 
                             <input type="hidden" id="paid_lot_id_input" name="id">
@@ -201,24 +203,28 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
-                                            <select class="form-control form-control-sm" id="select_branch"
-                                                name="receive_branch">
-                                                <option value="">
-                                                    ເລືອກ
-                                                </option>
-                                                @foreach ($branchs as $branch)
-                                                    <option
-                                                        {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
-                                                        value="{{ $branch->id }}">
-                                                        {{ $branch->branch_name }}
+
+                                    @if (Auth::user()->is_admin == 1)
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ສົ່ງໄປສາຂາ</label>
+                                                <select class="form-control form-control-sm" id="select_branch"
+                                                    name="receive_branch">
+                                                    <option value="">
+                                                        ເລືອກ
                                                     </option>
-                                                @endforeach
-                                            </select>
+                                                    @foreach ($branchs as $branch)
+                                                        <option
+                                                            {{ Request::input('receive_branch') == $branch->id ? 'selected' : '' }}
+                                                            value="{{ $branch->id }}">
+                                                            {{ $branch->branch_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
+
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ວັນທີສົ່ງ</label>

@@ -703,7 +703,7 @@ class ImportProductsController extends Controller
       return redirect('access_denied');
     }
 
-    $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
+    $branchs = Branchs::where('branchs.enabled', '1')->get();
 
     $result = Import_products::query();
 
