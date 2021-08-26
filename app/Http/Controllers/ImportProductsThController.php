@@ -1210,7 +1210,7 @@ class ImportProductsThController extends Controller
         $income_th->price = $sum_price;
         $income_th->lot_id = $request->id;
         $income_th->save();
-        return redirect('importViewTh')->with(['error' => 'insert_success']);
+        return redirect()->back()->with(['error' => 'insert_success']);
     }
 
     public function changeImportWeightTh(Request $request)

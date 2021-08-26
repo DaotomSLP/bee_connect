@@ -833,7 +833,7 @@ class ImportProductsController extends Controller
       $lot->delete();
     }
 
-    return redirect('importDetail?id=' . $request->lot_id)->with(['error' => 'insert_success']);
+    return redirect()->back()->with(['error' => 'insert_success']);
   }
 
   public function changeImportItemWeight(Request $request)
@@ -862,7 +862,7 @@ class ImportProductsController extends Controller
       ]
     );
 
-    return redirect('importDetail?id=' . $request->lot_id_in_weight)->with(['error' => 'insert_success']);
+    return redirect()->back()->with(['error' => 'insert_success']);
   }
 
   public function deleteLot(Request $request)
@@ -876,7 +876,7 @@ class ImportProductsController extends Controller
     $lot->delete();
     $import_products = Import_products::where('lot_id', $request->id);
     $import_products->delete();
-    return redirect('importView')->with(['error' => 'delete_success']);
+    return redirect()->back()->with(['error' => 'delete_success']);
   }
 
   public function paidLot(Request $request)
@@ -898,7 +898,7 @@ class ImportProductsController extends Controller
     $income_ch->price = $sum_price;
     $income_ch->lot_id = $request->id;
     $income_ch->save();
-    return redirect('importView')->with(['error' => 'insert_success']);
+     return redirect()->back()->with(['error' => 'insert_success']);
   }
 
   public function changeImportWeight(Request $request)
