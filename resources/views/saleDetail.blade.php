@@ -48,11 +48,47 @@
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ລາຄາຂາຍ</label>
                                             <input type="hidden" id="sale_item_id" name="sale_item_id">
-                                            <input type="hidden" id="weight" name="weight">
+                                            <input type="hidden" id="old_weight" name="old_weight">
+                                            <input type="hidden" id="new_weight" name="new_weight">
                                             <input type="hidden" id="sale_id" name="sale_id">
                                             <input type="hidden" id="old_price" name="old_price">
                                             <input type="number" min="100" id="new_price" class="form-control"
                                                 name="new_price" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ບັນທຶກ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="new_weight_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="POST" action="/editSalePrice">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title" id="exampleModalLabel">ແກ້ໄຂນ້ຳໜັກ</h2>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ນ້ຳໜັກ</label>
+                                            <input type="hidden" id="sale_item_id_2" name="sale_item_id">
+                                            <input type="hidden" id="old_weight_2" name="old_weight">
+                                            <input type="number" id="new_weight_2" step="0.001" name="new_weight" class="form-control" required>
+                                            <input type="hidden" id="sale_id_2" name="sale_id">
+                                            <input type="hidden" id="old_price_2" name="old_price">
+                                            <input type="hidden" id="new_price_2" name="new_price">
                                         </div>
                                     </div>
                                 </div>
@@ -103,10 +139,15 @@
                                                 <td>
                                                     {{ $import_product->weight_branch }}
                                                     {{ $import_product->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກິໂລກຼາມ' }}
+                                                    <a type="button"
+                                                        onclick="change_weight({{ $import_product->id . ',' . $import_product->sale_price . ',' . ($import_product->status == 'success' ? $import_product->weight_branch : $import_product->weight) . ',' . $import_product->sale_id }})"
+                                                        data-toggle="modal" data-target="#new_weight_modal">
+                                                        <i class="material-icons">create</i>
+                                                    </a>
                                                 </td>
                                                 <td>
                                                     {{ number_format($import_product->sale_price) }}<a type="button"
-                                                        onclick="change_price({{ $import_product->id . ',' . $import_product->sale_price . ',' . $import_product->weight . ',' . $import_product->sale_id }})"
+                                                        onclick="change_price({{ $import_product->id . ',' . $import_product->sale_price . ',' . ($import_product->status == 'success' ? $import_product->weight_branch : $import_product->weight) . ',' . $import_product->sale_id }})"
                                                         data-toggle="modal" data-target="#new_price_modal">
                                                         <i class="material-icons">create</i>
                                                     </a>
@@ -139,12 +180,14 @@
                             href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page=1">1</a>
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
-                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li class="page-item
+                            {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -157,12 +200,14 @@
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
-                        {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li class="page-item
+                            {{ $pagination['offset'] == $j ? 'active' : '' }}">
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"
@@ -184,8 +229,18 @@
             $("#old_price").val(price);
             $("#sale_item_id").val(id);
             $("#weight").val(weight);
+            $("#old_weight").val(weight);
+            $("#new_weight").val(weight);
             $("#sale_id").val(sale_id);
         }
 
+        function change_weight(id, price, weight, sale_id) {
+            $("#new_price_2").val(price);
+            $("#old_price_2").val(price);
+            $("#sale_item_id_2").val(id);
+            $("#old_weight_2").val(weight);
+            $("#new_weight_2").val(weight);
+            $("#sale_id_2").val(sale_id);
+        }
     </script>
 @endsection

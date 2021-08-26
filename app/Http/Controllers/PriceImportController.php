@@ -26,9 +26,9 @@ class PriceImportController extends Controller
 
     public function priceImport(Request $request)
     {
-        if(Auth::user()->is_admin != 1){
+        if (Auth::user()->is_admin != 1) {
             return redirect('access_denied');
-          }
+        }
 
         $pagination = [
             'offsets' =>  ceil(sizeof(Price_imports::all()) / 10),
@@ -96,19 +96,22 @@ class PriceImportController extends Controller
 
     public function editSalePrice(Request $request)
     {
-        Import_products::where('id', $request->sale_item_id)->update(
-            [
-                'sale_price' => $request->new_price,
-                'total_sale_price' => $request->new_price * $request->weight
-            ]
-        );
 
         $sale_import = Sale_import::where('id', $request->sale_id)
             ->orderBy('id', 'DESC')->first();
+        Import_products::where('id', $request->sale_item_id)->update(
+            [
+                'sale_price' => $request->new_price,
+                'total_sale_price' => $request->new_price * $request->new_weight,
+                'weight_branch' => $request->new_weight
+            ]
+        );
+
 
         Sale_import::where('id', $request->sale_id)->update(
             [
-                'total' => ($sale_import->total - ($request->old_price * $request->weight)) + ($request->new_price * $request->weight)
+                'total' => ($sale_import->total - ($request->old_price * $request->old_weight)) + ($request->new_price * $request->new_weight) - $sale_import->discount,
+                'subtotal' => ($sale_import->total - ($request->old_price * $request->old_weight)) + ($request->new_price * $request->new_weight)
             ]
         );
 
@@ -117,7 +120,7 @@ class PriceImportController extends Controller
         $change_sale_price_history->sale_item_id = $request->sale_item_id;
         $change_sale_price_history->branch_id = Auth::user()->branch_id;
         if ($change_sale_price_history->save()) {
-            return redirect('saleDetail?id=' . $request->sale_id)->with(['error' => 'insert_success']);
+            return redirect('saleView')->with(['error' => 'insert_success']);
         } else {
             return redirect('saleDetail?id=' . $request->sale_id)->with(['error' => 'not_insert']);
         }
@@ -126,9 +129,9 @@ class PriceImportController extends Controller
     public function saleImportPrice(Request $request)
     {
 
-        if(Auth::user()->is_branch != 1){
+        if (Auth::user()->is_branch != 1) {
             return redirect('access_denied');
-          }
+        }
 
         $pagination = [
             'offsets' =>  ceil(sizeof(Price_imports::all()) / 10),

@@ -148,7 +148,7 @@
                                                     {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->weight_branch ? $import_product->weight_branch : $import_product->weight }}
+                                                    {{ $import_product->status == 'success' ? $import_product->weight_branch : $import_product->weight }}
                                                     {{ $import_product->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກິໂລກຼາມ' }}
                                                 </td>
                                                 {{-- <td>
