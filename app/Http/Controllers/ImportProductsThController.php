@@ -58,8 +58,8 @@ class ImportProductsThController extends Controller
                             ->subDays(1)
                             ->toDateString(),
                     ]
-                    : $request->to_date;
-            $to_date = $request->to_date == Carbon::today()->toDateString() ? [Carbon::tomorrow()->toDateString()] : $request->to_date;
+                    : $request->date.' 00:00:00';
+            $to_date = $request->to_date == Carbon::today()->toDateString() ? [Carbon::tomorrow()->toDateString()] : $request->to_date." 23:59:59";
             $date_now = date('Y-m-d', strtotime($request->date));
             $to_date_now = date('Y-m-d', strtotime($request->to_date));
         } else {
@@ -83,8 +83,7 @@ class ImportProductsThController extends Controller
             $sum_real_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
                 ->where('payment_status', 'paid')
                 ->sum('total_main_price');
-
-            // echo($to_date);
+                // echo($date);
 
             //   print_r($sum_real_price);exit;
 
@@ -97,7 +96,7 @@ class ImportProductsThController extends Controller
                 ->where('lot_th.receiver_branch_id', Auth::user()->branch_id)
                 ->sum('total_main_price');
             $sum_real_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])
-                ->where('lot_th.receiver_branch_id', Auth::user()->branch_id)
+                // ->where('lot_th.receiver_branch_id', Auth::user()->branch_id)
                 ->sum('total_sale_price');
 
             $sum_fee_price = Lots_th::whereBetween('lot_th.created_at', [$date, $to_date])

@@ -892,7 +892,7 @@ class ImportProductsController extends Controller
       ]
     );
 
-    $sum_price = Lots::where('id', $request->id)->sum('total_main_price');
+    $sum_price = Lots::where('id', $request->id)->sum('total_price') - Lots::where('id', $request->id)->sum('total_base_price') ;
 
     $income_ch = new IncomeCh();
     $income_ch->price = $sum_price;

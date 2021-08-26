@@ -20,7 +20,7 @@
                         </div>
                         <hr>
                         <div class="x_content">
-                            <p class="h2">{{ number_format($sum_income) }} ບາດ</p>
+                            <p class="h2">{{ number_format($sum_income) }} ກີບ</p>
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                         </div>
                         <hr>
                         <div class="x_content">
-                            <p class="h2">{{ number_format($sum_withdraw) }} ບາດ</p>
+                            <p class="h2">{{ number_format($sum_withdraw) }} ກີບ</p>
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                         </div>
                         <hr>
                         <div class="x_content">
-                            <p class="h2">{{ number_format($sum_income - $sum_withdraw) }} ບາດ</p>
+                            <p class="h2">{{ number_format($sum_income - $sum_withdraw) }} ກີບ</p>
                         </div>
                     </div>
                 </div>
