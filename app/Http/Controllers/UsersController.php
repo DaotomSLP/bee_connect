@@ -84,6 +84,7 @@ class UsersController extends Controller
         $user->branch_id = $request->branch_id;
         $user->is_admin = '0';
         $user->enabled = '1';
+        $user->is_branch = '1';
         $user->phone_no = $request->phone_no;
 
         try {
