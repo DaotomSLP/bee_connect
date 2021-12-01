@@ -70,7 +70,18 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_sale_profit) }} ກີບ</p>
+                                <p class="h2">{{number_format($sum_sale_profit) }} ກີບ</p>
+                            </div>
+                        </div>
+                    </div>
+           <div class="col-12 col-mg-4 col-lg-4">
+                        <div class="x_panel">
+                            <div>
+                                <p class="h4">ນ້ຳໜັກລວມ</p>
+                            </div>
+                            <hr>
+                            <div class="x_content">
+                                <p class="h2">{{$sum_weight_kg_branch}} Kg</p>
                             </div>
                         </div>
                     </div>
