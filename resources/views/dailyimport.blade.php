@@ -70,18 +70,29 @@
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{number_format($sum_sale_profit) }} ກີບ</p>
+                                <p class="h2">{{ number_format($sum_sale_profit) }} ກີບ</p>
                             </div>
                         </div>
                     </div>
-           <div class="col-12 col-mg-4 col-lg-4">
+                    <div class="col-12 col-mg-4 col-lg-4">
                         <div class="x_panel">
                             <div>
-                                <p class="h4">ນ້ຳໜັກລວມ</p>
+                                <p class="h4">ນ້ຳໜັກລວມ (kg)</p>
                             </div>
                             <hr>
                             <div class="x_content">
-                                <p class="h2">{{$sum_weight_kg_branch}} Kg</p>
+                                <p class="h2">{{ $sum_weight_kg_branch }} Kg</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-mg-4 col-lg-4">
+                        <div class="x_panel">
+                            <div>
+                                <p class="h4">ຂະໜາດລວມ (m)</p>
+                            </div>
+                            <hr>
+                            <div class="x_content">
+                                <p class="h2">{{ $sum_weight_m_branch }} m</p>
                             </div>
                         </div>
                     </div>
@@ -310,12 +321,15 @@
                                 href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page=1">1</a>
                         </li>
                         @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                            @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                            @if ($j % 10 == 0 && $j > 1)
+                                <li
+                                    class="page-item
                             {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                            <a class="page-link"
-                            href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else @endif
+                                    <a class="page-link"
+                                        href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
+                                </li>
+                            @else
+                            @endif
                         @endfor
                         @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                             @if ($i > 1 && $i <= $pagination['all'])
@@ -328,12 +342,15 @@
                             @endif
                         @endfor
                         @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                            @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                            @if ($j % 10 == 0 && $j > 1)
+                                <li
+                                    class="page-item
                             {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                            <a class="page-link"
-                            href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
-                            </li>
-                        @else @endif
+                                    <a class="page-link"
+                                        href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
+                                </li>
+                            @else
+                            @endif
                         @endfor
                         <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                             <a class="page-link"

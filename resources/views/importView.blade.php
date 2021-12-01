@@ -271,6 +271,9 @@
                                         <th>
                                             kg
                                         </th>
+                                        <th>
+                                            m
+                                        </th>
                                         @if (Auth::user()->is_admin == 1)
                                             <th>
                                                 ລວມຕົ້ນທຶນ
@@ -348,6 +351,9 @@
                                                 </td>
                                                 <td>
                                                     {{ $lot->weight_kg }}
+                                                </td>
+                                                <td>
+                                                    {{ $lot->weight_m }}
                                                 </td>
                                                 @if (Auth::user()->is_admin == 1)
                                                     <td>
@@ -471,12 +477,15 @@
                             href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page=1">1</a>
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li
+                                class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -489,12 +498,15 @@
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li
+                                class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"

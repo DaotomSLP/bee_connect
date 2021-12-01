@@ -44,6 +44,14 @@ class ImportProductsController extends Controller
 
   public function dailyImport(Request $request)
   {
+    // $all = Lots::all();
+    // // print_r($all);
+    // // exit;
+
+    // foreach ($all as $key => $value) {
+    //   $sum = Import_products::where("lot_id", $value->id)->where("weight_type", "m")->sum("weight");
+    //   Lots::where('id', $value->id)->update(['weight_m' => $sum]);
+    // }
 
     if (Auth::user()->is_thai_admin == 1) {
       return redirect('/addImportTh');
@@ -101,6 +109,10 @@ class ImportProductsController extends Controller
       $sum_weight_kg_branch = Lots::whereBetween('lot.created_at', [$date, $to_date])
         ->where('lot.receiver_branch_id', Auth::user()->branch_id)
         ->sum("weight_kg");
+
+      $sum_weight_m_branch = Lots::whereBetween('lot.created_at', [$date, $to_date])
+        ->where('lot.receiver_branch_id', Auth::user()->branch_id)
+        ->sum("weight_m");
 
       $sum_fee_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
         ->where('lot.receiver_branch_id', Auth::user()->branch_id)
@@ -191,7 +203,7 @@ class ImportProductsController extends Controller
       $sum_share = $sum_profit * (Auth::user()->ch_percent / 100);
     }
 
-    return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share', 'result_weight', 'result_weight_m', 'sum_weight_kg_branch'));
+    return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share', 'result_weight', 'result_weight_m', 'sum_weight_kg_branch', 'sum_weight_m_branch'));
   }
 
   public function insertImport(Request $request)
@@ -259,6 +271,7 @@ class ImportProductsController extends Controller
       $lot->lot_real_price_m = $request->real_price_m;
       $lot->lot_base_price_m = $request->base_price_m;
       $lot->service_charge = $sum_service_charge;
+      $lot->weight_m = $sum_m_weight;
 
       if ($lot->save()) {
         $count = 0;
