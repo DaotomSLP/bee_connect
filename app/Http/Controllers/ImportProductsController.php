@@ -85,7 +85,8 @@ class ImportProductsController extends Controller
       ->groupBy('branchs.branch_name');
 
     if (Auth::user()->branch_id == null) {
-
+      $sum_weight_kg_branch = 0;
+      $sum_weight_m_branch = 0;
       $sum_base_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
         ->sum("total_base_price");
       $sum_real_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
