@@ -42,33 +42,33 @@
             @if (Auth::user()->branch_id != null)
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
-                        <div class="x_panel">
+                        <div class="x_panel bg-primary text-white">
                             <div>
                                 <p class="h4">ຈຳນວນເງິນທີ່ໄດ້ຮັບ</p>
                             </div>
-                            <hr>
+                            <hr class="border-white">
                             <div class="x_content">
                                 <p class="h2">{{ number_format($sum_real_price) }} ກີບ</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-mg-4 col-lg-4">
-                        <div class="x_panel">
+                        <div class="x_panel bg-warning text-white">
                             <div>
                                 <p class="h4">ຕົ້ນທຶນ</p>
                             </div>
-                            <hr>
+                            <hr class="border-white">
                             <div class="x_content">
                                 <p class="h2">{{ number_format($sum_base_price) }} ກີບ</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-mg-4 col-lg-4">
-                        <div class="x_panel">
+                        <div class="x_panel bg-success text-white">
                             <div>
                                 <p class="h4">ກຳໄລການຂາຍ</p>
                             </div>
-                            <hr>
+                            <hr class="border-white">
                             <div class="x_content">
                                 <p class="h2">{{ number_format($sum_sale_profit) }} ກີບ</p>
                             </div>
@@ -100,33 +100,33 @@
             @else
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
-                        <div class="x_panel">
+                        <div class="x_panel bg-primary text-white">
                             <div>
                                 <p class="h4">ຈຳນວນເງິນທີ່ໄດ້ຮັບ</p>
                             </div>
-                            <hr>
+                            <hr class="border-white">
                             <div class="x_content">
                                 <p class="h2">{{ number_format($sum_real_price) }} ກີບ</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-mg-4 col-lg-4">
-                        <div class="x_panel">
+                        <div class="x_panel bg-warning text-white">
                             <div>
                                 <p class="h4">ຕົ້ນທຶນ</p>
                             </div>
-                            <hr>
+                            <hr class="border-white">
                             <div class="x_content">
                                 <p class="h2">{{ number_format($sum_base_price) }} ກີບ</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-mg-4 col-lg-4">
-                        <div class="x_panel">
+                        <div class="x_panel bg-success text-white">
                             <div>
                                 <p class="h4">ກຳໄລການຂາຍ</p>
                             </div>
-                            <hr>
+                            <hr class="border-white">
                             <div class="x_content">
                                 <p class="h2">{{ number_format($sum_sale_profit) }} ກີບ</p>
                             </div>
@@ -136,11 +136,11 @@
 
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
-                        <div class="x_panel">
+                        <div class="x_panel bg-info text-white">
                             <div>
                                 <p class="h4">ລວມຄ່າຂົນສົ່ງ</p>
                             </div>
-                            <hr>
+                            <hr class="border-white">
                             <div class="x_content">
                                 <p class="h2">{{ number_format($sum_fee_price) }} ກີບ</p>
                             </div>
@@ -161,13 +161,13 @@
                 <hr>
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
-                        <div class="x_panel">
+                        <div class="x_panel bg-danger text-white">
                             <div>
                                 <p class="h4 d-inline">ລາຍຈ່າຍອື່ນໆ</p>
                                 <p class="pl-3 h4 d-inline"><a href="/expenditure"><i
-                                            class="fa fa-arrow-right"></i></span></a></p>
+                                            class="fa fa-arrow-right text-white"></i></span></a></p>
                             </div>
-                            <hr>
+                            <hr class="border-white">
                             <div class="x_content">
                                 <p class="h2">{{ number_format($sum_expenditure) }} ກີບ</p>
                             </div>
@@ -177,13 +177,13 @@
                 <hr>
                 <div class="row">
                     <div class="col-12 col-mg-4 col-lg-4">
-                        <div class="x_panel">
+                        <div class="x_panel bg-primary text-white">
                             <div>
-                                <p class="h4">ກຳໄລ</p>
+                                <p class="h3 font-weight-bold">ກຳໄລ</p>
                             </div>
-                            <hr>
+                            <hr class="border-white">
                             <div class="x_content">
-                                <p class="h2">{{ number_format($sum_profit) }} ກີບ</p>
+                                <p class="h2 font-weight-bold">{{ number_format($sum_profit) }} ກີບ</p>
                             </div>
                         </div>
                     </div>
@@ -194,11 +194,11 @@
                 @if (Auth::user()->is_ch_partner == 1)
                     <div class="row">
                         <div class="col-12 col-mg-4 col-lg-4">
-                            <div class="x_panel">
+                            <div class="x_panel bg-success text-white">
                                 <div>
                                     <p class="h4">ສ່ວນແບ່ງ</p>
                                 </div>
-                                <hr>
+                                <hr class="border-white">
                                 <div class="x_content">
                                     <p class="h2">{{ number_format($sum_share) }} ກີບ</p>
                                 </div>
