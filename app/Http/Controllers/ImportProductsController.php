@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
 
+use function PHPSTORM_META\type;
+
 class ImportProductsController extends Controller
 {
   public function index(Request $request)
@@ -77,7 +79,7 @@ class ImportProductsController extends Controller
     $branch_id = Auth::user()->branch_id;
 
     $result = DB::table('lot')
-      ->select(DB::raw('branchs.id as receiver_branch_id, branchs.branch_name as branch_name, sum(lot.total_price) as branch_total_price'))
+      ->select(DB::raw('branchs.id as receiver_branch_id, branchs.branch_name as branch_name, sum(lot.total_main_price) as branch_total_price, sum(lot.weight_kg) as weight_kg, sum(lot.weight_m) as weight_m'))
       // ->join('import_products', 'lot.id', 'import_products.lot_id')
       ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
       ->whereBetween('lot.created_at', [$date, $to_date])
@@ -141,6 +143,48 @@ class ImportProductsController extends Controller
     $branch_sale_totals = $result
       ->limit(25)
       ->get();
+    $branch_sale_totals_branch_name = $result
+      ->limit(25)
+      ->get()
+      ->pluck('branch_name');
+
+    $branch_sale_totals_kg = $result
+      ->limit(25)
+      ->get()
+      ->pluck('weight_kg');
+
+    $branch_sale_totals_m = $result
+      ->limit(25)
+      ->get()
+      ->pluck('weight_m');
+
+    $branch_sale_totals_price = $result
+      ->limit(25)
+      ->get()
+      ->pluck('branch_total_price');
+
+
+    $branch_sale_totals_paid = DB::table('lot')
+      ->select(DB::raw('sum(lot.total_main_price) as branch_total_price'))
+      // ->join('import_products', 'lot.id', 'import_products.lot_id')
+      ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+      ->whereBetween('lot.created_at', [$date, $to_date])
+      ->where('lot.payment_status', '<>', 'not_paid')
+      ->groupBy('branchs.id')
+      ->groupBy('branchs.branch_name')
+      ->get()
+      ->pluck('branch_total_price');
+
+    $branch_sale_totals_unpaid = DB::table('lot')
+      ->select(DB::raw('sum(lot.total_main_price) as branch_total_price'))
+      // ->join('import_products', 'lot.id', 'import_products.lot_id')
+      ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+      ->whereBetween('lot.created_at', [$date, $to_date])
+      ->where('lot.payment_status', 'not_paid')
+      ->groupBy('branchs.id')
+      ->groupBy('branchs.branch_name')
+      ->get()
+      ->pluck('branch_total_price');
 
     $pagination = [
       'offsets' =>  ceil($all_branch_sale_totals / 25),
@@ -154,6 +198,15 @@ class ImportProductsController extends Controller
       ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
       ->whereBetween('lot.created_at', [$date, $to_date])
       ->groupBy('lot.receiver_branch_id')->get();
+
+    $import_product_count_for_chart = DB::table('lot')
+      ->select(DB::raw('count(import_products.id) as count_import_product'))
+      ->join('import_products', 'lot.id', 'import_products.lot_id')
+      ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+      ->whereBetween('lot.created_at', [$date, $to_date])
+      ->groupBy('lot.receiver_branch_id')->get()
+      ->pluck('count_import_product');
+
 
     $result_unpaid = DB::table('lot')
       ->select(DB::raw('branchs.id as receiver_branch_id, sum(lot.total_main_price) as branch_total_price'))
@@ -196,7 +249,7 @@ class ImportProductsController extends Controller
       ->get();
 
 
-    // print_r($result_paid);
+    // print_r($import_product_count);
     // exit;
 
     $sum_share = 0;
@@ -204,7 +257,7 @@ class ImportProductsController extends Controller
       $sum_share = $sum_profit * (Auth::user()->ch_percent / 100);
     }
 
-    return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share', 'result_weight', 'result_weight_m', 'sum_weight_kg_branch', 'sum_weight_m_branch'));
+    return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share', 'result_weight', 'result_weight_m', 'sum_weight_kg_branch', 'sum_weight_m_branch', 'branch_sale_totals_branch_name', 'branch_sale_totals_kg', 'branch_sale_totals_m', 'import_product_count_for_chart', 'branch_sale_totals_price', 'branch_sale_totals_unpaid', 'branch_sale_totals_paid'));
   }
 
   public function insertImport(Request $request)
