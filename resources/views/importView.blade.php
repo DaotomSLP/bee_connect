@@ -150,10 +150,11 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="x_panel">
+                    <div class="x_panel bg-info text-white">
                         <div>
-                            <h2>ຄົ້ນຫາ</h2>
+                            <h2 class="font-weight-bold">ຄົ້ນຫາ</h2>
                         </div>
+                        <hr class="border-white">
                         <div class="x_content">
                             <form method="GET" action="/importView">
                                 {{-- @csrf --}}
@@ -233,7 +234,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-primary pull-right px-4">ຄົ້ນຫາ</button>
+                                <button type="submit" class="btn btn-sm btn-light pull-right px-4">ຄົ້ນຫາ</button>
                                 <div class="clearfix"></div>
                             </form>
                         </div>
@@ -244,7 +245,7 @@
             <div class="clearfix"></div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col">
                     <div class="x_panel">
                         <div>
                             <h2>ລາຍການສົ່ງອອກທັງໝົດຂອງສາຂາ</h2>
@@ -253,7 +254,7 @@
                         <div class="x_content">
                             <div class="table-responsive">
                                 <table class="table">
-                                    <thead class=" text-primary">
+                                    <thead class="font-weight-bold">
                                         <th>
                                             ລ/ດ
                                         </th>
@@ -274,20 +275,20 @@
                                         <th>
                                             m
                                         </th>
-                                        @if (Auth::user()->is_admin == 1)
+                                        {{-- @if (Auth::user()->is_admin == 1)
                                             <th>
                                                 ລວມຕົ້ນທຶນ
                                             </th>
                                             <th>
                                                 ລວມລາຄາເຄື່ອງ
                                             </th>
-                                        @endif
+                                        @endif --}}
                                         @if (Auth::user()->is_admin != 1)
                                             <th>
                                                 ລວມຕົ້ນທຶນຄ່າເຄື່ຶອງ
                                             </th>
                                         @endif
-                                        <th>
+                                        {{-- <th>
                                             ຄ່າຂົນສົ່ງ
                                         </th>
                                         <th>
@@ -295,7 +296,7 @@
                                         </th>
                                         <th>
                                             ຄ່າບໍລິການເພີ່ມເຕີມ
-                                        </th>
+                                        </th> --}}
                                         @if (Auth::user()->is_admin == 1)
                                             <th>
                                                 ລວມເປັນເງິນທັງໝົດ
@@ -317,12 +318,6 @@
                                         </th>
                                         <th>
                                             ສະຖານະຈ່າຍເງິນ
-                                        </th>
-                                        <th>
-
-                                        </th>
-                                        <th>
-
                                         </th>
                                         <th>
 
@@ -355,15 +350,15 @@
                                                 <td>
                                                     {{ $lot->weight_m }}
                                                 </td>
-                                                @if (Auth::user()->is_admin == 1)
+                                                {{-- @if (Auth::user()->is_admin == 1)
                                                     <td>
                                                         {{ number_format($lot->total_base_price) }} ກີບ
                                                     </td>
-                                                @endif
+                                                @endif --}}
                                                 <td>
                                                     {{ number_format($lot->total_price) }} ກີບ
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     {{ number_format($lot->fee) }} ກີບ
                                                 </td>
                                                 <td>
@@ -374,7 +369,7 @@
                                                         href="/{{ Auth::user()->is_admin == 1 ? 'serviceChargeDetail' : 'serviceChargeDetailForUser' }}?id={{ $lot->id }}">
                                                         {{ number_format($lot->service_charge) }} ກີບ
                                                     </a>
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     <p class="text-danger font-weight-bold">
                                                         {{ number_format($lot->total_main_price) }} ກີບ</p>
@@ -406,8 +401,6 @@
                                                         href="/{{ Auth::user()->is_admin == 1 ? 'importDetail' : 'importDetailForUser' }}?id={{ $lot->id }}">
                                                         <i class="material-icons">assignment</i>
                                                     </a>
-                                                </td>
-                                                <td>
                                                     @if ($lot->status != 'success' && Auth::user()->is_owner == 1)
 
                                                         <a type="button" onclick="deleteLot({{ $lot->id }})"
@@ -416,8 +409,6 @@
                                                         </a>
 
                                                     @endif
-                                                </td>
-                                                <td>
                                                     @if ($lot->status != 'success' && Auth::user()->is_owner == 1)
                                                         <a type="button"
                                                             onclick="change_weight({{ $lot->id . ',' . ($lot->lot_base_price_kg ? $lot->lot_base_price_kg : 0) . ',' . ($lot->lot_real_price_kg ? $lot->lot_real_price_kg : 0) . ',' . ($lot->lot_base_price_m ? $lot->lot_base_price_m : 0) . ',' . ($lot->lot_real_price_m ? $lot->lot_real_price_m : 0) . ',' . ($lot->weight_kg ? $lot->weight_kg : 0) . ',' . ($lot->fee ? $lot->fee : 0) . ',' . ($lot->pack_price ? $lot->pack_price : 0) }})"
@@ -425,21 +416,18 @@
                                                             <i class="material-icons">create</i>
                                                         </a>
                                                     @endif
-                                                </td>
-                                                <td>
                                                     @if (Auth::user()->is_admin == 1)
                                                         <a href="/importpdf/{{ $lot->id }}" target="_blank">
                                                             <i class="material-icons">print</i>
                                                         </a>
                                                     @endif
                                                 </td>
-
                                                 <td>
                                                     @if ($lot->payment_status == 'not_paid' && Auth::user()->is_admin == 1)
-
                                                         {{-- <a href="/paidLot?id={{ $lot->id }}"> --}}
-                                                        <a type="button" onclick="paidLot({{ $lot->id }})"
-                                                            data-toggle="modal" data-target="#paid_lot_modal">
+                                                        <a type="button" class="btn btn-sm btn-info text-white"
+                                                            onclick="paidLot({{ $lot->id }})" data-toggle="modal"
+                                                            data-target="#paid_lot_modal">
                                                             ຈ່າຍເງິນ
                                                         </a>
 

@@ -32,15 +32,16 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="x_panel">
+                    <div class="x_panel bg-info text-white">
                         <div>
-                            <h2>ສະແກນບາໂຄດ</h2>
+                            <h2 class="font-weight-bold">ສະແກນບາໂຄດ</h2>
                         </div>
+                        <hr class="border-white">
                         <div class="x_content">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="bmd-label-floating">ລະຫັດເຄື່ອງ</label>
+                                        <label class="bmd-label-floating h6">ລະຫັດເຄື່ອງ</label>
                                         <div class="spinner-border d-none" id="loading" role="status">
                                             <span class="sr-only">Loading...</span>
                                         </div>
@@ -54,226 +55,229 @@
             </div>
 
             <div class="clearfix"></div>
-            <div class="row">
-                <div class="col">
-                    <form method="POST" action="/importProduct">
-                        @csrf
-                        <div class="row">
-                            <div class="col">
-                                <div class="x_panel">
-                                    <div>
-                                        <h2>ລາຍການ</h2>
-                                    </div>
-                                    <div class="x_content">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover">
-                                                <thead class=" text-primary">
-                                                    <th>
-                                                        ລະຫັດເຄື່ອງ
-                                                    </th>
-                                                    <th>
-                                                        ນ້ຳໜັກ/ຂະໜາດ
-                                                    </th>
-                                                    <th>
-                                                        ຫົວໜ່ວຍ
-                                                    </th>
-                                                </thead>
-                                                <tbody id="product_item_table">
 
-                                                </tbody>
-                                            </table>
-                                        </div>
+            <form method="POST" action="/importProduct">
+                @csrf
+                <div class="row">
+                    <div class="col">
+                        <div class="x_panel">
+                            <div>
+                                <h2>ລາຍການ</h2>
+                            </div>
+                            <div class="x_content">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class=" text-primary">
+                                            <th>
+                                                ລະຫັດເຄື່ອງ
+                                            </th>
+                                            <th>
+                                                ນ້ຳໜັກ/ຂະໜາດ
+                                            </th>
+                                            <th>
+                                                ຫົວໜ່ວຍ
+                                            </th>
+                                        </thead>
+                                        <tbody id="product_item_table">
 
-                                        <hr>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ (ກິໂລກຼາມ)</label>
-                                                    <input class="form-control form-control-sm" name="base_price_kg">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ລາຄາ (ກິໂລກຼາມ)</label>
-                                                    <input class="form-control form-control-sm" name="real_price_kg">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ນ້ຳໜັກລວມ (ກິໂລກຼາມ)</label>
-                                                    <input class="form-control form-control-sm" name="weight_kg"
-                                                        id="all_weight_kg" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ (ແມັດກ້ອນ)</label>
-                                                    <input class="form-control form-control-sm" name="base_price_m">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ລາຄາ (ແມັດກ້ອນ)</label>
-                                                    <input class="form-control form-control-sm" name="real_price_m">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ຄ່າຂົນສົ່ງ</label>
-                                                    <input class="form-control form-control-sm" name="fee">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ຄ່າເປົາ</label>
-                                                    <input class="form-control form-control-sm" name="pack_price">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {{-- <div>
-                                            <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
-                                            <div class="clearfix"></div>
-                                        </div> --}}
-
-                                    </div>
+                                        </tbody>
+                                    </table>
                                 </div>
+
+                                <hr>
+
+                                {{-- <div>
+                                <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
+                                <div class="clearfix"></div>
+                            </div> --}}
+
                             </div>
                         </div>
-                        <div class="clearfix"></div>
-
-                        <div class="row">
-                            <div class="col">
-                                <div class="x_panel">
-                                    <div>
-                                        <h2 class="mr-3">ຄ່າບໍລິການເພີ່ມເຕີມ</h2>
-                                        
-                                    </div>
-                                    <div class="x-content">
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ຊື່ບໍລິການ</label>
-                                                    <input class="form-control form-control-sm" id="service_charge_name">
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ລາຄາ</label>
-                                                    <input class="form-control form-control-sm" id="service_charge_price">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <button type="button" class="btn btn-sm btn-primary px-3" onclick="addServiceCharge()">ເພີ່ມ</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover">
-                                                <thead class=" text-primary">
-                                                    <th>
-                                                        ລະຫັດເຄື່ອງ
-                                                    </th>
-                                                    <th>
-                                                        ນ້ຳໜັກ/ຂະໜາດ
-                                                    </th>
-                                                </thead>
-                                                <tbody id="service_item_table">
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col">
-                                <div class="x_panel">
-                                    <div>
-                                        <h2>ເລຶອກບ່ອນສົ່ງ</h2>
-                                    </div>
-                                    <div class="x-content">
-
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ແຂວງ</label>
-                                                    <select class="form-control form-control-sm" id="select_province"
-                                                        required>
-                                                        <option value="">
-                                                            ເລືອກ
-                                                        </option>
-                                                        @foreach ($provinces as $province)
-                                                            <option value="{{ $province->id }}">
-                                                                {{ $province->prov_name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ເມືອງ</label>
-                                                    <select class="form-control form-control-sm" disabled
-                                                        id="select_district" required>
-                                                        <option value="">
-                                                            ເລືອກ
-                                                        </option>
-                                                        @foreach ($districts as $district)
-                                                            <option value="{{ $district->id }}">
-                                                                {{ $district->dist_name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label class="bmd-label-floating">ສາຂາ</label>
-                                                    <select class="form-control form-control-sm" disabled id="select_branch"
-                                                        name="receiver_branch_id" required>
-                                                        <option value="">
-                                                            ເລືອກ
-                                                        </option>
-                                                        @foreach ($branchs as $branch)
-                                                            <option value="{{ $branch->id }}">
-                                                                {{ $branch->branch_name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </form>
-
+                    </div>
                 </div>
-            </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col">
+                        <div class="x_panel">
+                            <div class="x_content">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ (ກິໂລກຼາມ)</label>
+                                            <input class="form-control form-control-sm" name="base_price_kg">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ລາຄາ (ກິໂລກຼາມ)</label>
+                                            <input class="form-control form-control-sm" name="real_price_kg">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ນ້ຳໜັກລວມ (ກິໂລກຼາມ)</label>
+                                            <input class="form-control form-control-sm" name="weight_kg" id="all_weight_kg"
+                                                required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ (ແມັດກ້ອນ)</label>
+                                            <input class="form-control form-control-sm" name="base_price_m">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ລາຄາ (ແມັດກ້ອນ)</label>
+                                            <input class="form-control form-control-sm" name="real_price_m">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ຄ່າຂົນສົ່ງ</label>
+                                            <input class="form-control form-control-sm" name="fee">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ຄ່າເປົາ</label>
+                                            <input class="form-control form-control-sm" name="pack_price">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="x_panel">
+                            <div>
+                                <h2 class="mr-3">ຄ່າບໍລິການເພີ່ມເຕີມ</h2>
+
+                            </div>
+                            <div class="x-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ຊື່ບໍລິການ</label>
+                                            <input class="form-control form-control-sm" id="service_charge_name">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ລາຄາ</label>
+                                            <input class="form-control form-control-sm" id="service_charge_price">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <button type="button" class="btn btn-sm btn-primary px-3"
+                                            onclick="addServiceCharge()">ເພີ່ມ</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class=" text-primary">
+                                            <th>
+                                                ລະຫັດເຄື່ອງ
+                                            </th>
+                                            <th>
+                                                ນ້ຳໜັກ/ຂະໜາດ
+                                            </th>
+                                        </thead>
+                                        <tbody id="service_item_table">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="x_panel bg-info text-white">
+                            <div>
+                                <h2>ເລຶອກບ່ອນສົ່ງ</h2>
+                            </div>
+                            <hr class="border-white">
+                            <div class="x-content">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ແຂວງ</label>
+                                            <select class="form-control form-control-sm" id="select_province" required>
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                @foreach ($provinces as $province)
+                                                    <option value="{{ $province->id }}">
+                                                        {{ $province->prov_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ເມືອງ</label>
+                                            <select class="form-control form-control-sm" disabled id="select_district"
+                                                required>
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                @foreach ($districts as $district)
+                                                    <option value="{{ $district->id }}">
+                                                        {{ $district->dist_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ສາຂາ</label>
+                                            <select class="form-control form-control-sm" disabled id="select_branch"
+                                                name="receiver_branch_id" required>
+                                                <option value="">
+                                                    ເລືອກ
+                                                </option>
+                                                @foreach ($branchs as $branch)
+                                                    <option value="{{ $branch->id }}">
+                                                        {{ $branch->branch_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-light pull-right px-5">ບັນທຶກ</button>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
         </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        var district_lists = <?php echo json_encode($districts); ?> ;;
-        var branch_lists = <?php echo json_encode($branchs); ?> ;;
+        var district_lists = <?php echo json_encode($districts); ?>;;
+        var branch_lists = <?php echo json_encode($branchs); ?>;;
         $("#select_province").on("change", function() {
             let province_id = this.value;
             let district_options = "<option value=''>ເລືອກ</option>";
@@ -383,34 +387,34 @@
         }
 
         var service_charge = []
-        function addServiceCharge(){
-            if($("#service_charge_name").val() === "" || $("#service_charge_price").val() === "" ){
-                alert("ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບ")
-            }else{
 
-                service_charge.push(
-                    {
-                        id:service_charge.length+1,
-                        name:$("#service_charge_name").val(),
-                        price:$("#service_charge_price").val()
-                    }
-                );
+        function addServiceCharge() {
+            if ($("#service_charge_name").val() === "" || $("#service_charge_price").val() === "") {
+                alert("ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບ")
+            } else {
+
+                service_charge.push({
+                    id: service_charge.length + 1,
+                    name: $("#service_charge_name").val(),
+                    price: $("#service_charge_price").val()
+                });
                 generateServiceChargeItems();
                 $("#service_charge_name").val("")
                 $("#service_charge_price").val("")
             }
         }
 
-        function generateServiceChargeItems(){
-            let service_charge_html = service_charge.map(val=>`<tr><td class="py-0"><div class="form-group"><input value='${val.name}' class="form-control form-control-sm" name="service_item_name[]" required readonly></div></td><td class="py-0"><div class="form-group"><input type="number" value=${val.price} step="0.001" class="form-control form-control-sm" name="service_item_price[]" required readonly></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteServiceItem(${val.id})> <i class="material-icons">clear</i></a></div></td></tr>`);
+        function generateServiceChargeItems() {
+            let service_charge_html = service_charge.map(val =>
+                `<tr><td class="py-0"><div class="form-group"><input value='${val.name}' class="form-control form-control-sm" name="service_item_name[]" required readonly></div></td><td class="py-0"><div class="form-group"><input type="number" value=${val.price} step="0.001" class="form-control form-control-sm" name="service_item_price[]" required readonly></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteServiceItem(${val.id})> <i class="material-icons">clear</i></a></div></td></tr>`
+            );
             $("#service_item_table").html(service_charge_html)
-            
+
         }
 
-        function deleteServiceItem(id){
-            service_charge = service_charge.filter(val=>val.id!==id);
+        function deleteServiceItem(id) {
+            service_charge = service_charge.filter(val => val.id !== id);
             generateServiceChargeItems();
         }
-
     </script>
 @endsection

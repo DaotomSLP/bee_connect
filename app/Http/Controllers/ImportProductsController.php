@@ -584,6 +584,8 @@ class ImportProductsController extends Controller
 
     $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)->where('branchs.enabled', '1')->get();
 
+    $lot = Lots::join('branchs As receive', 'lot.receiver_branch_id', 'receive.id')->where('lot.id', $request->id)->get();
+
     $result = Import_products::query();
 
     $result->select('import_products.*')
@@ -625,7 +627,7 @@ class ImportProductsController extends Controller
     // echo ($import_products));
     // exit;
 
-    return view('importDetail', compact('branchs', 'import_products', 'pagination'));
+    return view('importDetail', compact('branchs', 'import_products', 'pagination', 'lot'));
   }
 
   public function importDetailForUser(Request $request)
