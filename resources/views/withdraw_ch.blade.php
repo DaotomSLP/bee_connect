@@ -26,40 +26,44 @@
             </div>
         </div>
     </div> --}}
-        <div class="x_panel">
-            <div>
-                <h2 class="card-title ">ເພີ່ມການເບີກເງິນ</h2>
-            </div>
-            <div class="x_content">
-                <form method="POST" action="/addWithDrawCh">
-                    @csrf
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label class="bmd-label-floating">ຈຳນວນເງິນ</label>
-                                <input class="form-control form-control-sm" name="price">
-                            </div>
-                        </div>
-                        <div>
-                            <button type="submit" class="btn btn-primary pull-right px-5">Save</button>
-                            <div class="clearfix"></div>
-                        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title">ເພີ່ມການເບີກເງິນ</h5>
                     </div>
-                </form>
+                    <div class="card-body">
+                        <form method="POST" action="/addWithDrawCh">
+                            @csrf
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating">ຈຳນວນເງິນ</label>
+                                        <input class="form-control form-control-sm" name="price">
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-info pull-right px-5">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 
         <hr>
         <div class="row">
-            <div class="col-md-12">
-                <div class="x_panel">
-                    <div>
-                        <h2 class="card-title ">ລາຍການເບີກເງິນ</h2>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title">ລາຍການເບີກເງິນ</h5>
                     </div>
-                    <div class="x_content">
+                    <div class="card-body">
                         <div class="table-responsive">
                             <table class="table">
-                                <thead class=" text-primary">
+                                <thead class="font-weight-bold">
                                     <th>
                                         ລ/ດ
                                     </th>
@@ -86,7 +90,7 @@
                                                 {{ $withdraw->created_at }}
                                             </td>
                                             <td>
-                                                <a href="/withdraw_detail_ch/{{$withdraw->id}}">ລາຍລະອຽດ</a>
+                                                <a href="/withdraw_detail_ch/{{ $withdraw->id }}">ລາຍລະອຽດ</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -112,13 +116,15 @@
                     <a class="page-link"
                         href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page=1">1</a>
                 </li>
-                @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++) @if ($j % 10 == 0 && $j > 1) <li
-                    class="page-item
+                @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
+                    @if ($j % 10 == 0 && $j > 1)
+                        <li class="page-item
                     {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                    <a class="page-link"
-                    href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
-                    </li>
-                @else @endif
+                            <a class="page-link"
+                                href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else
+                    @endif
                 @endfor
                 @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                     @if ($i > 1 && $i <= $pagination['all'])
@@ -131,12 +137,14 @@
                     @endif
                 @endfor
                 @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                    @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                    @if ($j % 10 == 0 && $j > 1)
+                        <li class="page-item
                     {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                    <a class="page-link"
-                    href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
-                    </li>
-                @else @endif
+                            <a class="page-link"
+                                href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else
+                    @endif
                 @endfor
                 <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                     <a class="page-link"

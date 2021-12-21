@@ -14,35 +14,35 @@
             <hr>
             <div class="row">
                 <div class="col-12 col-mg-4 col-lg-4">
-                    <div class="x_panel">
+                    <div class="x_panel bg-success text-white">
                         <div>
                             <p class="h4">ຈຳນວນເງິນທີ່ໄດ້ຮັບ</p>
                         </div>
-                        <hr>
+                        <hr class="border-white">
                         <div class="x_content">
-                            <p class="h2">{{ number_format($sum_income) }} ກີບ</p>
+                            <p class="h2 font-weight-bold">{{ number_format($sum_income) }} ກີບ</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-12 col-mg-4 col-lg-4">
-                    <div class="x_panel">
+                    <div class="x_panel bg-danger text-white">
                         <div>
                             <p class="h4">ຈຳນວນເງິນທີ່ຖອນອອກ</p>
                         </div>
-                        <hr>
+                        <hr class="border-white">
                         <div class="x_content">
-                            <p class="h2">{{ number_format($sum_withdraw) }} ກີບ</p>
+                            <p class="h2 font-weight-bold">{{ number_format($sum_withdraw) }} ກີບ</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-12 col-mg-4 col-lg-4">
-                    <div class="x_panel">
+                    <div class="x_panel bg-primary text-white">
                         <div>
                             <p class="h4">ຈຳນວນເງິນທີ່ຍັງເຫຼືອ</p>
                         </div>
-                        <hr>
+                        <hr class="border-white">
                         <div class="x_content">
-                            <p class="h2">{{ number_format($sum_income - $sum_withdraw) }} ກີບ</p>
+                            <p class="h2 font-weight-bold">{{ number_format($sum_income - $sum_withdraw) }} ກີບ</p>
                         </div>
                     </div>
                 </div>
@@ -51,11 +51,11 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="x_panel">
-                    <div>
-                        <h2 class="card-title ">ລາຍຊື່ຫຸ້ນສ່ວນ</h2>
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title">ລາຍຊື່ຫຸ້ນສ່ວນ</h5>
                     </div>
-                    <div class="x_content">
+                    <div class="card-body">
                         <div class="table-responsive">
                             <table class="table">
                                 <thead class=" text-primary">
@@ -112,12 +112,14 @@
                         href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page=1">1</a>
                 </li>
                 @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                    @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                    @if ($j % 10 == 0 && $j > 1)
+                        <li class="page-item
                     {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                    <a class="page-link"
-                    href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
-                    </li>
-                @else @endif
+                            <a class="page-link"
+                                href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else
+                    @endif
                 @endfor
                 @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                     @if ($i > 1 && $i <= $pagination['all'])
@@ -130,12 +132,14 @@
                     @endif
                 @endfor
                 @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                    @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                    @if ($j % 10 == 0 && $j > 1)
+                        <li class="page-item
                     {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                    <a class="page-link"
-                    href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
-                    </li>
-                @else @endif
+                            <a class="page-link"
+                                href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $j }}">{{ $j }}</a>
+                        </li>
+                    @else
+                    @endif
                 @endfor
                 <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                     <a class="page-link"
