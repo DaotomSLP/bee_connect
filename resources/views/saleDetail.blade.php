@@ -85,7 +85,8 @@
                                             <label class="bmd-label-floating">ນ້ຳໜັກ</label>
                                             <input type="hidden" id="sale_item_id_2" name="sale_item_id">
                                             <input type="hidden" id="old_weight_2" name="old_weight">
-                                            <input type="number" id="new_weight_2" step="0.001" name="new_weight" class="form-control" required>
+                                            <input type="number" id="new_weight_2" step="0.001" name="new_weight"
+                                                class="form-control" required>
                                             <input type="hidden" id="sale_id_2" name="sale_id">
                                             <input type="hidden" id="old_price_2" name="old_price">
                                             <input type="hidden" id="new_price_2" name="new_price">
@@ -103,14 +104,14 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ລາຍການສິນຄ້າຂອງເລກບິນທີ່ {{ Request::input('id') }}</h2>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ລາຍການສິນຄ້າຂອງເລກບິນທີ່ {{ Request::input('id') }}</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table">
-                                    <thead class=" text-primary">
+                                    <thead class="font-weight-bold">
                                         <th>
                                             ລ/ດ
                                         </th>
@@ -181,7 +182,8 @@
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
                         @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item
+                            <li
+                                class="page-item
                             {{ $pagination['offset'] == $j ? 'active' : '' }}">
                                 <a class="page-link"
                                     href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
@@ -201,7 +203,8 @@
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
                         @if ($j % 10 == 0 && $j > 1)
-                            <li class="page-item
+                            <li
+                                class="page-item
                             {{ $pagination['offset'] == $j ? 'active' : '' }}">
                                 <a class="page-link"
                                     href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>

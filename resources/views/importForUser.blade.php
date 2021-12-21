@@ -34,11 +34,11 @@
             @if (Auth::user()->is_admin != 1)
                 <div class="row">
                     <div class="col">
-                        <div class="x_panel">
-                            <div>
-                                <h2>ຮັບສິນຄ້າ</h2>
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title">ຮັບສິນຄ້າ</h5>
                             </div>
-                            <div class="x_content">
+                            <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -55,19 +55,19 @@
                     </div>
                 </div>
             @endif
-
+            <br>
             <form method="POST" action="/importProductForUser">
                 @csrf
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="x_panel">
-                            <div>
-                                <h2>ລາຍການ</h2>
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title">ລາຍການ</h5>
                             </div>
-                            <div class="x_content">
+                            <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-hover">
-                                        <thead class=" text-primary">
+                                        <thead class="font-weight-bold">
                                             <th>
                                                 ລະຫັດເຄື່ອງ
                                             </th>
@@ -77,7 +77,7 @@
                                         </tbody>
                                     </table>
                                     <div>
-                                        <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
+                                        <button type="submit" class="btn btn-info pull-right px-5">ບັນທຶກ</button>
                                         <div class="clearfix"></div>
                                     </div>
                                 </div>
@@ -93,8 +93,8 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        var district_lists = <?php echo json_encode($districts); ?> ;;
-        var branch_lists = <?php echo json_encode($branchs); ?> ;;
+        var district_lists = <?php echo json_encode($districts); ?>;;
+        var branch_lists = <?php echo json_encode($branchs); ?>;;
         $("#select_province").on("change", function() {
             let province_id = this.value;
             let district_options = "<option value=''>ເລືອກ</option>";
@@ -210,6 +210,5 @@
             })
             $('#product_item_table').html(html_table)
         }
-
     </script>
 @endsection

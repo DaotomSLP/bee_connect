@@ -15,11 +15,11 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ຄົ້ນຫາ</h2>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ຄົ້ນຫາ</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <form method="GET" action="/importProductTrackForUser">
                                 {{-- @csrf --}}
                                 <input type="hidden" value="{{ Request::input('id') }}" name="id">
@@ -79,7 +79,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-primary pull-right px-4">ຄົ້ນຫາ</button>
+                                <button type="submit" class="btn btn-sm btn-info pull-right px-4">ຄົ້ນຫາ</button>
                                 <div class="clearfix"></div>
                             </form>
                         </div>
@@ -87,11 +87,11 @@
                 </div>
             </div>
 
-            <div class="clearfix"></div>
+            <br>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col">
                     <div class="card">
-                        <div class="card-header card-header-primary">
+                        <div class="card-header bg-info text-white">
                             <h5 class="card-title ">ລາຍການສົ່ງອອກທັງໝົດຂອງສາຂາ</h5>
                         </div>
                         <div class="card-body">
@@ -182,12 +182,15 @@
                             href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page=1">1</a>
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li
+                                class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -200,12 +203,15 @@
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li
+                                class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"
@@ -222,7 +228,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-        var branch_lists = <?php echo json_encode($branchs); ?> ;;
+        var branch_lists = <?php echo json_encode($branchs); ?>;;
         $("#select_province").on("change", function() {
             let province_id = this.value;
             let district_options = "<option value=''>ເລືອກ</option>";
@@ -283,6 +289,5 @@
                 `<tr><td class="py-0"><div class="form-group"><input value='${code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><input type="number" value=0 min="0"class="form-control form-control-sm" name="weight[]" required></div></td><td class="py-0"><div class="form-group"><select class="form-control form-control-sm" name="weight_type[]"required><option value="kg">ກິໂລກຼາມ</option> <option value="m">ແມັດກ້ອນ</option></select></div></td><td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="base_price[]"> </div></td> <td class="py-0"><div class="form-group"><input class="form-control form-control-sm" name="real_price[]"></div></td></tr>`
             )
         }
-
     </script>
 @endsection

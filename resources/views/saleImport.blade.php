@@ -31,11 +31,11 @@
             @endif
             <div class="row">
                 <div class="col">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ສະແກນບາໂຄດ</h2>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ສະແກນບາໂຄດ</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -51,18 +51,19 @@
                     </div>
                 </div>
             </div>
+            <br>
             <form method="POST" action="/insertSaleImport">
                 @csrf
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="x_panel">
-                            <div>
-                                <h2>ລາຍການ</h2>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title">ລາຍການ</h5>
                             </div>
-                            <div class="x_content">
+                            <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table">
-                                        <thead class=" text-primary">
+                                        <thead class="font-weight-bold">
                                             <th>
                                                 ລະຫັດເຄື່ອງ
                                             </th>
@@ -79,31 +80,30 @@
                                     </table>
                                 </div>
                                 <hr>
-                                    <div class="row my-3">
-                                        <div class="col-6">
-                                            <label class="bmd-label-floating">ສ່ວນຫຼຸດ</label>
-                                            <div class="form-group"><input type="number"
-                                                    class="form-control form-control-sm" name="discount" id="discount_input"
-                                                    onkeypress="disableSubmit()">
-                                            </div>
+                                <div class="row my-3">
+                                    <div class="col-6">
+                                        <label class="bmd-label-floating">ສ່ວນຫຼຸດ</label>
+                                        <div class="form-group"><input type="number"
+                                                class="form-control form-control-sm" name="discount" id="discount_input"
+                                                onkeypress="disableSubmit()">
                                         </div>
                                     </div>
-                                    <div class="row my-3">
-                                        <div class="col">
-                                            <p class="d-inline pr-3 h5">ລວມເປັນເງິນ : </p>
-                                            <p class="d-inline h5" id="total">0 ກີບ</p>
-                                        </div>
+                                </div>
+                                <div class="row my-3">
+                                    <div class="col">
+                                        <p class="d-inline pr-3 h5">ລວມເປັນເງິນ : </p>
+                                        <p class="d-inline h5" id="total">0 ກີບ</p>
                                     </div>
+                                </div>
 
-                                    <div>
-                                        <button type="button" onclick="calcurateTotal()"
-                                            class="btn btn-primary pull-left px-5 mr-3">ຄິດໄລ່ເງິນ</button>
-                                    </div>
-                                    <div>
-                                        <button type="submit" id="submitBtn" disabled
-                                            class="btn btn-primary px-5">ບັນທຶກ</button>
-                                        <div class="clearfix"></div>
-                                    </div>
+                                <div>
+                                    <button type="button" onclick="calcurateTotal()"
+                                        class="btn btn-info pull-left px-5 mr-3">ຄິດໄລ່ເງິນ</button>
+                                </div>
+                                <div>
+                                    <button type="submit" id="submitBtn" disabled class="btn btn-info px-5">ບັນທຶກ</button>
+                                    <div class="clearfix"></div>
+                                </div>
 
                             </div>
                         </div>
@@ -151,9 +151,9 @@
 
         var total = 0;
 
-        var gram_price = <?php echo isset($sale_price_gram) ? $sale_price_gram['price'] :
-        0; ?> ;;
+        var gram_price = <?php echo isset($sale_price_gram) ? $sale_price_gram['price'] : 0; ?>;;
         var m_price = <?php echo isset($sale_price_m) ? $sale_price_m['price'] : 0; ?>;
+
         function checkItem(code) {
 
             $.ajax({
@@ -256,6 +256,5 @@
         function disableSubmit() {
             $("#submitBtn").prop('disabled', true);
         }
-
     </script>
 @endsection

@@ -32,11 +32,11 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ຄົ້ນຫາ</h2>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ຄົ້ນຫາ</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <form method="GET" action="/saleView">
                                 {{-- @csrf --}}
                                 <div class="row">
@@ -56,25 +56,25 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-primary pull-right px-4">ຄົ້ນຫາ</button>
+                                <button type="submit" class="btn btn-sm btn-info pull-right px-4">ຄົ້ນຫາ</button>
                                 <div class="clearfix"></div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+            <br>
 
             <div class="row">
-                <div class="col-md-12">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ລາຍການປະຫວັດການຂາຍ</h2>
-                            <div class="clearfix"></div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ລາຍການປະຫວັດການຂາຍ</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table">
-                                    <thead class=" text-primary">
+                                    <thead class="font-weight-bold">
                                         <th>
                                             ລ/ດ
                                         </th>

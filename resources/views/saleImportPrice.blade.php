@@ -32,11 +32,11 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ຕັ້ງຄ່າລາຄາເຄື່ອງນຳເຂົ້າ</h2>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ຕັ້ງຄ່າລາຄາເຄື່ອງນຳເຂົ້າ</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <form method="POST" action="/addSalePriceImport​">
                                 @csrf
                                 <div class="row">
@@ -58,7 +58,7 @@
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
+                                <button type="submit" class="btn btn-info pull-right px-5">ບັນທຶກ</button>
                                 <div class="clearfix"></div>
                             </form>
                         </div>
@@ -66,15 +66,14 @@
                 </div>
             </div>
 
-
-            <div class="clearfix"></div>
+            <br>
             <div class="row">
                 <div class="col">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ຄົ້ນຫາ</h2>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ຄົ້ນຫາ</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <form method="GET" action="/saleImportPrice">
                                 {{-- @csrf --}}
                                 <div class="row">
@@ -88,8 +87,7 @@
                                                 <option {{ Request::input('unit') == 'm' ? 'selected' : '' }} value="m">
                                                     ແມັດກ້ອນ
                                                 </option>
-                                                <option {{ Request::input('unit') == 'kg' ? 'selected' : '' }}
-                                                    value="kg">
+                                                <option {{ Request::input('unit') == 'kg' ? 'selected' : '' }} value="kg">
                                                     ກຼາມ
                                                 </option>
                                             </select>
@@ -103,25 +101,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary pull-right px-5">ຄົ້ນຫາ</button>
+                                <button type="submit" class="btn btn-info pull-right px-5">ຄົ້ນຫາ</button>
                                 <div class="clearfix"></div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-
+            <br>
             <div class="row">
-                <div class="col-md-12">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ປະຫວັດການຕັ້ງຄ່າລາຄາ</h2>
-                            <div class="clearfix"></div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ປະຫວັດການຕັ້ງຄ່າລາຄາ</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table">
-                                    <thead class=" text-primary">
+                                    <thead class="font-weight-bold">
                                         <th>
                                             ປະຈຳວັນທີ
                                         </th>
@@ -170,12 +167,15 @@
                             href="{{ Request::route()->getName() }}?unit={{ Request::input('unit') }}&date={{ Request::input('date') }}&page=1">1</a>
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li
+                                class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?unit={{ Request::input('unit') }}&date={{ Request::input('date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?unit={{ Request::input('unit') }}&date={{ Request::input('date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -188,12 +188,15 @@
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li
+                                class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?unit={{ Request::input('unit') }}&date={{ Request::input('date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?unit={{ Request::input('unit') }}&date={{ Request::input('date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"
