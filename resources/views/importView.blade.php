@@ -150,12 +150,11 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="x_panel bg-info text-white">
-                        <div>
-                            <h2 class="font-weight-bold">ຄົ້ນຫາ</h2>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ຄົ້ນຫາ</h5>
                         </div>
-                        <hr class="border-white">
-                        <div class="x_content">
+                        <div class="card-body">
                             <form method="GET" action="/importView">
                                 {{-- @csrf --}}
                                 <div class="row">
@@ -234,7 +233,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-light pull-right px-4">ຄົ້ນຫາ</button>
+                                <button type="submit" class="btn btn-sm btn-info pull-right px-4">ຄົ້ນຫາ</button>
                                 <div class="clearfix"></div>
                             </form>
                         </div>
@@ -242,16 +241,15 @@
                 </div>
             </div>
 
-            <div class="clearfix"></div>
+            <br>
 
             <div class="row">
                 <div class="col">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ລາຍການສົ່ງອອກທັງໝົດຂອງສາຂາ</h2>
-                            <div class="clearfix"></div>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ລາຍການສົ່ງອອກທັງໝົດຂອງສາຂາ</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead class="font-weight-bold">

@@ -35,8 +35,8 @@
                                             <input type="hidden" id="real_price" name="real_price">
                                             <input type="hidden" id="base_price" name="base_price">
                                             <input type="hidden" id="weight_type" name="weight_type">
-                                            <input type="number" id="weight" class="form-control" name="weight" step="0.001"
-                                                required>
+                                            <input type="number" id="weight" class="form-control" name="weight"
+                                                step="0.001" required>
                                         </div>
                                     </div>
                                 </div>
@@ -85,15 +85,13 @@
                 </div>
             </div>
 
-
-
             <div class="row">
                 <div class="col">
-                    <div class="x_panel">
-                        <div>
-                            <h2>ຄົ້ນຫາ</h2>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ຄົ້ນຫາ</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <form method="GET" action="/importProductTrack">
                                 {{-- @csrf --}}
                                 <input type="hidden" value="{{ Request::input('id') }}" name="id">
@@ -153,25 +151,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-primary pull-right px-4">ຄົ້ນຫາ</button>
+                                <button type="submit" class="btn btn-sm btn-info pull-right px-4">ຄົ້ນຫາ</button>
                                 <div class="clearfix"></div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="clearfix"></div>
+            <br>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col">
                     <div class="card">
-                        <div class="card-header card-header-primary">
+                        <div class="card-header bg-info text-white">
                             <h5 class="card-title ">ລາຍການສົ່ງອອກທັງໝົດຂອງສາຂາ</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table">
-                                    <thead class=" text-primary">
+                                    <thead class="font-weight-bold">
                                         <th>
                                             ລ/ດ
                                         </th>
@@ -277,12 +274,15 @@
                             href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page=1">1</a>
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li
+                                class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -295,12 +295,15 @@
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li
+                                class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"
@@ -334,6 +337,5 @@
             $("#old_weight_in_weight").val(old_weight);
             $("#weight_in_weight").val(old_weight);
         }
-
     </script>
 @endsection

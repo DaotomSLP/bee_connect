@@ -32,12 +32,11 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="x_panel bg-info text-white">
-                        <div>
-                            <h2 class="font-weight-bold">ສະແກນບາໂຄດ</h2>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ສະແກນບາໂຄດ</h5>
                         </div>
-                        <hr class="border-white">
-                        <div class="x_content">
+                        <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -54,20 +53,20 @@
                 </div>
             </div>
 
-            <div class="clearfix"></div>
+            <br>
 
             <form method="POST" action="/importProduct">
                 @csrf
                 <div class="row">
                     <div class="col">
-                        <div class="x_panel">
-                            <div>
-                                <h2>ລາຍການ</h2>
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title">ລາຍການ</h5>
                             </div>
-                            <div class="x_content">
+                            <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-hover">
-                                        <thead class=" text-primary">
+                                        <thead class="font-weight-bold">
                                             <th>
                                                 ລະຫັດເຄື່ອງ
                                             </th>
@@ -95,7 +94,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="clearfix"></div>
+                <br>
                 <div class="row">
                     <div class="col">
                         <div class="x_panel">
@@ -155,12 +154,11 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <div class="x_panel">
-                            <div>
-                                <h2 class="mr-3">ຄ່າບໍລິການເພີ່ມເຕີມ</h2>
-
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title">ຄ່າບໍລິການເພີ່ມເຕີມ</h5>
                             </div>
-                            <div class="x-content">
+                            <div class="card-body">
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group">
@@ -177,40 +175,40 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <button type="button" class="btn btn-sm btn-primary px-3"
+                                        <button type="button" class="btn btn-sm btn-info px-3"
                                             onclick="addServiceCharge()">ເພີ່ມ</button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead class=" text-primary">
-                                            <th>
-                                                ລະຫັດເຄື່ອງ
-                                            </th>
-                                            <th>
-                                                ນ້ຳໜັກ/ຂະໜາດ
-                                            </th>
-                                        </thead>
-                                        <tbody id="service_item_table">
+                                <br>
+                                <div class="row">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead class="font-weight-bold">
+                                                <th>
+                                                    ລະຫັດເຄື່ອງ
+                                                </th>
+                                                <th>
+                                                    ນ້ຳໜັກ/ຂະໜາດ
+                                                </th>
+                                            </thead>
+                                            <tbody id="service_item_table">
 
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                <br>
                 <div class="row">
                     <div class="col">
-                        <div class="x_panel bg-info text-white">
-                            <div>
-                                <h2>ເລຶອກບ່ອນສົ່ງ</h2>
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title">ເລຶອກບ່ອນສົ່ງ</h5>
                             </div>
-                            <hr class="border-white">
-                            <div class="x-content">
+                            <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
@@ -261,14 +259,14 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <button type="submit" class="btn btn-light pull-right px-5">ບັນທຶກ</button>
+                                    <button type="submit" class="btn btn-info pull-right px-5">ບັນທຶກ</button>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                <br>
             </form>
 
         </div>
