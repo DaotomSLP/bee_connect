@@ -104,12 +104,11 @@
 
             <div class="row">
                 <div class="col">
-                    <div class="x_panel">
-                        <div>
-                            <h2 class="font-weight-bold">ລາຍລະອຽດຂອງເລກບິນ : {{ Request::input('id') }}</h2>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ລາຍລະອຽດຂອງເລກບິນ {{ Request::input('id') }}</h5>
                         </div>
-                        <hr>
-                        <div class="x_content">
+                        <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ສົ່ງໄປສາຂາ :</label>
@@ -179,14 +178,14 @@
                     </div>
                 </div>
             </div>
+            <br>
             <div class="row">
                 <div class="col">
-                    <div class="x_panel bg-info text-white">
-                        <div>
-                            <h2 class="font-weight-bold">ຄົ້ນຫາລາຍການສິນຄ້າຂອງເລກບິນ</h2>
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ຄົ້ນຫາ</h5>
                         </div>
-                        <hr class="border-white">
-                        <div class="x_content">
+                        <div class="card-body">
                             <form method="GET" action="/importDetail?id=25">
                                 {{-- @csrf --}}
                                 <input type="hidden" value="{{ Request::input('id') }}" name="id">
@@ -224,24 +223,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-sm btn-light pull-right px-4">ຄົ້ນຫາ</button>
+                                <button type="submit" class="btn btn-sm btn-info pull-right px-4">ຄົ້ນຫາ</button>
                                 <div class="clearfix"></div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-
+            <br>
             <div class="row">
-                <div class="col-md-12">
-                    <div class="x_panel">
-                        <div>
-                            <h2 class="card-title ">ລາຍການສິນຄ້າຂອງເລກບິນທີ່ {{ Request::input('id') }}</h2>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title">ລາຍການສິນຄ້າຂອງເລກບິນທີ່ {{ Request::input('id') }}</h5>
                         </div>
-                        <div class="x_content">
+                        <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table">
-                                    <thead class=" text-primary">
+                                    <thead class="font-weight-bold">
                                         <th>
                                             ລ/ດ
                                         </th>
@@ -266,7 +265,8 @@
                                         <th>
                                             ລາຄາຂາຍ
                                         </th>
-
+                                        <td>
+                                        </td>
                                     </thead>
                                     <tbody>
                                         @foreach ($import_products as $key => $import_product)
