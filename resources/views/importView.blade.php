@@ -287,16 +287,17 @@
                                             <th>
                                                 ລວມຕົ້ນທຶນຄ່າເຄື່ຶອງ
                                             </th>
+                                            <th>
+                                                ຄ່າຂົນສົ່ງ
+                                            </th>
+                                            <th>
+                                                ຄ່າເປົາ
+                                            </th>
+                                            <th>
+                                                ຄ່າບໍລິການເພີ່ມເຕີມ
+                                            </th>
                                         @endif
-                                        {{-- <th>
-                                            ຄ່າຂົນສົ່ງ
-                                        </th>
-                                        <th>
-                                            ຄ່າເປົາ
-                                        </th>
-                                        <th>
-                                            ຄ່າບໍລິການເພີ່ມເຕີມ
-                                        </th> --}}
+
                                         @if (Auth::user()->is_admin == 1)
                                             <th>
                                                 ລວມເປັນເງິນທັງໝົດ
@@ -358,18 +359,20 @@
                                                 <td>
                                                     {{ number_format($lot->total_price) }} ກີບ
                                                 </td>
-                                                {{-- <td>
-                                                    {{ number_format($lot->fee) }} ກີບ
-                                                </td>
-                                                <td>
-                                                    {{ number_format($lot->pack_price) }} ກີບ
-                                                </td>
-                                                <td>
-                                                    <a
-                                                        href="/{{ Auth::user()->is_admin == 1 ? 'serviceChargeDetail' : 'serviceChargeDetailForUser' }}?id={{ $lot->id }}">
-                                                        {{ number_format($lot->service_charge) }} ກີບ
-                                                    </a>
-                                                </td> --}}
+                                                @if (Auth::user()->is_admin != 1)
+                                                    <td>
+                                                        {{ number_format($lot->fee) }} ກີບ
+                                                    </td>
+                                                    <td>
+                                                        {{ number_format($lot->pack_price) }} ກີບ
+                                                    </td>
+                                                    <td>
+                                                        <a
+                                                            href="/{{ Auth::user()->is_admin == 1 ? 'serviceChargeDetail' : 'serviceChargeDetailForUser' }}?id={{ $lot->id }}">
+                                                            {{ number_format($lot->service_charge) }} ກີບ
+                                                        </a>
+                                                    </td>
+                                                @endif
                                                 <td>
                                                     <p class="text-danger font-weight-bold">
                                                         {{ number_format($lot->total_main_price) }} ກີບ</p>
