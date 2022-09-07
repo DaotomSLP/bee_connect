@@ -178,7 +178,7 @@ return [
 
         Milon\Barcode\BarcodeServiceProvider::class,
 
-        Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class
+        // Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class
     ],
 
     /*
