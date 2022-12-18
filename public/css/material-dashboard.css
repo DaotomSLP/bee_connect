@@ -5608,7 +5608,7 @@ a.bg-light:hover, a.bg-light:focus, button.bg-light:hover, button.bg-light:focus
 }
 
 .bg-dark {
-  background-color: #343a40 !important;
+  background-color: #252525 !important;
 }
 
 a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
@@ -5692,7 +5692,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .border-dark {
-  border-color: #343a40 !important;
+  border-color: #252525 !important;
 }
 
 .border-white {
@@ -7819,7 +7819,7 @@ a.text-light:hover, a.text-light:focus {
 }
 
 .text-dark {
-  color: #343a40 !important;
+  color: #252525 !important;
 }
 
 a.text-dark:hover, a.text-dark:focus {
