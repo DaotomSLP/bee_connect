@@ -1,3 +1,12 @@
 .Text-secondary {
     color: #F0A600;
 }
+
+#social-float-div {
+    z-index: 10000;
+    position: fixed;
+    top: 50%;
+    right: 0px;
+    border-top-left-radius: 0.25rem !important;
+    border-bottom-left-radius: 0.25rem !important;
+}
