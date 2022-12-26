@@ -8,12 +8,12 @@
  */
 
 @font-face {
-  font-family: 'NotoSansLao';
-  src: url('../fonts/NotoSansLao-Regular.ttf');
+  font-family: 'defago-noto-sans-lao" !important';
+  src: url('../fonts/defago-noto-sans-lao.ttf');
 }
 
 body, p {
-  font-family: 'NotoSansLao' !important;
+  font-family: 'defago-noto-sans-lao" !important' !important;
 }
 
 
@@ -9687,7 +9687,7 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 }
 
 .font-weight-bold {
-  font-weight: 700 !important;
+  font-weight: bold !important;
 }
 
 .font-weight-bolder {

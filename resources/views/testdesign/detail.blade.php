@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="col-lg-4 mt-5 mt-lg-1">
-                <div class="card bg-dark">
+                <div class="card bg-dark card-shadow"card-shadow >
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-6">
@@ -136,75 +136,219 @@
         </div>
         <div class="row pt-5">
             <div class="col-12">
-                <p class="h5">
+                <p class="h5 font-weight-bolder Text-secondary">
                     1st LEVEL
                 </p>
             </div>
             <div class="col-12">
-                <div class="card bg-dark">
+                <div class="card bg-dark card-shadow"card-shadow >
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-4">
-                                <p class="text-white mb-0 font-weight-bold">ROOMS</p>
+                                <p class="text-white mb-0 h5 font-weight-bolder">ຫ້ອງ</p>
                             </div>
                             <div class="col-lg-4">
-                                <p class="text-white mb-0 font-weight-bold">SIZES</p>
+                                <p class="text-white mb-0 h5 font-weight-bolder">SIZES</p>
                             </div>
                             <div class="col-lg-4">
-                                <p class="text-white mb-0 font-weight-bold">CEILING</p>
+                                <p class="text-white mb-0 h5 font-weight-bolder">CEILING</p>
                             </div>
                         </div>
                         <hr class="my-2">
                         <div class="row">
                             <div class="col-lg-4">
-                                <p class="text-white mb-0 ">ROOMS</p>
+                                <p class="text-white font-weight-lighter mb-0 ">Kitchen</p>
                             </div>
                             <div class="col-lg-4">
-                                <p class="text-white mb-0 ">SIZES</p>
+                                <p class="text-white font-weight-lighter mb-0 ">11'8" x 10'4"</p>
                             </div>
                             <div class="col-lg-4">
-                                <p class="text-white mb-0 ">CEILING</p>
+                                <p class="text-white font-weight-lighter mb-0 ">~ 8'0"</p>
                             </div>
                         </div>
                         <hr class="my-2">
                         <div class="row">
-                            <div class="col-lg-6">
-                                <p class="text-white mb-0">LIVING AREA</p>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">Dining room</p>
                             </div>
-                            <div class="col-lg-6">
-                                <p class="text-white mb-0">1050 sq.ft</p>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">11'8" x 10'4"</p>
                             </div>
-                        </div>
-                        <hr class="my-2">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <p class="text-white mb-0">BEDROOM(S)</p>
-                            </div>
-                            <div class="col-lg-6">
-                                <p class="text-white mb-0">2</p>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">~ 8'0"</p>
                             </div>
                         </div>
                         <hr class="my-2">
                         <div class="row">
-                            <div class="col-lg-6">
-                                <p class="text-white mb-0">Baths</p>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">Foyer</p>
                             </div>
-                            <div class="col-lg-6">
-                                <p class="text-white mb-0">2</p>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">11'8" x 10'4"</p>
                             </div>
-                        </div>
-                        <hr class="my-2">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <p class="text-white mb-0">Floor</p>
-                            </div>
-                            <div class="col-lg-6">
-                                <p class="text-white mb-0">1</p>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">~ 8'0"</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row pt-3">
+            <div class="col-12">
+                <p class="h5 font-weight-bolder Text-secondary">
+                    2nd LEVEL
+                </p>
+            </div>
+            <div class="col-12">
+                <div class="card bg-dark card-shadow"card-shadow >
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <p class="text-white mb-0 h5 font-weight-bolder">ຫ້ອງ</p>
+                            </div>
+                            <div class="col-lg-4">
+                                <p class="text-white mb-0 h5 font-weight-bolder">SIZES</p>
+                            </div>
+                            <div class="col-lg-4">
+                                <p class="text-white mb-0 h5 font-weight-bolder">CEILING</p>
+                            </div>
+                        </div>
+                        <hr class="my-2">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">Kitchen</p>
+                            </div>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">11'8" x 10'4"</p>
+                            </div>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">~ 8'0"</p>
+                            </div>
+                        </div>
+                        <hr class="my-2">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">Dining room</p>
+                            </div>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">11'8" x 10'4"</p>
+                            </div>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">~ 8'0"</p>
+                            </div>
+                        </div>
+                        <hr class="my-2">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">Foyer</p>
+                            </div>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">11'8" x 10'4"</p>
+                            </div>
+                            <div class="col-lg-4">
+                                <p class="text-white font-weight-lighter mb-0 ">~ 8'0"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-5">
+            <div class="col-12">
+                <p class="h4 font-weight-bolder text-uppercase headertext-symbol Text-secondary">
+                    Description
+                </p>
+            </div>
+            <div class="col-12">
+                <div class="card bg-dark card-shadow"card-shadow >
+                    <div class="card-body">
+                        <p class="text-white">
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam et fuga ullam, perspiciatis
+                            omnis dicta, eos asperiores quis ipsum cumque itaque quod architecto doloremque, consequatur
+                            deserunt qui mollitia! Ipsa, eaque?
+                        </p>
+                        <p class="text-white">
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam et fuga ullam, perspiciatis
+                            omnis dicta, eos asperiores quis ipsum cumque itaque quod architecto doloremque, consequatur
+                            deserunt qui mollitia! Ipsa, eaque?
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row pt-5">
+            <div class="col-12">
+                <p class="h4 font-weight-bolder text-uppercase headertext-symbol Text-secondary">
+                    Recommended
+                </p>
+            </div>
+            <div class="col-12 col-lg-3 col-md-6">
+                <a href="/testdesign/detail">
+                    <div class="card bg-dark card-shadow plan-card">
+                        <img class="card-img-top plan-card-image" src="{{ URL::asset('/img/design/1.jpeg') }}"
+                            alt="Card image cap">
+                        <div class="card-body plan-card-body bg-dark">
+                            <p class="text-white font-weight-bolder h5">
+                                Plan name.
+                            </p>
+                            <p class="text-white font-weight-lighter mb-0">
+                                category name.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 col-lg-3 col-md-6">
+                <a href="/testdesign/detail">
+                    <div class="card bg-dark card-shadow plan-card">
+                        <img class="card-img-top plan-card-image" src="{{ URL::asset('/img/design/1.jpeg') }}"
+                            alt="Card image cap">
+                        <div class="card-body plan-card-body bg-dark">
+                            <p class="text-white font-weight-bolder h5">
+                                Plan name.
+                            </p>
+                            <p class="text-white font-weight-lighter mb-0">
+                                category name.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 col-lg-3 col-md-6">
+                <a href="/testdesign/detail">
+                    <div class="card bg-dark card-shadow plan-card">
+                        <img class="card-img-top plan-card-image" src="{{ URL::asset('/img/design/1.jpeg') }}"
+                            alt="Card image cap">
+                        <div class="card-body plan-card-body bg-dark">
+                            <p class="text-white font-weight-bolder h5">
+                                Plan name.
+                            </p>
+                            <p class="text-white font-weight-lighter mb-0">
+                                category name.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-12 col-lg-3 col-md-6">
+                <a href="/testdesign/detail">
+                    <div class="card bg-dark card-shadow plan-card">
+                        <img class="card-img-top plan-card-image" src="{{ URL::asset('/img/design/1.jpeg') }}"
+                            alt="Card image cap">
+                        <div class="card-body plan-card-body bg-dark">
+                            <p class="text-white font-weight-bolder h5">
+                                Plan name.
+                            </p>
+                            <p class="text-white font-weight-lighter mb-0">
+                                category name.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <br />
     </div>
 @endsection
