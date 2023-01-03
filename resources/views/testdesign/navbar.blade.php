@@ -21,7 +21,7 @@
             </div>
         </div>
     </div>
-    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light card-shadow" id="ftco-navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
                 aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,9 +33,9 @@
                         <a href="/testdesign/home" class="nav-link">Home</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown"
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04111" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">Page</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <div class="dropdown-menu" aria-labelledby="dropdown04111">
                             <a class="dropdown-item" href="#">Page 1</a>
                             <a class="dropdown-item" href="#">Page 2</a>
                             <a class="dropdown-item" href="#">Page 3</a>

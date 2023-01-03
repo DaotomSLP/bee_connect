@@ -11496,9 +11496,14 @@ h1, h2, h3, h4, h5,
 @media (max-width: 991.98px) {
   .ftco-navbar-light {
     background: #000 !important;
-    position: relative;
+    position: fixed;
     top: 0;
     padding: 10px 15px;
+    z-index: 99999;
+  }
+
+  .navbar-collapse>ul {
+    height: 100vh;
   }
 }
 
@@ -11593,7 +11598,7 @@ h1, h2, h3, h4, h5,
 
 @media (max-width: 991.98px) {
   .ftco-navbar-light .navbar-nav>.nav-item .dropdown-menu {
-    display: block !important;
+    /* display: block !important; */
     background: #000;
   }
 
