@@ -20,7 +20,7 @@
                     <span>
                         <b> Danger - </b>ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່</span>
                 </div>
-            @elseif(session()->get( 'error' )=='insert_success')
+            @elseif(session()->get('error') == 'insert_success')
                 <div class="alert alert-success">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <i class="material-icons">close</i>
@@ -131,6 +131,20 @@
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ລາຄາ (ແມັດກ້ອນ)</label>
                                             <input class="form-control form-control-sm" name="real_price_m">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ລາຄາ (ແມັດກ້ອນ)(ຢວນ)</label>
+                                            <input class="form-control form-control-sm" name="real_price_m_yuan">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">ເລດເງິນ</label>
+                                            <input class="form-control form-control-sm" name="money_rate">
                                         </div>
                                     </div>
                                 </div>

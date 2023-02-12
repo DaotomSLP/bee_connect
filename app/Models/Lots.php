@@ -40,7 +40,9 @@ class Lots extends Model
         'lot_real_price_kg',
         'lot_base_price_m',
         'lot_real_price_m',
-        'service_charge'
+        'service_charge',
+        'real_price_m_yuan',
+        'money_rate'
     ];
 
     /**

@@ -129,7 +129,7 @@
                     <span>
                         <b> Danger - </b>ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່</span>
                 </div>
-            @elseif(session()->get( 'error' )=='insert_success')
+            @elseif(session()->get('error') == 'insert_success')
                 <div class="alert alert-success">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <i class="material-icons">close</i>
@@ -137,7 +137,7 @@
                     <span>
                         <b> Success - </b>ບັນທຶກຂໍ້ມູນສຳເລັດ</span>
                 </div>
-            @elseif(session()->get( 'error' )=='delete_success')
+            @elseif(session()->get('error') == 'delete_success')
                 <div class="alert alert-warning">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <i class="material-icons">close</i>
@@ -168,7 +168,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ສະຖານະ</label>
-                                            <select class="form-control form-control-sm" id="select_status" name="status">
+                                            <select class="form-control form-control-sm" id="select_status"
+                                                name="status">
                                                 <option value="">
                                                     ເລືອກ
                                                 </option>
@@ -265,6 +266,9 @@
                                             </th>
                                         @endif
                                         <th>
+                                            ເລດເງິນ
+                                        </th>
+                                        <th>
                                             ຮັບມາວັນທີ່
                                         </th>
                                         <th>
@@ -281,9 +285,12 @@
                                                 ລວມລາຄາເຄື່ອງ
                                             </th>
                                         @endif --}}
+                                        <th>
+                                            ລາຄາ (ແມັດກ້ອນ)(ຢວນ)
+                                        </th>
                                         @if (Auth::user()->is_admin != 1)
                                             <th>
-                                                ລວມຕົ້ນທຶນຄ່າເຄື່ຶອງ
+                                                ລວມຕົ້ນທຶນຄ່າເຄື່ອງ
                                             </th>
                                             <th>
                                                 ຄ່າຂົນສົ່ງ
@@ -339,7 +346,9 @@
                                                         {{ $lot->receiver_branch_name }}
                                                     </td>
                                                 @endif
-
+                                                <td>
+                                                    {{ $lot->money_rate }}
+                                                </td>
                                                 <td>
                                                     {{ date('d-m-Y', strtotime($lot->created_at)) }}
                                                 </td>
@@ -354,6 +363,9 @@
                                                         {{ number_format($lot->total_base_price) }} ກີບ
                                                     </td>
                                                 @endif --}}
+                                                <td>
+                                                    {{ number_format($lot->real_price_m_yuan) }} ກີບ
+                                                </td>
                                                 <td>
                                                     {{ number_format($lot->total_price) }} ກີບ
                                                 </td>
@@ -403,12 +415,10 @@
                                                         <i class="material-icons">assignment</i>
                                                     </a>
                                                     @if ($lot->status != 'success' && Auth::user()->is_owner == 1)
-
                                                         <a type="button" onclick="deleteLot({{ $lot->id }})"
                                                             data-toggle="modal" data-target="#delete_lot_modal">
                                                             <i class="material-icons">delete_forever</i>
                                                         </a>
-
                                                     @endif
                                                     @if ($lot->status != 'success' && Auth::user()->is_owner == 1)
                                                         <a type="button"
@@ -431,7 +441,6 @@
                                                             data-target="#paid_lot_modal">
                                                             ຈ່າຍເງິນ
                                                         </a>
-
                                                     @endif
                                                 </td>
                                                 {{-- <td>
@@ -483,7 +492,6 @@
                                     href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $i }}">{{ $i }}</a>
                             </li>
                         @else
-
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)

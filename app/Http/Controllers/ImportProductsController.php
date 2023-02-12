@@ -69,7 +69,7 @@ class ImportProductsController extends Controller
       $date = $request->date;
       $to_date = $request->to_date;
       $date_now = date('Y-m-d', strtotime($request->date));
-      $to_date_now = date('Y-m-d',  strtotime($request->to_date));
+      $to_date_now = date('Y-m-d', strtotime($request->to_date));
     } else {
       $date = [Carbon::today()->toDateString()];
       $to_date = [Carbon::today()->toDateString()];
@@ -125,12 +125,12 @@ class ImportProductsController extends Controller
         ->sum("pack_price");
     }
 
-    $sum_sale_profit    = $sum_real_price - $sum_base_price;
+    $sum_sale_profit = $sum_real_price - $sum_base_price;
 
     $sum_expenditure = Expenditure::whereBetween('created_at', [$date, $to_date])
       ->sum("price");
 
-    $sum_profit    = $sum_real_price - $sum_base_price - $sum_expenditure;
+    $sum_profit = $sum_real_price - $sum_base_price - $sum_expenditure;
 
 
     $all_branch_sale_totals = $result
@@ -187,7 +187,7 @@ class ImportProductsController extends Controller
       ->pluck('branch_total_price');
 
     $pagination = [
-      'offsets' =>  ceil($all_branch_sale_totals / 25),
+      'offsets' => ceil($all_branch_sale_totals / 25),
       'offset' => $request->page ? $request->page : 1,
       'all' => $all_branch_sale_totals
     ];
@@ -326,6 +326,8 @@ class ImportProductsController extends Controller
       $lot->lot_base_price_m = $request->base_price_m;
       $lot->service_charge = $sum_service_charge;
       $lot->weight_m = $sum_m_weight;
+      $lot->money_rate = $request->money_rate;
+      $lot->real_price_m_yuan = $request->real_price_m_yuan;
 
       if ($lot->save()) {
         $count = 0;
@@ -396,7 +398,7 @@ class ImportProductsController extends Controller
         $import_product = Import_products::where('id', $product_code)
           ->orderBy('id', 'DESC')->first();
 
-        $new_import_product_update =  [
+        $new_import_product_update = [
           'received_at' => Carbon::now(),
           'status' => 'received',
         ];
@@ -464,7 +466,7 @@ class ImportProductsController extends Controller
     // }
 
     if ($request->send_date != '') {
-      $result->whereDate('lot.created_at', '=',  $request->send_date);
+      $result->whereDate('lot.created_at', '=', $request->send_date);
     }
     if ($request->id != '') {
       $result->where('lot.id', $request->id);
@@ -493,7 +495,7 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil($all_lots / 25),
+      'offsets' => ceil($all_lots / 25),
       'offset' => $request->page ? $request->page : 1,
       'all' => $all_lots
     ];
@@ -523,7 +525,7 @@ class ImportProductsController extends Controller
     // }
 
     if ($request->send_date != '') {
-      $result->whereDate('lot.created_at', '=',  $request->send_date);
+      $result->whereDate('lot.created_at', '=', $request->send_date);
     }
     if ($request->id != '') {
       $result->where('lot.id', $request->id);
@@ -548,7 +550,7 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil($all_lots / 25),
+      'offsets' => ceil($all_lots / 25),
       'offset' => $request->page ? $request->page : 1,
       'all' => $all_lots
     ];
@@ -592,7 +594,7 @@ class ImportProductsController extends Controller
       ->where('lot_id', $request->id);
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products.created_at', '=',  $request->send_date);
+      $result->whereDate('import_products.created_at', '=', $request->send_date);
     }
 
     if ($request->product_id != '') {
@@ -619,7 +621,7 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil($all_import_products / 25),
+      'offsets' => ceil($all_import_products / 25),
       'offset' => $request->page ? $request->page : 1,
       'all' => $all_import_products
     ];
@@ -648,7 +650,7 @@ class ImportProductsController extends Controller
       ->where('lot.receiver_branch_id', Auth::user()->branch_id);
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products.created_at', '=',  $request->send_date);
+      $result->whereDate('import_products.created_at', '=', $request->send_date);
     }
 
     if ($request->product_id != '') {
@@ -675,7 +677,7 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil($all_import_products / 25),
+      'offsets' => ceil($all_import_products / 25),
       'offset' => $request->page ? $request->page : 1,
       'all' => $all_import_products
     ];
@@ -700,7 +702,7 @@ class ImportProductsController extends Controller
       ->join('branchs As receive', 'lot.receiver_branch_id', 'receive.id');
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products.created_at', '=',  $request->send_date);
+      $result->whereDate('import_products.created_at', '=', $request->send_date);
     }
 
     if ($request->product_id != '') {
@@ -727,7 +729,7 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil($all_import_products / 25),
+      'offsets' => ceil($all_import_products / 25),
       'offset' => $request->page ? $request->page : 1,
       'all' => $all_import_products
     ];
@@ -785,7 +787,7 @@ class ImportProductsController extends Controller
       ->join('branchs As receive', 'lot.receiver_branch_id', 'receive.id');
 
     if ($request->send_date != '') {
-      $result->whereDate('import_products.received_at', '=',  $request->send_date);
+      $result->whereDate('import_products.received_at', '=', $request->send_date);
     }
 
     if ($request->product_id != '') {
@@ -812,7 +814,7 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil($all_import_products / 25),
+      'offsets' => ceil($all_import_products / 25),
       'offset' => $request->page ? $request->page : 1,
       'all' => $all_import_products
     ];
@@ -846,7 +848,7 @@ class ImportProductsController extends Controller
       ->where('import_products.receiver_branch_id', Auth::user()->branch_id);
 
     if ($request->receive_date != '') {
-      $result->whereDate('import_products.created_at', '=',  $request->receive_date);
+      $result->whereDate('import_products.created_at', '=', $request->receive_date);
     }
     if ($request->id != '') {
       $result->where('import_products.id', $request->id);
@@ -872,7 +874,7 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil(sizeof($all_products) / 25),
+      'offsets' => ceil(sizeof($all_products) / 25),
       'offset' => $request->page ? $request->page : 1,
       'all' => sizeof($all_products)
     ];
@@ -1028,7 +1030,7 @@ class ImportProductsController extends Controller
       ->where('type', 'import');
 
     if ($request->receive_date != '') {
-      $result->whereDate('import_products.created_at', '=',  $request->receive_date);
+      $result->whereDate('import_products.created_at', '=', $request->receive_date);
     }
     if ($request->id != '') {
       $result->where('import_products.id', $request->id);
@@ -1054,7 +1056,7 @@ class ImportProductsController extends Controller
       ->get();
 
     $pagination = [
-      'offsets' =>  ceil(sizeof($all_products) / 25),
+      'offsets' => ceil(sizeof($all_products) / 25),
       'offset' => $request->page ? $request->page : 1,
       'all' => sizeof($all_products)
     ];
