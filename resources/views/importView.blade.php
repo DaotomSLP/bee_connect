@@ -366,10 +366,10 @@
                                                 <td>
                                                     {{ number_format($lot->real_price_m_yuan) }} ກີບ
                                                 </td>
-                                                <td>
-                                                    {{ number_format($lot->total_price) }} ກີບ
-                                                </td>
                                                 @if (Auth::user()->is_admin != 1)
+                                                    <td>
+                                                        {{ number_format($lot->total_price) }} ກີບ
+                                                    </td>
                                                     <td>
                                                         {{ number_format($lot->fee) }} ກີບ
                                                     </td>
