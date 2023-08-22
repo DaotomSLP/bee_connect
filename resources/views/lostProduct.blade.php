@@ -111,7 +111,8 @@
                         alert("ລະຫັດຊ້ຳ");
                     } else {
                         items.push({
-                            code: code
+                            code: code,
+                            weight: 0,
                         })
                         codes.push(code);
                         generateItem();
@@ -133,9 +134,19 @@
             var html_table = '';
             items.slice().reverse().forEach(item => {
                 html_table +=
-                    `<tr><td class="py-0"><div class="form-group"><input value='${item.code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteItem("${item.code}")> <i class="material-icons">clear</i></a></div></td></tr>`
+                    `<tr><td class="py-0"><div class="form-group"><input value='${item.code}' class="form-control form-control-sm" name="item_id[]" required></div></td><td class="py-0"><div class="form-group"><input type="number" value=${item.weight} step="0.001" class="form-control form-control-sm" name="weight[]" onchange=changeWeight(this.value,'${item.code}') required></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteItem("${item.code}")> <i class="material-icons">clear</i></a></div></td></tr>`
             })
             $('#product_item_table').html(html_table)
+        }
+
+        function changeWeight(weight, code) {
+            old_item = items.filter(item => item.code === code);
+            var o_index = items.findIndex(item => item.code === code);
+            items = items.filter(item => item.code !== code);
+            items.splice(o_index, 0, {
+                code: code,
+                weight: weight
+            });
         }
     </script>
 @endsection

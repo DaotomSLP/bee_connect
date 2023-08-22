@@ -21,6 +21,7 @@ class Lost_products extends Model
         'id',
         'code',
         'status',
+        'weight',
         'created_at',
         'updated_at',
     ];

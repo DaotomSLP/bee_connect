@@ -107,6 +107,9 @@
                                             ຮັບມາວັນທີ່
                                         </th>
                                         <th>
+                                            ຂະໜາດ
+                                        </th>
+                                        <th>
                                             ສະຖານະ
                                         </th>
                                         <th>
@@ -124,6 +127,9 @@
                                                 </td>
                                                 <td>
                                                     {{ $lost_product->created_at ? date('d-m-Y', strtotime($lost_product->created_at)) : '' }}
+                                                </td>
+                                                <td>
+                                                    {{ $lost_product->weight }}
                                                 </td>
                                                 <td>
                                                     {{ $lost_product->status == 'success' ? 'ປ່ອຍອອກ' : 'ຄ້າງ' }}

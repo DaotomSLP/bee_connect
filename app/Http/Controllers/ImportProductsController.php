@@ -66,6 +66,7 @@ class ImportProductsController extends Controller
             foreach ($request->item_id as $product_id) {
                 $product = new Lost_products();
                 $product->code = $product_id;
+                $product->weight = $request->weight[$count];
                 $product->status = 'receive';
 
                 if ($product->save()) {
