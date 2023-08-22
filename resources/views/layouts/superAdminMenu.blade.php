@@ -36,6 +36,12 @@
         <li class="{{ Request::is('withdraw_ch') || Request::is('withdraw_ch') ? 'current-page' : '' }}">
             <a href="/withdraw_ch">ຖອນເງິນ</a>
         </li>
+        <li class="{{ Request::is('lostProduct') || Request::is('lostProduct') ? 'current-page' : '' }}">
+            <a href="/lostProduct">ເພີ່ມເຄື່ອງບໍ່ມີຊື່</a>
+        </li>
+        <li class="{{ Request::is('lostProductLists') || Request::is('lostProductLists') ? 'current-page' : '' }}">
+            <a href="/lostProductLists">ລາຍການເຄື່ອງບໍ່ມີຊື່</a>
+        </li>
     </ul>
 </li>
 
