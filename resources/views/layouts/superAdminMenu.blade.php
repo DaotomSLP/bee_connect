@@ -34,7 +34,7 @@
             <a href="/money_ch">ຜົນຕອບແທນ</a>
         </li>
         <li class="{{ Request::is('withdraw_ch') || Request::is('withdraw_ch') ? 'current-page' : '' }}">
-            <a href="/withdraw_ch">ຖອນເງິນ</a>
+            <a href="/withdraw_ch">ຖອນເງິນປັນຜົນ</a>
         </li>
         <li class="{{ Request::is('lostProduct') || Request::is('lostProduct') ? 'current-page' : '' }}">
             <a href="/lostProduct">ເພີ່ມເຄື່ອງບໍ່ມີຊື່</a>

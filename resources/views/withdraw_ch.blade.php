@@ -31,7 +31,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header bg-info text-white">
-                        <h5 class="card-title">ເພີ່ມການເບີກເງິນ</h5>
+                        <h5 class="card-title">ເພີ່ມການເບີກເງິນປັນຜົນ</h5>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="/addWithDrawCh">
@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                             <div>
-                                <button type="submit" class="btn btn-info pull-right px-5">Save</button>
+                                <button type="submit" class="btn btn-info px-5">Save</button>
                             </div>
                         </form>
                     </div>
@@ -58,7 +58,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header bg-info text-white">
-                        <h5 class="card-title">ລາຍການເບີກເງິນ</h5>
+                        <h5 class="card-title">ລາຍການເບີກເງິນປັນຜົນ</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -73,9 +73,7 @@
                                     <th>
                                         ວັນທີ
                                     </th>
-                                    <th>
-                                        ວັນທີ
-                                    </th>
+                                    <th></th>
                                 </thead>
                                 <tbody>
                                     @foreach ($withdraws as $key => $withdraw)
@@ -90,7 +88,9 @@
                                                 {{ $withdraw->created_at }}
                                             </td>
                                             <td>
-                                                <a href="/withdraw_detail_ch/{{ $withdraw->id }}">ລາຍລະອຽດ</a>
+                                                <a href="/withdraw_detail_ch/{{ $withdraw->id }}">
+                                                    ລາຍລະອຽດການປັນຜົນ
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -133,7 +133,6 @@
                                 href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $i }}">{{ $i }}</a>
                         </li>
                     @else
-
                     @endif
                 @endfor
                 @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
