@@ -20,7 +20,7 @@
                     <span>
                         <b> Danger - </b>ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່</span>
                 </div>
-            @elseif(session()->get( 'error' )=='insert_success')
+            @elseif(session()->get('error') == 'insert_success')
                 <div class="alert alert-success">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <i class="material-icons">close</i>
@@ -74,13 +74,26 @@
 
             <div class="row">
                 <div class="col">
-                    <form method="GET" action="/send" class="mb-0">
+                    <form method="GET" action="/expenditure" class="mb-0">
                         {{-- @csrf --}}
                         <div class="row">
                             <div class="col-8">
                                 <div class="form-group">
                                     <label class="bmd-label-floating">ຄົ້ນຫາຕາມວັນທີ່</label>
-                                    <input class="form-control" type="date" name="date_search">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-12">
+                                            <div class="form-group">
+                                                <input class="form-control" type="date" value="{{ $date_now }}" name="date">
+                                            </div>
+                                        </div>
+                                        <p class="h5">ຫາ</p>
+                                        <div class="col-lg-4 col-md-4 col-12">
+                                            <div class="form-group">
+                                                <input class="form-control" type="date" value="{{ $to_date_now }}"
+                                                    name="to_date">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-2">
@@ -120,6 +133,11 @@
                                         <th>
                                             ເພີ່ມໂດຍ
                                         </th>
+                                        <th>
+                                            ເອກະສານປະກອບ
+                                        </th>
+                                        <th>
+                                        </th>
                                     </thead>
                                     <tbody>
                                         @foreach ($expenditure as $key => $expen)
@@ -131,13 +149,23 @@
                                                     {{ date('d-m-Y', strtotime($expen->created_at)) }}
                                                 </td>
                                                 <td>
-                                                    {{ $expen->price }} ກີບ
+                                                    {{ number_format($expen->price) }} ກີບ
                                                 </td>
                                                 <td>
                                                     {{ $expen->detail }}
                                                 </td>
                                                 <td>
                                                     {{ $expen->name }}
+                                                </td>
+                                                <td>
+                                                    <a href="/expenditureImages/{{ $expen->id }}">
+                                                        <i class="material-icons">image</i>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/editExpenditure/{{ $expen->id }}">
+                                                        <i class="material-icons">create</i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -164,12 +192,15 @@
                             href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page=1">1</a>
                     </li>
                     @for ($j = $pagination['offset'] - 25; $j < $pagination['offset'] - 10; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li
+                                class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     @for ($i = $pagination['offset'] - 4; $i <= $pagination['offset'] + 4 && $i <= $pagination['offsets']; $i++)
                         @if ($i > 1 && $i <= $pagination['all'])
@@ -178,16 +209,18 @@
                                     href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $i }}">{{ $i }}</a>
                             </li>
                         @else
-
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
-                        @if ($j % 10 == 0 && $j > 1) <li class="page-item
+                        @if ($j % 10 == 0 && $j > 1)
+                            <li
+                                class="page-item
                         {{ $pagination['offset'] == $j ? 'active' : '' }}">
-                        <a class="page-link"
-                        href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
-                        </li>
-                    @else @endif
+                                <a class="page-link"
+                                    href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $j }}">{{ $j }}</a>
+                            </li>
+                        @else
+                        @endif
                     @endfor
                     <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                         <a class="page-link"
@@ -201,5 +234,4 @@
             </nav>
         </div>
     </div>
-
 @endsection

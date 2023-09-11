@@ -112,31 +112,6 @@
                             </div>
                         </div>
                         <div class="col-12 col-mg-4 col-lg-4">
-                            <div class="x_panel bg-warning text-white">
-                                <div>
-                                    <p class="h4">ຕົ້ນທຶນ</p>
-                                </div>
-                                <hr class="border-white">
-                                <div class="x_content">
-                                    <p class="h2">{{ number_format($sum_base_price) }} ກີບ</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-mg-4 col-lg-4">
-                            <div class="x_panel bg-success text-white">
-                                <div>
-                                    <p class="h4">ກຳໄລການຂາຍ</p>
-                                </div>
-                                <hr class="border-white">
-                                <div class="x_content">
-                                    <p class="h2">{{ number_format($sum_sale_profit) }} ກີບ</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12 col-mg-4 col-lg-4">
                             <div class="x_panel bg-info text-white">
                                 <div>
                                     <p class="h4">ລວມຄ່າຂົນສົ່ງ</p>
@@ -159,6 +134,7 @@
                             </div>
                         </div>
                     </div>
+
                     <hr>
                     <div class="row">
                         <div class="col-12 col-mg-4 col-lg-4">

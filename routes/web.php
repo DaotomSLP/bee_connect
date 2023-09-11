@@ -80,7 +80,17 @@ Route::get('/deleteUser/{id}', [UsersController::class, 'delete'])->middleware('
 
 Route::get('/expenditure', [ExpenditureController::class, 'index'])->middleware('auth')->name('expenditure');
 
+Route::get('/editExpenditure/{id}', [ExpenditureController::class, 'editExpenditure'])->middleware('auth')->name('editExpenditure');
+
+Route::post('/updateExpenditure', [ExpenditureController::class, 'updateExpenditure'])->middleware('auth')->name('updateExpenditure');
+
 Route::post('/addExpenditure', [ExpenditureController::class, 'insert'])->middleware('auth')->name('addExpenditure');
+
+Route::get('/expenditureImages/{id}', [ExpenditureController::class, 'expenditureImages'])->middleware('auth')->name('expenditureImages');
+
+Route::post('/addExpenditureImages', [ExpenditureController::class, 'addExpenditureImages'])->middleware('auth')->name('addExpenditureImages');
+
+Route::get('/deleteExpenditureImages/{id}/expen/{expen_id}', [ExpenditureController::class, 'deleteExpenditureImages'])->middleware('auth')->name('deleteExpenditureImages');
 
 Route::get('/partner', [UsersController::class, 'partner'])->middleware('auth')->name('partner');
 
