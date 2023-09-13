@@ -180,23 +180,7 @@ class ImportProductsController extends Controller
             ->groupBy('branchs.id')
             ->groupBy('branchs.branch_name');
 
-        if (Auth::user()->branch_id == null) {
-            //admin
-            $sum_weight_kg_branch = 0;
-            $sum_weight_m_branch = 0;
-            $sum_real_price = Lots::whereBetween('lot.created_at', [$date, $to_date])->sum('total_main_price');
-
-            $sum_fee_price = Lots::whereBetween('lot.created_at', [$date, $to_date])->sum('fee');
-            $sum_pack_price = Lots::whereBetween('lot.created_at', [$date, $to_date])->sum('pack_price');
-
-            $sum_expenditure = Expenditure::whereBetween('created_at', [$date, $to_date])->sum('price');
-
-            $sum_profit = $sum_real_price - $sum_expenditure;
-
-            //unused:
-            $sum_base_price = 0;
-            $sum_sale_profit = 0;
-        } else {
+        if (Auth::user()->branch_id != null) {
             $result->where('lot.receiver_branch_id', Auth::user()->branch_id);
 
             $sum_base_price = Lots::whereBetween('lot.created_at', [$date, $to_date])
@@ -226,6 +210,27 @@ class ImportProductsController extends Controller
             //unused:
             $sum_expenditure = 0;
             $sum_profit = 0;
+            $sum_real_price_paid = 0;
+            $sum_real_price_unpaid = 0;
+        } else {
+            //admin
+            $sum_weight_kg_branch = 0;
+            $sum_weight_m_branch = 0;
+            $sum_real_price = Lots::whereBetween('lot.created_at', [$date, $to_date])->sum('total_main_price');
+
+            $sum_real_price_paid = Lots::whereBetween('lot.created_at', [$date, $to_date])->where('lot.payment_status', '<>', 'not_paid')->sum('total_main_price');
+            $sum_real_price_unpaid = Lots::whereBetween('lot.created_at', [$date, $to_date])->where('lot.payment_status', 'not_paid')->sum('total_main_price');
+
+            $sum_fee_price = Lots::whereBetween('lot.created_at', [$date, $to_date])->sum('fee');
+            $sum_pack_price = Lots::whereBetween('lot.created_at', [$date, $to_date])->sum('pack_price');
+
+            $sum_expenditure = Expenditure::whereBetween('created_at', [$date, $to_date])->sum('price');
+
+            $sum_profit = $sum_real_price_paid - $sum_expenditure;
+
+            //unused:
+            $sum_base_price = 0;
+            $sum_sale_profit = 0;
         }
 
         $all_branch_sale_totals = $result->count();
@@ -348,7 +353,7 @@ class ImportProductsController extends Controller
             $sum_share = $sum_profit * (Auth::user()->ch_percent / 100);
         }
 
-        return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share', 'result_weight', 'result_weight_m', 'sum_weight_kg_branch', 'sum_weight_m_branch', 'branch_sale_totals_branch_name', 'branch_sale_totals_kg', 'branch_sale_totals_m', 'import_product_count_for_chart', 'branch_sale_totals_price', 'branch_sale_totals_unpaid', 'branch_sale_totals_paid'));
+        return view('dailyimport', compact('sum_base_price', 'sum_real_price', 'sum_real_price_paid', 'sum_real_price_unpaid', 'sum_sale_profit', 'sum_profit', 'sum_expenditure', 'date_now', 'branch_sale_totals', 'pagination', 'to_date_now', 'import_product_count', 'result_paid', 'result_unpaid', 'sum_fee_price', 'sum_pack_price', 'sum_share', 'result_weight', 'result_weight_m', 'sum_weight_kg_branch', 'sum_weight_m_branch', 'branch_sale_totals_branch_name', 'branch_sale_totals_kg', 'branch_sale_totals_m', 'import_product_count_for_chart', 'branch_sale_totals_price', 'branch_sale_totals_unpaid', 'branch_sale_totals_paid'));
     }
 
     public function insertImport(Request $request)

@@ -103,11 +103,14 @@
                         <div class="col-12 col-mg-4 col-lg-4">
                             <div class="x_panel bg-primary text-white">
                                 <div>
-                                    <p class="h4">ຈຳນວນເງິນທີ່ໄດ້ຮັບ</p>
+                                    <p class="h4">ລວມລາຍຮັບໃບບິນ</p>
                                 </div>
                                 <hr class="border-white">
                                 <div class="x_content">
-                                    <p class="h2">{{ number_format($sum_real_price) }} ກີບ</p>
+                                    <p class="h3">ຮັບເງິນແລ້ວ : {{ number_format($sum_real_price_paid) }} ກີບ</p>
+                                    <hr class="border-white">
+                                    <p class="h5">ທັງໝົດ : {{ number_format($sum_real_price) }} ກີບ</p>
+                                    <p class="h5">ຄ້າງຈ່າຍ : {{ number_format($sum_real_price_unpaid) }} ກີບ</p>
                                 </div>
                             </div>
                         </div>
