@@ -30,7 +30,6 @@
                 </div>
             @endif
 
-
             @if (Auth::user()->is_admin == 1)
                 <div class="row">
                     <div class="col">
@@ -83,7 +82,8 @@
                                     <div class="row">
                                         <div class="col-lg-4 col-md-4 col-12">
                                             <div class="form-group">
-                                                <input class="form-control" type="date" value="{{ $date_now }}" name="date">
+                                                <input class="form-control" type="date" value="{{ $date_now }}"
+                                                    name="date">
                                             </div>
                                         </div>
                                         <p class="h5">ຫາ</p>
@@ -143,7 +143,7 @@
                                         @foreach ($expenditure as $key => $expen)
                                             <tr>
                                                 <td>
-                                                    {{ $key + 1 }}
+                                                    {{ $pagination['offset'] ? ($pagination['offset'] - 1) * 25 + $key + 1 : $key + 1 }}
                                                 </td>
                                                 <td>
                                                     {{ date('d-m-Y', strtotime($expen->created_at)) }}
