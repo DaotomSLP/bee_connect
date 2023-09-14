@@ -120,7 +120,7 @@
                                         @foreach ($lost_products as $key => $lost_product)
                                             <tr>
                                                 <td>
-                                                    {{ $key + 1 }}
+                                                    {{ $pagination['offset'] ? ($pagination['offset'] - 1) * 25 + $key + 1 : $key + 1 }}
                                                 </td>
                                                 <td>
                                                     {{ $lost_product->code }}

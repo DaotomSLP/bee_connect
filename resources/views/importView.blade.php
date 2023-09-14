@@ -336,7 +336,7 @@
                                         @foreach ($lots as $key => $lot)
                                             <tr>
                                                 <td>
-                                                    {{ $key + 1 }}
+                                                    {{ $pagination['offset'] ? ($pagination['offset'] - 1) * 25 + $key + 1 : $key + 1 }}
                                                 </td>
                                                 <td>
                                                     {{ $lot->id }}

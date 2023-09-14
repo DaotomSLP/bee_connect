@@ -108,7 +108,7 @@
                                         @foreach ($import_products as $key => $import_product)
                                             <tr>
                                                 <td>
-                                                    {{ $key + 1 }}
+                                                    {{ $pagination['offset'] ? ($pagination['offset'] - 1) * 25 + $key + 1 : $key + 1 }}
                                                 </td>
                                                 <td>
                                                     {{ $import_product->code }}

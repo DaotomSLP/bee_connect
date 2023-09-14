@@ -174,6 +174,9 @@
                                 <table class="table">
                                     <thead class=" text-primary">
                                         <th>
+                                            ລ/ດ
+                                        </th>
+                                        <th>
                                             ຊື່ ແລະ ນາມສະກຸນ
                                         </th>
                                         <th>
@@ -193,8 +196,11 @@
                                         </th>
                                     </thead>
                                     <tbody>
-                                        @foreach ($users as $user)
+                                        @foreach ($users as $key => $user)
                                             <tr>
+                                                <td>
+                                                    {{ $pagination['offset'] ? ($pagination['offset'] - 1) * 25 + $key + 1 : $key + 1 }}
+                                                </td>
                                                 <td>
                                                     {{ $user->name }} {{ $user->last_name }}
                                                 </td>

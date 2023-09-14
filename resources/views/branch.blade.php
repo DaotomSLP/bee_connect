@@ -127,6 +127,9 @@
                                 <table class="table">
                                     <thead class=" text-primary">
                                         <th>
+                                            ລ/ດ
+                                        </th>
+                                        <th>
                                             ຊື່ສາຂາ
                                         </th>
                                         <th>
@@ -149,8 +152,11 @@
                                         </th>
                                     </thead>
                                     <tbody>
-                                        @foreach ($branchs as $branch)
+                                        @foreach ($branchs as $key => $branch)
                                             <tr>
+                                                <td>
+                                                    {{ $pagination['offset'] ? ($pagination['offset'] - 1) * 10 + $key + 1 : $key + 1 }}
+                                                </td>
                                                 <td>
                                                     {{ $branch->branch_name }}
                                                 </td>
