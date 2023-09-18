@@ -112,7 +112,11 @@
                 <div class="col-md-12">
                     <div class="x_panel">
                         <div>
-                            <h2 class="card-title ">ລາຍການລາຍຈ່າຍ</h2>
+                            <h2 class="card-title ">ລາຍການລາຍຈ່າຍ
+                                <button type="button"
+                                    onclick="window.open(`expenditureReport?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}`);"
+                                    class="btn btn-primary ml-3 px-3" {{ Request::input('date') ? '' : 'disabled' }}>ພິມລາຍງານ</button>
+                            </h2>
                         </div>
                         <div class="x_content">
                             <div class="table-responsive">

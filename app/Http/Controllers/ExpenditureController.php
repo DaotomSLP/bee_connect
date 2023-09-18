@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branchs;
 use App\Models\Expenditure;
 use App\Models\ExpenditureImages;
+use App\Models\Lots;
+use Faker\Core\Number;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use PDF;
 
 class ExpenditureController extends Controller
 {
@@ -39,8 +43,8 @@ class ExpenditureController extends Controller
         $result = Expenditure::query();
 
         $result->select('expenditure.*', 'users.name')
-        ->join('users', 'expenditure.user_id', 'users.id')
-        ->whereBetween('expenditure.created_at', [$date, $to_date]);
+            ->join('users', 'expenditure.user_id', 'users.id')
+            ->whereBetween('expenditure.created_at', [$date, $to_date]);
 
         if ($request->date_search != '') {
         }
@@ -154,5 +158,62 @@ class ExpenditureController extends Controller
         } else {
             return redirect('expenditureImages/' . $expen_id)->with(['error' => 'not_insert']);
         }
+    }
+
+    public function report(Request $request)
+    {
+        if (Auth::user()->is_admin != 1) {
+            return redirect('access_denied');
+        }
+
+        if ($request->date != '') {
+            $date = $request->date;
+            $to_date = $request->to_date;
+        } else {
+            $date = [Carbon::today()->toDateString()];
+            $to_date = [Carbon::today()->toDateString()];
+        }
+
+        $result = Expenditure::query();
+
+        $result->select('expenditure.*', 'users.name')
+            ->join('users', 'expenditure.user_id', 'users.id')
+            ->whereBetween('expenditure.created_at', [$date, $to_date]);
+
+        if ($request->date_search != '') {
+        }
+
+        $expenditure = $result
+            ->orderBy('expenditure.id', 'desc')
+            ->get();
+
+        $totalExpenditure = $expenditure->reduce(function ($carry, $expen) : int {
+            return $carry + $expen->price;
+        });
+
+        $data = [
+            'date' => $date,
+            'to_date' => $to_date,
+            'expenditure' => $expenditure,
+            'totalExpenditure' => $totalExpenditure
+        ];
+
+        $pdf = PDF::loadView(
+            'pdf.expen',
+            $data,
+            [],
+            [
+                'format' => 'A4',
+                'custom_font_dir' => base_path('resources/fonts/'),
+                'custom_font_data' => [
+                    'defago' => [ // must be lowercase and snake_case
+                        'R'  => 'defago-noto-sans-lao.ttf',    // regular font
+                        'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+                    ]
+                  // ...add as many as you want.
+                ]
+            ]
+        );
+        return $pdf->stream('document.pdf');
     }
 }

@@ -92,6 +92,8 @@ Route::post('/addExpenditureImages', [ExpenditureController::class, 'addExpendit
 
 Route::get('/deleteExpenditureImages/{id}/expen/{expen_id}', [ExpenditureController::class, 'deleteExpenditureImages'])->middleware('auth')->name('deleteExpenditureImages');
 
+Route::get('/expenditureReport', [ExpenditureController::class, 'report'])->middleware('auth')->name('expenditureReport');
+
 Route::get('/partner', [UsersController::class, 'partner'])->middleware('auth')->name('partner');
 
 Route::post('/insertPartner', [UsersController::class, 'insertPartner'])->middleware('auth')->name('insertPartner');
