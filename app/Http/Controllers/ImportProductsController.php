@@ -660,12 +660,27 @@ class ImportProductsController extends Controller
             'date' => date('d-m-Y', strtotime($lot->created_at)),
             'to' => $receive_branch->branch_name,
             'weight_kg' => $lot->weight_kg,
+            'weight_m' => $lot->weight_m,
             'price' => $lot->total_main_price,
             'pack_price' => $lot->pack_price,
             'fee' => $lot->fee,
             'service_charge' => $lot->service_charge,
         ];
-        $pdf = PDF::loadView('pdf.import', $data);
+        $pdf = PDF::loadView(
+            'pdf.import',
+            $data,
+            [],
+            [
+                'custom_font_dir' => base_path('resources/fonts/'),
+                'custom_font_data' => [
+                    'defago' => [ // must be lowercase and snake_case
+                        'R'  => 'defago-noto-sans-lao.ttf',    // regular font
+                        'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+                    ]
+                    // ...add as many as you want.
+                ]
+            ]
+        );
         return $pdf->stream('document.pdf');
     }
 

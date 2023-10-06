@@ -7,10 +7,13 @@
             margin: 20px;
         }
 
+        body {
+            font-family: 'defago', sans-serif;
+        }
+
         p {
             margin: 5px
         }
-
     </style>
 </head>
 
@@ -31,6 +34,10 @@
 
     <p style="font-size: 11pt;">ນ້ຳໜັກລວມ :
         {{ $weight_kg }} kg
+    </p>
+
+    <p style="font-size: 11pt;">ຂະໜາດລວມ :
+        {{ $weight_m }} ແມັດກ້ອນ
     </p>
 
 
