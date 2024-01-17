@@ -19,14 +19,15 @@
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-12">
                                     <div class="form-group">
-                                        <input class="form-control" type="date" value="{{ $date_now }}" name="date">
+                                        <input class="form-control" type="date" value="{{ $date_now }}"
+                                            name="date" id="date">
                                     </div>
                                 </div>
                                 <p class="h5">ຫາ</p>
                                 <div class="col-lg-4 col-md-4 col-12">
                                     <div class="form-group">
                                         <input class="form-control" type="date" value="{{ $to_date_now }}"
-                                            name="to_date">
+                                            name="to_date" id="to_date">
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-12">
@@ -144,7 +145,7 @@
                             <div class="x_panel bg-danger text-white">
                                 <div>
                                     <p class="h4 d-inline">ລາຍຈ່າຍອື່ນໆ</p>
-                                    <p class="pl-3 h4 d-inline"><a href="/expenditure"><i
+                                    <p class="pl-3 h4 d-inline"><a onclick="handleClickSeeExpenditure()"><i
                                                 class="fa fa-arrow-right text-white"></i></span></a></p>
                                 </div>
                                 <hr class="border-white">
@@ -319,7 +320,6 @@
                                             href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $i }}">{{ $i }}</a>
                                     </li>
                                 @else
-
                                 @endif
                             @endfor
                             @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
@@ -333,8 +333,7 @@
                                 @else
                                 @endif
                             @endfor
-                            <li
-                                class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
+                            <li class="page-item {{ $pagination['offset'] == $pagination['offsets'] ? 'disabled' : '' }}">
                                 <a class="page-link"
                                     href="{{ Request::route()->getName() }}?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}&page={{ $pagination['offset'] + 1 }}"
                                     aria-label="Next">
@@ -534,6 +533,15 @@
                     }
                 });
 
+            }
+
+            function handleClickSeeExpenditure() {
+                var urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('date')) {
+                    window.location.href = `/expenditure?date=${urlParams.get('date')}&to_date=${urlParams.get('to_date')}`;
+                } else {
+                    window.location.href = `/expenditure`;
+                }
             }
         </script>
     @endsection
