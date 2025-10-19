@@ -23,6 +23,7 @@ class IncomeCh extends Model
         'created_at',
         'updated_at',
         'price',
+        'receipt_image',
         'lot_id'
     ];
 

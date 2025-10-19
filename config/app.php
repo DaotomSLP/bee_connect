@@ -1,5 +1,7 @@
 <?php
 
+use Mpdf\Mpdf;
+
 return [
 
     /*
@@ -161,6 +163,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        // Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -177,7 +180,7 @@ return [
 
 
         Milon\Barcode\BarcodeServiceProvider::class,
-
+        // GImageIm::class,
         // Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class
     ],
 
@@ -234,7 +237,7 @@ return [
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
 
-        'PDF' => Meneses\LaravelMpdf\Facades\LaravelMpdf::class,
+        // 'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
 
     ],
 

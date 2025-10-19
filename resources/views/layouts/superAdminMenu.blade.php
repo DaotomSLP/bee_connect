@@ -25,6 +25,10 @@
             class="{{ Request::is('importProductTrack') || Request::is('importProductTrack/*') ? 'current-page' : '' }}">
             <a href="/importProductTrack">ຕິດຕາມສິນຄ້າ</a>
         </li>
+        <li
+            class="{{ Request::is('mainReport') || Request::is('mainReport/*') ? 'current-page' : '' }}">
+            <a href="/mainReport">ລາຍງານລາຍຮັບ-ລາຍຈ່າຍ</a>
+        </li>
         <li class="{{ Request::is('dailyImport') ? 'current-page' : '' }}"><a href="/dailyImport">ລາຍງານປະຈຳວັນ</a>
         </li>
         <li class="{{ Request::is('priceImport') || Request::is('priceImport/*') ? 'current-page' : '' }}">
@@ -77,8 +81,10 @@
 {{-- setting --}}
 <li><a><i class="fa fa-desktop"></i> ຕັ້ງຄ່າລະບົບ <span class="fa fa-chevron-down"></span></a>
     <ul class="nav child_menu">
-        <li {{ Request::is('expenditure') || Request::is('expenditure/*') || Request::is('editBranch/*')
-            ? 'current-page' : '' }}>
+        <li
+            {{ Request::is('expenditure') || Request::is('expenditure/*') || Request::is('editBranch/*')
+                ? 'current-page'
+                : '' }}>
             <a href="/expenditure">ເພີ່ມລາຍຈ່າຍ</a>
         </li>
         <li
@@ -96,10 +102,10 @@
         </li>
 
         @if (Auth::user()->is_owner == 1)
-        <li
-            class="{{ Request::is('admin') || Request::is('admin/*') || Request::is('editAdmin/*') ? 'current-page' : '' }}">
-            <a href="/admin">ແອັດມິນ</a>
-        </li>
+            <li
+                class="{{ Request::is('admin') || Request::is('admin/*') || Request::is('editAdmin/*') ? 'current-page' : '' }}">
+                <a href="/admin">ແອັດມິນ</a>
+            </li>
         @endif
     </ul>
 </li>

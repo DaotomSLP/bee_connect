@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PriceImportController extends Controller
 {
-    /** 
+    /**
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request

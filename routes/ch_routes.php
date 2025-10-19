@@ -54,7 +54,7 @@ Route::post('/getImportProduct', [ImportProductsController::class, 'getImportPro
 
 Route::get('/deleteLot', [ImportProductsController::class, 'deleteLot'])->middleware('auth')->name('deleteLot');
 
-Route::get('/paidLot', [ImportProductsController::class, 'paidLot'])->middleware('auth')->name('paidLot');
+Route::post('/paidLot', [ImportProductsController::class, 'paidLot'])->middleware('auth')->name('paidLot');
 
 Route::get('/addChinaProduct', [ImportProductsController::class, 'addChinaProduct'])->middleware('auth')->name('addChinaProduct');
 
@@ -97,3 +97,7 @@ Route::get('/withdraw_detail_ch/{id}', [ImportProductsController::class, 'withdr
 Route::post('/addWithDrawCh', [ImportProductsController::class, 'addWithDrawCh'])->middleware('auth')->name('addWithDrawCh');
 
 Route::get('/tracking',[HomeController::class,'tracking'])->name('tracking');
+
+Route::get('/mainReport', [ImportProductsController::class, 'mainReport'])->middleware('auth')->name('mainReport');
+
+Route::get('/mainReportPrint', [ImportProductsController::class, 'mainReportPrint'])->middleware('auth')->name('mainReportPrint');

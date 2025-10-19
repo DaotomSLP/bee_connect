@@ -84,6 +84,25 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="show_receipt_dialog" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title" id="exampleModalLabel">ບິນຈ່າຍເງິນ</h2>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <img src="{{ asset('storage/' . $lot[0]['receipt_image']) }}" alt="Receipt Image"
+                                    style="max-width: 350px; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.2);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             @if (session()->get('error') == 'not_insert')
                 <div class="alert alert-danger">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -92,7 +111,7 @@
                     <span>
                         <b> Danger - </b>ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່</span>
                 </div>
-            @elseif(session()->get( 'error' )=='insert_success')
+            @elseif(session()->get('error') == 'insert_success')
                 <div class="alert alert-success">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <i class="material-icons">close</i>
@@ -165,13 +184,32 @@
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ສະຖານະ :</label>
                                     <p class="font-weight-bold">
-                                        {{ $lot[0]['status'] == 'sending' ? 'ກຳລັງສົ່ງ' : ($lot[0]['status'] == 'received' ? 'ຄົບແລ້ວ' : ($lot[0]['status'] == 'not_full' ? 'ຍັງບໍ່ຄົບ' : 'ສຳເລັດ')) }}
+                                        @if ($lot[0]['status'] == 'sending')
+                                            ກຳລັງສົ່ງ
+                                        @elseif($lot[0]['status'] == 'received')
+                                            ຄົບແລ້ວ
+                                        @elseif($lot[0]['status'] == 'not_full')
+                                            ຍັງບໍ່ຄົບ
+                                        @else
+                                            ສຳເລັດ
+                                        @endif
                                     </p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ສະຖານະຈ່າຍເງິນ :</label>
                                     <p class="font-weight-bold">
-                                        {{ $lot[0]['payment_status'] == 'not_paid' ? 'ຍັງບໍ່ຈ່າຍ' : 'ຈ່າຍແລ້ວ' }}</p>
+                                        @if ($lot[0]['payment_status'] == 'not_paid')
+                                            ຍັງບໍ່ຈ່າຍ
+                                        @else
+                                            ຈ່າຍແລ້ວ
+                                        @endif
+                                    </p>
+
+                                    @if ($lot[0]['payment_status'] == 'paid')
+                                        <a type="button" class="btn btn-sm btn-info text-white" data-toggle="modal"
+                                            data-target="#show_receipt_dialog">
+                                            ສະແດງຮູບບິນຈ່າຍເງິນ</a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -200,7 +238,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ສະຖານະ</label>
-                                            <select class="form-control form-control-sm" id="select_status" name="status">
+                                            <select class="form-control form-control-sm" id="select_status"
+                                                name="status">
                                                 <option value="">
                                                     ເລືອກ
                                                 </option>
@@ -281,11 +320,21 @@
                                                     {{ $import_product->created_at ? date('d-m-Y', strtotime($import_product->created_at)) : '' }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
+                                                    @if ($import_product->status == 'sending')
+                                                        ກຳລັງສົ່ງ
+                                                    @elseif($import_product->status == 'received')
+                                                        ຮອດແລ້ວ
+                                                    @else
+                                                        ສຳເລັດ
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     {{ $import_product->weight }}
-                                                    {{ $import_product->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກິໂລກຼາມ' }}
+                                                    @if ($import_product->weight_type == 'm')
+                                                        ແມັດກ້ອນ
+                                                    @else
+                                                        ກິໂລກຼາມ
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     {{ number_format($import_product->total_sale_price) }}
@@ -350,7 +399,6 @@
                                     href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $i }}">{{ $i }}</a>
                             </li>
                         @else
-
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)

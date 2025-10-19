@@ -428,5 +428,45 @@
             service_charge = service_charge.filter(val => val.id !== id);
             generateServiceChargeItems();
         }
+
+        // 🧮 ฟังก์ชันฟอร์แมตเลข (ไม่มีทศนิยม)
+        function formatIntegerInput(input) {
+            // เก็บตำแหน่ง cursor ก่อนฟอร์แมต
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+
+            // ลบ comma เดิมออก
+            let value = input.value.replace(/,/g, '');
+            // เอาเฉพาะตัวเลข
+            value = value.replace(/\D/g, '');
+
+            if (value === '') {
+                input.value = '';
+                return;
+            }
+
+            // ฟอร์แมต comma
+            const formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            input.value = formatted;
+
+            // พยายามคืนตำแหน่ง cursor ให้ใกล้เคียงเดิม
+            const diff = formatted.length - value.length;
+            input.setSelectionRange(start + diff, end + diff);
+        }
+
+        // 🎯 ฟอร์แมตทุกครั้งที่พิมพ์
+        $(document).on('input',
+            'input[name="base_price_kg"], input[name="real_price_kg"], input[name="weight_kg"], input[name="base_price_m"], input[name="real_price_m"], input[name="real_price_m_yuan"], input[name="money_rate"], input[name="fee"], input[name="pack_price"], input[id="service_charge_price"]',
+            function() {
+                formatIntegerInput(this);
+            }
+        );
+
+        // 🚀 ลบ comma ก่อนส่งฟอร์ม (กัน backend อ่านค่าผิด)
+        $('form').on('submit', function() {
+            $(this).find('input').each(function() {
+                this.value = this.value.replace(/,/g, '');
+            });
+        });
     </script>
 @endsection

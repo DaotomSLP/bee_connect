@@ -18,9 +18,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use PDF;
-
 use function PHPSTORM_META\type;
+use GImage\Image;
 
 class ImportProductsController extends Controller
 {
@@ -652,25 +653,41 @@ class ImportProductsController extends Controller
 
     public function report($id)
     {
-        $lot = Lots::find($id);
-        $receive_branch = Branchs::find($lot->receiver_branch_id);
+        // Set higher limits for large reports
+        ini_set('max_execution_time', '300');
+        ini_set('memory_limit', '1024M');
 
+        $lots = DB::table('lot')
+            ->select('lot.*', 'branchs.branch_name')
+            ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+            ->where('lot.id', $id)
+            ->orderBy('lot.id', 'desc')
+            ->get();
+
+        $import_products = DB::table('import_products')
+            ->select('import_products.*', 'branchs.branch_name')
+            ->join('lot', 'lot.id', 'import_products.lot_id')
+            ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+            ->where('lot.id', $id)
+            ->orderBy('import_products.id', 'desc')
+            ->get();
+
+        // --- 5. Prepare Data for View ---
         $data = [
-            'id' => $lot->id,
-            'date' => date('d-m-Y', strtotime($lot->created_at)),
-            'to' => $receive_branch->branch_name,
-            'weight_kg' => $lot->weight_kg,
-            'weight_m' => $lot->weight_m,
-            'price' => $lot->total_main_price,
-            'pack_price' => $lot->pack_price,
-            'fee' => $lot->fee,
-            'service_charge' => $lot->service_charge,
+            'lots' => $lots,
+            'import_products' => $import_products
         ];
+
+        ini_set("pcre.backtrack_limit", "5000000");
+        ini_set("pcre.recursion_limit", "5000000");
+
         $pdf = PDF::loadView(
             'pdf.import',
             $data,
             [],
             [
+                'format' => 'A4',
+                'orientation' => 'landscape',
                 'custom_font_dir' => base_path('resources/fonts/'),
                 'custom_font_data' => [
                     'defago' => [ // must be lowercase and snake_case
@@ -695,6 +712,7 @@ class ImportProductsController extends Controller
             ->get();
 
         $lot = Lots::join('branchs As receive', 'lot.receiver_branch_id', 'receive.id')
+            ->leftJoin('income_ch', 'lot.id', 'income_ch.lot_id')
             ->where('lot.id', $request->id)
             ->get();
 
@@ -735,7 +753,7 @@ class ImportProductsController extends Controller
             'all' => $all_import_products,
         ];
 
-        // echo ($import_products));
+        // echo ($lot);
         // exit;
 
         return view('importDetail', compact('branchs', 'import_products', 'pagination', 'lot'));
@@ -1071,19 +1089,42 @@ class ImportProductsController extends Controller
             return redirect('access_denied');
         }
 
-        lots::where('id', $request->id)->update([
+        $receiptPath = null;
+        if ($request->hasFile('receipt')) {
+            $file = $request->file('receipt');
+
+            // ตรวจสอบว่าเป็นรูปภาพ
+            $request->validate([
+                'receipt' => 'image|mimes:jpeg,png,jpg|max:5120', // 5MB
+            ]);
+
+            $fileName = 'receipt_' . time() . '.jpg';
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $fileName;
+
+            $image = new Image();
+            $image->load($file)
+                ->resizeToWidth(300) // ปรับขนาดตามความกว้าง
+                ->save($path);
+
+            $receiptPath = $fileName;
+        }
+
+        Lots::where('id', $request->id)->update([
             'payment_status' => 'paid',
         ]);
 
-        $sum_price = Lots::where('id', $request->id)->sum('total_main_price') - Lots::where('id', $request->id)->sum('total_base_price');
+        $sum_price = Lots::where('id', $request->id)->sum('total_main_price')
+            - Lots::where('id', $request->id)->sum('total_base_price');
 
         $income_ch = new IncomeCh();
         $income_ch->price = $sum_price;
         $income_ch->lot_id = $request->id;
+        if ($receiptPath) {
+            $income_ch->receipt_image = $receiptPath;
+        }
         $income_ch->save();
-        return redirect()
-            ->back()
-            ->with(['error' => 'insert_success']);
+
+        return redirect()->back()->with(['error' => 'insert_success']);
     }
 
     public function changeImportWeight(Request $request)
@@ -1298,5 +1339,155 @@ class ImportProductsController extends Controller
         $withdraw->save();
 
         return redirect('withdraw_ch');
+    }
+
+    public function mainReport(Request $request)
+    {
+        $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
+
+        if ($request->date != '') {
+            $date = $request->date;
+            $to_date = $request->to_date;
+            $date_now = date('Y-m-d', strtotime($request->date));
+            $to_date_now = date('Y-m-d', strtotime($request->to_date));
+        } else {
+            $date = [Carbon::today()->toDateString()];
+            $to_date = [Carbon::today()->toDateString()];
+            $date_now = date('Y-m-d', strtotime(Carbon::now()));
+        }
+
+        $lot_query = DB::table('lot')
+            ->select(DB::raw('branchs.branch_name as branch_name, income_ch.receipt_image, lot.*'))
+            ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+            ->leftJoin('income_ch', 'lot.id', 'income_ch.lot_id')
+            ->whereBetween('lot.created_at', [$date, $to_date])
+            ->orderBy('lot.id', 'desc');
+        $lots = $lot_query->get();
+
+        $expenditure_query = Expenditure::query();
+        $expenditure_query->select('expenditure.*', 'users.name')
+            ->join('users', 'expenditure.user_id', 'users.id')
+            ->whereBetween('expenditure.created_at', [$date, $to_date])
+            ->orderBy('expenditure.id', 'desc');
+        $expenditures = $expenditure_query->get();
+        // print_r($import_product_count);
+        // exit;
+
+        return view('mainReport', compact('date_now', 'lots', 'to_date_now', 'expenditures'));
+    }
+
+    public function mainReportPrint(Request $request)
+    {
+        // Set higher limits for large reports
+        ini_set('max_execution_time', '300');
+        ini_set('memory_limit', '1024M');
+
+        // --- 1. Define Date Range ---
+        if ($request->date && $request->to_date) {
+            $date = date('Y-m-d', strtotime($request->date));
+            $to_date = date('Y-m-d', strtotime($request->to_date));
+        } else {
+            $date = Carbon::today()->toDateString();
+            $to_date = Carbon::today()->toDateString();
+        }
+
+        // --- 2. Fetch Lot Data (Income) ---
+        $lots = DB::table('lot')
+            ->select('lot.*', 'branchs.branch_name', 'income_ch.receipt_image')
+            ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+            ->leftJoin('income_ch', 'lot.id', 'income_ch.lot_id')
+            ->whereBetween('lot.created_at', [$date, $to_date])
+            ->orderBy('lot.id', 'desc')
+            ->get();
+
+        // --- 3. Process Images and Encode for PDF ---
+        $lots = $lots->map(function ($lot) {
+            $lot->image_base64 = null;
+
+            if (!empty($lot->receipt_image)) {
+                $filePath = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $lot->receipt_image;
+
+                if (file_exists($filePath)) {
+                    try {
+                        $imageData = file_get_contents($filePath);
+                        $base64 = base64_encode($imageData);
+
+                        // Determine MIME type
+                        $mimeType = mime_content_type($filePath);
+
+                        // Use Base64 Data URI for images
+                        $lot->image_base64 = 'data:' . $mimeType . ';base64,' . $base64;
+                    } catch (\Exception $e) {
+                        Log::error('Image processing error for lot ID ' . $lot->id . ': ' . $e->getMessage());
+                    }
+                }
+            }
+
+            return $lot;
+        });
+
+        // --- 4. Fetch Expenditure Data ---
+        $expenditures = Expenditure::select('expenditure.*', 'users.name')
+            ->join('users', 'expenditure.user_id', 'users.id')
+            ->whereBetween('expenditure.created_at', [$date, $to_date])
+            ->orderBy('expenditure.id', 'desc')
+            ->get();
+
+        // --- 3. Process Images and Encode for PDF ---
+        $expenditures = $expenditures->map(function ($expenditure) {
+            $expenditure->image_base64 = null;
+
+            if (!empty($expenditure->receipt_image)) {
+                $filePath = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $expenditure->receipt_image;
+
+                if (file_exists($filePath)) {
+                    try {
+                        $imageData = file_get_contents($filePath);
+                        $base64 = base64_encode($imageData);
+
+                        // Determine MIME type
+                        $mimeType = mime_content_type($filePath);
+
+                        // Use Base64 Data URI for images
+                        $expenditure->image_base64 = 'data:' . $mimeType . ';base64,' . $base64;
+                    } catch (\Exception $e) {
+                        Log::error('Image processing error for expenditure ID ' . $expenditure->id . ': ' . $e->getMessage());
+                    }
+                }
+            }
+
+            return $expenditure;
+        });
+
+        // --- 5. Prepare Data for View ---
+        $data = [
+            'date' => $date,
+            'to_date' => $to_date,
+            'lots' => $lots,
+            'expenditures' => $expenditures,
+        ];
+
+        ini_set("pcre.backtrack_limit", "5000000");
+        ini_set("pcre.recursion_limit", "5000000");
+
+        $pdf = PDF::loadView(
+            'pdf.mainReportPrint',
+            $data,
+            [],
+            [
+                'format' => 'A4',
+                'orientation' => 'landscape',
+                'custom_font_dir' => base_path('resources/fonts/'),
+                'custom_font_data' => [
+                    'defago' => [ // must be lowercase and snake_case
+                        'R'  => 'defago-noto-sans-lao.ttf',    // regular font
+                        'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+                    ]
+                    // ...add as many as you want.
+                ]
+            ]
+        );
+
+        return $pdf->stream('main_report.pdf');
     }
 }

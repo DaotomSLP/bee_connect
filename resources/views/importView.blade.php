@@ -101,15 +101,31 @@
             <!-- Modal -->
             <div class="modal fade" id="paid_lot_modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
-                    <form method="GET" action="/paidLot">
+                    <form method="POST" action="/paidLot" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-content">
-                            <div>
-                                <h2 class="text-center" id="exampleModalLabel"><i
-                                        class="material-icons h1">paid</i><br>ຕ້ອງການຈ່າຍເງິນໃຫ້ກັບລາຍການນີ້ ຫຼືບໍ່?</h2>
-                            </div>
+                            <div class="modal-body text-center">
+                                <h2 class="mb-3">
+                                    <i class="material-icons h1">paid</i><br>
+                                    ຕ້ອງການຈ່າຍເງິນໃຫ້ກັບລາຍການນີ້ ຫຼືບໍ່?
+                                </h2>
 
-                            <input type="hidden" id="paid_lot_id_input" name="id">
+                                <!-- อัปโหลดใบเสร็จ -->
+                                <div class="custom-file mt-3 mb-3">
+                                    <input type="file" class="custom-file-input" name="receipt" id="thumbnailInput"
+                                        accept="image/*" onchange="previewReceipt(event)">
+                                    <label class="custom-file-label" for="thumbnailInput" id="fileLabel">Choose
+                                        file</label>
+                                </div>
+
+                                <!-- แสดงรูป preview -->
+                                <div class="text-center">
+                                    <img id="receiptPreview" src="" alt=""
+                                        style="display:none; max-width:100%; border-radius:10px; margin-top:10px;">
+                                </div>
+
+                                <input type="hidden" id="paid_lot_id_input" name="id">
+                            </div>
 
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">ຕົກລົງ</button>
@@ -120,6 +136,33 @@
                     </form>
                 </div>
             </div>
+
+            <!-- ✅ Script แสดงชื่อไฟล์ + preview รูป -->
+            <script>
+                function previewReceipt(event) {
+                    const input = event.target;
+                    const file = input.files[0];
+                    const label = document.getElementById('fileLabel');
+                    const preview = document.getElementById('receiptPreview');
+
+                    if (file) {
+                        // แสดงชื่อไฟล์
+                        label.textContent = file.name;
+
+                        // แสดง preview
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                            preview.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        label.textContent = 'Choose file';
+                        preview.style.display = 'none';
+                        preview.src = '';
+                    }
+                }
+            </script>
 
             @if (session()->get('error') == 'not_insert')
                 <div class="alert alert-danger">
@@ -404,10 +447,22 @@
                                                     </td>
                                                 @endif
                                                 <td>
-                                                    {{ $lot->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($lot->status == 'received' ? 'ຄົບແລ້ວ' : ($lot->status == 'not_full' ? 'ຍັງບໍ່ຄົບ' : 'ສຳເລັດ')) }}
+                                                    @if ($lot->status == 'sending')
+                                                        ກຳລັງສົ່ງ
+                                                    @elseif($lot->status == 'received')
+                                                        ຄົບແລ້ວ
+                                                    @elseif($lot->status == 'not_full')
+                                                        ຍັງບໍ່ຄົບ
+                                                    @else
+                                                        ສຳເລັດ
+                                                    @endif
                                                 </td>
                                                 <td>
-                                                    {{ $lot->payment_status == 'not_paid' ? 'ຍັງບໍ່ຈ່າຍ' : 'ຈ່າຍແລ້ວ' }}
+                                                    @if ($lot->payment_status == 'not_paid')
+                                                        ຍັງບໍ່ຈ່າຍ
+                                                    @else
+                                                        ຈ່າຍແລ້ວ
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     <a

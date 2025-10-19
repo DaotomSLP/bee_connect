@@ -38,13 +38,13 @@
                                 <h2 class="card-title">ເພິ່ມລາຍຈ່າຍ</h2>
                             </div>
                             <div class="x_content">
-                                <form method="POST" action="/addExpenditure">
+                                <form method="POST" action="/addExpenditure" enctype="multipart/form-data">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="bmd-label-floating">ວັນທີ</label>
-                                                <input class="form-control" type="date" value="{{ $date_now }}"
+                                                <input class="form-control" type="date" value="{{ date('Y-m-d') }}"
                                                     name="date">
                                             </div>
                                         </div>
@@ -60,6 +60,23 @@
                                                 <textarea class="form-control" name="detail"></textarea>
                                             </div>
                                         </div>
+
+                                        <div class="col-md-4">
+                                            <!-- อัปโหลดใบเสร็จ -->
+                                            <div class="custom-file mt-3 mb-3">
+                                                <input type="file" class="custom-file-input" name="receipt"
+                                                    id="thumbnailInput" accept="image/*" onchange="previewReceipt(event)">
+                                                <label class="custom-file-label" for="thumbnailInput" id="fileLabel">Choose
+                                                    file</label>
+                                            </div>
+
+                                            <!-- แสดงรูป preview -->
+                                            <div class="text-center">
+                                                <img id="receiptPreview" src="" alt=""
+                                                    style="display:none; max-width:50%; border-radius:10px; margin-top:10px;">
+                                            </div>
+                                        </div>
+
                                     </div>
                                     <button type="submit" class="btn btn-primary pull-right px-5">ບັນທຶກ</button>
                                     <div class="clearfix"></div>
@@ -115,7 +132,8 @@
                             <h2 class="card-title ">ລາຍການລາຍຈ່າຍ
                                 <button type="button"
                                     onclick="window.open(`expenditureReport?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}`);"
-                                    class="btn btn-primary ml-3 px-3" {{ Request::input('date') ? '' : 'disabled' }}>ພິມລາຍງານ</button>
+                                    class="btn btn-primary ml-3 px-3"
+                                    {{ Request::input('date') ? '' : 'disabled' }}>ພິມລາຍງານ</button>
                             </h2>
                         </div>
                         <div class="x_content">
@@ -237,5 +255,32 @@
                 </ul>
             </nav>
         </div>
+
+        <!-- ✅ Script แสดงชื่อไฟล์ + preview รูป -->
+        <script>
+            function previewReceipt(event) {
+                const input = event.target;
+                const file = input.files[0];
+                const label = document.getElementById('fileLabel');
+                const preview = document.getElementById('receiptPreview');
+
+                if (file) {
+                    // แสดงชื่อไฟล์
+                    label.textContent = file.name;
+
+                    // แสดง preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    label.textContent = 'Choose file';
+                    preview.style.display = 'none';
+                    preview.src = '';
+                }
+            }
+        </script>
     </div>
 @endsection

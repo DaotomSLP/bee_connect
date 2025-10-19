@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use PDF;
+use GImage\Image;
 
 class ExpenditureController extends Controller
 {
@@ -76,6 +77,29 @@ class ExpenditureController extends Controller
         $expenditure->price = $request->price;
         $expenditure->user_id = Auth::user()->id;
         $expenditure->detail = $request->detail;
+
+        $receiptPath = null;
+        if ($request->hasFile('receipt')) {
+            $file = $request->file('receipt');
+
+            // ตรวจสอบว่าเป็นรูปภาพ
+            $request->validate([
+                'receipt' => 'image|mimes:jpeg,png,jpg|max:5120', // 5MB
+            ]);
+
+            $fileName = 'receipt_' . time() . '.jpg';
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $fileName;
+            $image = new Image();
+            $image->load($file)
+                ->resizeToWidth(300) // ปรับขนาดตามความกว้าง
+                ->save($path);
+
+            $receiptPath = $fileName;
+        }
+
+        if ($receiptPath) {
+            $expenditure->receipt_image = $receiptPath;
+        }
 
         if ($expenditure->save()) {
             return redirect('expenditure')->with(['error' => 'insert_success']);
@@ -187,7 +211,7 @@ class ExpenditureController extends Controller
             ->orderBy('expenditure.id', 'desc')
             ->get();
 
-        $totalExpenditure = $expenditure->reduce(function ($carry, $expen) : int {
+        $totalExpenditure = $expenditure->reduce(function ($carry, $expen): int {
             return $carry + $expen->price;
         });
 
@@ -210,7 +234,7 @@ class ExpenditureController extends Controller
                         'R'  => 'defago-noto-sans-lao.ttf',    // regular font
                         'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
                     ]
-                  // ...add as many as you want.
+                    // ...add as many as you want.
                 ]
             ]
         );
