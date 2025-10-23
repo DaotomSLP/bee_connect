@@ -101,6 +101,23 @@
                             <div class="x_content">
                                 <div class="row">
                                     <div class="col">
+                                        <label class="bmd-label-floating d-block mb-2">ປະເພດເຄື່ອງ</label>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="parcel_size" id="normal"
+                                                value="normal" checked>
+                                            <label class="form-check-label" for="normal">ເຄື່ອງທົ່ວໄປ</label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="parcel_size" id="large"
+                                                value="large">
+                                            <label class="form-check-label" for="large">ເຄື່ອງໃຫຍ່</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ລາຄາຕົ້ນທຶນ (ກິໂລກຼາມ)</label>
                                             <input class="form-control form-control-sm" name="base_price_kg">
@@ -224,7 +241,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    {{-- <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ແຂວງ</label>
                                             <select class="form-control form-control-sm" id="select_province" required>
@@ -254,11 +271,11 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ສາຂາ</label>
-                                            <select class="form-control form-control-sm" disabled id="select_branch"
+                                            <select class="form-control form-control-sm" id="select_branch"
                                                 name="receiver_branch_id" required>
                                                 <option value="">
                                                     ເລືອກ
@@ -404,7 +421,6 @@
             if ($("#service_charge_name").val() === "" || $("#service_charge_price").val() === "") {
                 alert("ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບ")
             } else {
-
                 service_charge.push({
                     id: service_charge.length + 1,
                     name: $("#service_charge_name").val(),
@@ -418,7 +434,10 @@
 
         function generateServiceChargeItems() {
             let service_charge_html = service_charge.map(val =>
-                `<tr><td class="py-0"><div class="form-group"><input value='${val.name}' class="form-control form-control-sm" name="service_item_name[]" required readonly></div></td><td class="py-0"><div class="form-group"><input type="number" value=${val.price} step="0.001" class="form-control form-control-sm" name="service_item_price[]" required readonly></div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteServiceItem(${val.id})> <i class="material-icons">clear</i></a></div></td></tr>`
+                `<tr><td class="py-0"><div class="form-group">
+                    <input value='${val.name}' class="form-control form-control-sm" name="service_item_name[]" required readonly>
+                    </div></td><td class="py-0"><div class="form-group"><input value=${val.price} class="form-control form-control-sm" name="service_item_price[]" required readonly>
+                        </div></td><td class="py-0"><div class="form-group"><a type="button" onclick=deleteServiceItem(${val.id})> <i class="material-icons">clear</i></a></div></td></tr>`
             );
             $("#service_item_table").html(service_charge_html)
 

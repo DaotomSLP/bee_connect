@@ -76,48 +76,29 @@
         <tr>
             <th>ລ/ດ</th>
             <th>ລາຍການສິນຄ້າ</th>
-            <th>ຂະໜາດ/ນ້ຳໜັກ</th>
-            <th>ຫົວໜ່ວຍ</th>
+            <th>ນ້ຳໜັກລວມ</th>
             <th>ລາຄາ</th>
             <th>ລວມ</th>
         </tr>
         <tbody>
-            @php
-                $sumTotalPrice = 0;
-                $sumTotalSize = 0;
-            @endphp
-            @foreach ($import_products as $key => $import_product)
-                @php
-                    // Calculation for the sum
-                    $sumTotalPrice += $import_product->total_real_price;
-                    $sumTotalSize += $import_product->weight;
-                @endphp
-                <tr>
-                    <td class="text-center">{{ $key + 1 }}</td>
-                    <td>#{{ $import_product->code }}</td>
-                    <td class="text-center">{{ $import_product->weight }}</td>
-                    <td class="text-center">{{ $import_product->weight_type }}</td>
-                    <td class="text-right">{{ number_format($import_product->real_price) }} ກີບ</td>
-                    <td class="text-right">{{ number_format($import_product->total_real_price) }} ກີບ</td>
-                </tr>
-            @endforeach
+            <tr>
+                <td class="text-center">1</td>
+                <td>ເຄື່ອງນ້ອຍ</td>
+                <td class="text-center">{{ $lot->weight_kg }}</td>
+                <td class="text-right">{{ number_format($lot->lot_real_price_kg) }} ກີບ</td>
+                <td class="text-right">{{ number_format($lot->total_price) }} ກີບ</td>
+            </tr>
             <!-- Summation Row for Income -->
             <tr>
-                <td colspan="2"></td>
-                <td class="text-center" style="font-weight: bold;">{{ number_format($sumTotalSize) }}</td>
-                <td colspan="2" style="text-align: right; font-weight: bold;">ລວມຄ່າເຄື່ອງ</td>
-                <td class="text-right" style="font-weight: bold;">{{ number_format($sumTotalPrice) }} ກີບ</td>
+                <td colspan="4" style="text-align: right; font-weight: bold;">ລວມຄ່າເຄື່ອງ</td>
+                <td class="text-right" style="font-weight: bold;">{{ number_format($lot->total_price) }} ກີບ</td>
             </tr>
             <tr>
-                <td colspan="2"></td>
-                <td></td>
-                <td colspan="2" style="text-align: right;">ຄ່າສົ່ງ</td>
+                <td colspan="4" style="text-align: right;">ຄ່າສົ່ງ</td>
                 <td class="text-right">{{ number_format($lot->fee) }} ກີບ</td>
             </tr>
             <tr>
-                <td colspan="2"></td>
-                <td></td>
-                <td colspan="2" style="text-align: right;">ຄ່າເປົາ</td>
+                <td colspan="4" style="text-align: right;">ຄ່າເປົາ</td>
                 <td class="text-right">{{ number_format($lot->pack_price) }} ກີບ</td>
             </tr>
             @php
@@ -128,16 +109,14 @@
                     $sumTotalServiceCharge += $service_charge->price;
                 @endphp
                 <tr>
-                    <td colspan="2"></td>
-                    <td></td>
-                    <td colspan="2" style="text-align: right;">{{ $service_charge->name }}</td>
+                    <td colspan="4" style="text-align: right;">{{ $service_charge->name }}</td>
                     <td class="text-right">{{ number_format($service_charge->price) }} ກີບ</td>
                 </tr>
             @endforeach
             <tr>
-                <td colspan="5" style="text-align: right; font-weight: bold;">ລວມທັງໝົດ</td>
+                <td colspan="4" style="text-align: right; font-weight: bold;">ລວມທັງໝົດ</td>
                 <td class="text-right" style="font-weight: bold;">
-                    {{ number_format($sumTotalPrice + $lot->fee + $lot->pack_price + $sumTotalServiceCharge) }} ກີບ
+                    {{ number_format($lot->total_main_price) }} ກີບ
                 </td>
             </tr>
         </tbody>

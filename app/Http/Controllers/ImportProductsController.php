@@ -417,14 +417,15 @@ class ImportProductsController extends Controller
             $lot->payment_status = 'not_paid';
             $lot->fee = $request->fee;
             $lot->pack_price = $request->pack_price;
-            $lot->lot_real_price_kg = $request->real_price_kg;
-            $lot->lot_base_price_kg = $request->base_price_kg;
-            $lot->lot_real_price_m = $request->real_price_m;
-            $lot->lot_base_price_m = $request->base_price_m;
+            $lot->lot_real_price_kg = ($request->real_price_kg == '' ? $default_price_kg->real_price : $request->real_price_kg);
+            $lot->lot_base_price_kg = ($request->base_price_kg == '' ? $default_price_kg->base_price : $request->base_price_kg);
+            $lot->lot_real_price_m = ($request->real_price_m == '' ? $default_price_m->real_price : $request->real_price_m);
+            $lot->lot_base_price_m = ($request->real_price_m == '' ? $default_price_m->real_price : $request->real_price_m);
             $lot->service_charge = $sum_service_charge;
             $lot->weight_m = $sum_m_weight;
             $lot->money_rate = $request->money_rate;
             $lot->real_price_m_yuan = $request->real_price_m_yuan;
+            $lot->parcel_size = $request->parcel_size;
 
             if ($lot->save()) {
                 $count = 0;
@@ -657,48 +658,79 @@ class ImportProductsController extends Controller
         ini_set('max_execution_time', '300');
         ini_set('memory_limit', '1024M');
 
-        $lots = DB::table('lot')
+        $lot = DB::table('lot')
             ->select('lot.*', 'branchs.branch_name')
             ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
             ->where('lot.id', $id)
-            ->orderBy('lot.id', 'desc')
-            ->get();
+            ->first();
 
-        $import_products = DB::table('import_products')
-            ->select('import_products.*', 'branchs.branch_name')
-            ->join('lot', 'lot.id', 'import_products.lot_id')
-            ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
-            ->where('lot.id', $id)
-            ->orderBy('import_products.id', 'desc')
-            ->get();
-
-        // --- 5. Prepare Data for View ---
-        $data = [
-            'lots' => $lots,
-            'import_products' => $import_products
-        ];
+        $service_charges = Service_charge::where('lot_id', $id)->get();
 
         ini_set("pcre.backtrack_limit", "5000000");
         ini_set("pcre.recursion_limit", "5000000");
 
-        $pdf = PDF::loadView(
-            'pdf.import',
-            $data,
-            [],
-            [
-                'format' => 'A4',
-                'orientation' => 'landscape',
-                'custom_font_dir' => base_path('resources/fonts/'),
-                'custom_font_data' => [
-                    'defago' => [ // must be lowercase and snake_case
-                        'R'  => 'defago-noto-sans-lao.ttf',    // regular font
-                        'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+        if ($lot->parcel_size === 'large') {
+            // --- 5. Prepare Data for View ---
+
+            $import_products = DB::table('import_products')
+                ->select('import_products.*', 'branchs.branch_name')
+                ->join('lot', 'lot.id', 'import_products.lot_id')
+                ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+                ->where('lot.id', $id)
+                ->orderBy('import_products.id', 'desc')
+                ->get();
+
+            $data = [
+                'lot' => $lot,
+                'service_charges' => $service_charges,
+                'import_products' => $import_products
+            ];
+
+            $pdf = PDF::loadView(
+                'pdf.import',
+                $data,
+                [],
+                [
+                    'format' => 'A4',
+                    'orientation' => 'landscape',
+                    'custom_font_dir' => base_path('resources/fonts/'),
+                    'custom_font_data' => [
+                        'defago' => [ // must be lowercase and snake_case
+                            'R'  => 'defago-noto-sans-lao.ttf',    // regular font
+                            'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+                        ]
+                        // ...add as many as you want.
                     ]
-                    // ...add as many as you want.
                 ]
-            ]
-        );
-        return $pdf->stream('document.pdf');
+            );
+
+            return $pdf->stream('document.pdf');
+        } else {
+            $data = [
+                'lot' => $lot,
+                'service_charges' => $service_charges,
+            ];
+
+            $pdf = PDF::loadView(
+                'pdf.importKg',
+                $data,
+                [],
+                [
+                    'format' => 'A4',
+                    'orientation' => 'landscape',
+                    'custom_font_dir' => base_path('resources/fonts/'),
+                    'custom_font_data' => [
+                        'defago' => [ // must be lowercase and snake_case
+                            'R'  => 'defago-noto-sans-lao.ttf',    // regular font
+                            'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+                        ]
+                        // ...add as many as you want.
+                    ]
+                ]
+            );
+
+            return $pdf->stream('document.pdf');
+        }
     }
 
     public function importDetail(Request $request)
