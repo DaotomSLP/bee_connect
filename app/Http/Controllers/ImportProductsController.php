@@ -366,15 +366,29 @@ class ImportProductsController extends Controller
         if ($request->item_id) {
             $sum_price = 0;
             $sum_m_weight = 0;
-            $count = 0;
+            $sum_kg_weight = 0;
 
+            if ($request->parcel_size == 'normal') {
+                if ($request->weight_kg <= 0) {
+                    return redirect('import')->with(['error' => 'not_insert']);
+                }
+
+                $sum_kg_weight = $request->weight_kg;
+            } else {
+                $count = 0;
+                foreach ($request->weight_type as $weight_type) {
+                    if ($weight_type == 'kg') {
+                        $sum_kg_weight += $request->weight[$count];
+                    }
+
+                    $count++;
+                }
+            }
+
+            $count = 0;
             foreach ($request->weight_type as $weight_type) {
                 if ($weight_type == 'm') {
                     $sum_m_weight += $request->weight[$count];
-                } else {
-                    if ($request->weight_kg <= 0) {
-                        return redirect('import')->with(['error' => 'not_insert']);
-                    }
                 }
 
                 $count++;
@@ -395,17 +409,17 @@ class ImportProductsController extends Controller
                 ->orderBy('id', 'DESC')
                 ->first();
 
-            $sum_kg_base_price = ($request->base_price_kg == '' ? $default_price_kg->base_price : $request->base_price_kg) * $request->weight_kg;
+            $sum_kg_base_price = ($request->base_price_kg == '' ? $default_price_kg->base_price : $request->base_price_kg) * $sum_kg_weight;
             $sum_m_base_price = ($request->base_price_m == '' ? $default_price_m->base_price : $request->base_price_m) * $sum_m_weight;
             $sum_base_price = $sum_m_base_price + $sum_kg_base_price;
 
-            $sum_kg_price = ($request->real_price_kg == '' ? $default_price_kg->real_price : $request->real_price_kg) * $request->weight_kg;
+            $sum_kg_price = ($request->real_price_kg == '' ? $default_price_kg->real_price : $request->real_price_kg) * $sum_kg_weight;
             $sum_m_price = ($request->real_price_m == '' ? $default_price_m->real_price : $request->real_price_m) * $sum_m_weight;
             $sum_price = $sum_m_price + $sum_kg_price;
 
             $lot = new Lots();
             $lot->receiver_branch_id = $request->receiver_branch_id;
-            $lot->weight_kg = $request->weight_kg;
+            $lot->weight_kg = $sum_kg_weight;
             $lot->total_base_price_kg = $sum_kg_base_price;
             $lot->total_base_price_m = $sum_m_base_price;
             $lot->total_base_price = $sum_base_price;
@@ -445,11 +459,12 @@ class ImportProductsController extends Controller
                         $product->total_real_price = ($request->real_price_m == '' ? $price->real_price : $request->real_price_m) * $request->weight[$count];
                         $product->total_sale_price = 0;
                     } else {
-                        $product->weight = 0;
+                        $product_weight = $request->parcel_size == 'large' ? $request->weight[$count] : 0;
+                        $product->weight = $product_weight;
                         $product->base_price = $request->base_price_kg == '' ? $price->base_price : $request->base_price_kg;
                         $product->real_price = $request->real_price_kg == '' ? $price->real_price : $request->real_price_kg;
-                        $product->total_base_price = 0;
-                        $product->total_real_price = 0;
+                        $product->total_base_price = ($request->base_price_kg == '' ? $price->base_price : $request->base_price_kg) * $product_weight;
+                        $product->total_real_price = ($request->real_price_kg == '' ? $price->real_price : $request->real_price_kg) * $product_weight;
                         $product->total_sale_price = 0;
                     }
 

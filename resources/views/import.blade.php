@@ -406,13 +406,6 @@
                 weight: old_item[0].weight,
                 weight_type: weight_type,
             });
-
-            if (items.filter(filter => filter.weight_type === 'kg').length <= 0) {
-                $("#all_weight_kg").attr("required", false);
-            } else {
-                $("#all_weight_kg").attr("required", true);
-            }
-
         }
 
         var service_charge = []
@@ -486,6 +479,14 @@
             $(this).find('input').each(function() {
                 this.value = this.value.replace(/,/g, '');
             });
+        });
+
+        $('input[name="parcel_size"]').on('change', function() {
+            if ($(this).val() === 'large') {
+                $("#all_weight_kg").attr("required", false);
+            } else {
+                $("#all_weight_kg").attr("required", true);
+            }
         });
     </script>
 @endsection
