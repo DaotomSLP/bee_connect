@@ -102,7 +102,7 @@ class PriceImportController extends Controller
         Import_products::where('id', $request->sale_item_id)->update(
             [
                 'sale_price' => $request->new_price,
-                'total_sale_price' => $request->new_price * $request->new_weight,
+                // 'total_sale_price' => $request->new_price * $request->new_weight,
                 'weight_branch' => $request->new_weight
             ]
         );

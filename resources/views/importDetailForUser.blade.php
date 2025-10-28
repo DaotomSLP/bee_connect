@@ -130,7 +130,7 @@
                                                     {{ number_format($import_product->total_real_price) }}
                                                 </td> --}}
                                                 <td>
-                                                    {{ number_format($import_product->total_sale_price) }}
+                                                    {{ number_format($import_product->sale_price * ($import_product->weight_branch ?? $import_product->weight)) }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -174,7 +174,6 @@
                                     href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $i }}">{{ $i }}</a>
                             </li>
                         @else
-
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
@@ -202,7 +201,5 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script>
-
-    </script>
+    <script></script>
 @endsection

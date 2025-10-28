@@ -455,17 +455,17 @@ class ImportProductsController extends Controller
                         $product->weight = $request->weight[$count];
                         $product->base_price = $request->base_price_m == '' ? $price->base_price : $request->base_price_m;
                         $product->real_price = $request->real_price_m == '' ? $price->real_price : $request->real_price_m;
-                        $product->total_base_price = ($request->base_price_m == '' ? $price->base_price : $request->base_price_m) * $request->weight[$count];
-                        $product->total_real_price = ($request->real_price_m == '' ? $price->real_price : $request->real_price_m) * $request->weight[$count];
-                        $product->total_sale_price = 0;
+                        // $product->total_base_price = ($request->base_price_m == '' ? $price->base_price : $request->base_price_m) * $request->weight[$count];
+                        // $product->total_real_price = ($request->real_price_m == '' ? $price->real_price : $request->real_price_m) * $request->weight[$count];
+                        // $product->total_sale_price = 0;
                     } else {
                         $product_weight = $request->parcel_size == 'large' ? $request->weight[$count] : 0;
                         $product->weight = $product_weight;
                         $product->base_price = $request->base_price_kg == '' ? $price->base_price : $request->base_price_kg;
                         $product->real_price = $request->real_price_kg == '' ? $price->real_price : $request->real_price_kg;
-                        $product->total_base_price = ($request->base_price_kg == '' ? $price->base_price : $request->base_price_kg) * $product_weight;
-                        $product->total_real_price = ($request->real_price_kg == '' ? $price->real_price : $request->real_price_kg) * $product_weight;
-                        $product->total_sale_price = 0;
+                        // $product->total_base_price = ($request->base_price_kg == '' ? $price->base_price : $request->base_price_kg) * $product_weight;
+                        // $product->total_real_price = ($request->real_price_kg == '' ? $price->real_price : $request->real_price_kg) * $product_weight;
+                        // $product->total_sale_price = 0;
                     }
 
                     $product->weight_type = $request->weight_type[$count];
@@ -1101,9 +1101,9 @@ class ImportProductsController extends Controller
             ->first();
 
         Lots::where('id', $request->lot_id_in_weight)->update([
-            'total_base_price' => $lot->total_base_price - $import_product->base_price * $import_product->weight + $request->base_price_in_weight * $request->weight_in_weight,
-            'total_price' => $lot->total_price - $import_product->real_price * $import_product->weight + $request->real_price_in_weight * $request->weight_in_weight,
-            'total_main_price' => $lot->total_price - $import_product->real_price * $import_product->weight + $request->real_price_in_weight * $request->weight_in_weight + ($lot->fee ? $lot->fee : 0) + ($lot->pack_price ? $lot->pack_price : 0),
+            'total_base_price' => $lot->total_base_price - ($import_product->base_price * $import_product->weight) + ($import_product->base_price * $request->weight_in_weight),
+            'total_price' => $lot->total_price - ($import_product->real_price * $import_product->weight) + ($import_product->real_price * $request->weight_in_weight),
+            'total_main_price' => $lot->total_price - ($import_product->real_price * $import_product->weight) + ($import_product->real_price * $request->weight_in_weight) + ($lot->fee ? $lot->fee : 0) + ($lot->pack_price ? $lot->pack_price : 0),
         ]);
 
         $import_product = Import_products::where('id', $request->lot_item_id_in_weight)->update([
@@ -1200,6 +1200,15 @@ class ImportProductsController extends Controller
             'lot_base_price_m' => $base_price_m,
             'lot_real_price_m' => $real_price_m,
         ]);
+
+        Import_products::where('lot_id', $request->lot_id_in_weight)
+            ->where('weight_type', 'kg')
+            ->update([
+                'base_price' => $base_price_kg,
+                'real_price' => $real_price_kg,
+                // 'total_base_price' => $base_price_kg,
+                // 'total_real_price' => $real_price_kg,
+            ]);
 
         return redirect('importView')->with(['error' => 'insert_success']);
     }

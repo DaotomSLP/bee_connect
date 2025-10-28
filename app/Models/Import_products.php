@@ -28,11 +28,11 @@ class Import_products extends Model
         'weight',
         'weight_type',
         'base_price',
-        'total_base_price',
+        // 'total_base_price',
         'real_price',
-        'total_real_price',
+        // 'total_real_price',
         'sale_price',
-        'total_sale_price',
+        // 'total_sale_price',
         'status',
         'lot_id'
     ];

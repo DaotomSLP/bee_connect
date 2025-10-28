@@ -33,7 +33,6 @@
         @page {
             margin: 20px;
         }
-
     </style>
 </head>
 
@@ -59,10 +58,12 @@
         @foreach ($items as $item)
             <tr>
                 <td>{{ $item->code }}</td>
-                <td>{{ $item->weight_branch ? $item->weight_branch : $item->weight_branch }} {{ $item->weight_type == 'm' ? 'm' : 'kg' }}</td>
+                <td>{{ $item->weight_branch ? $item->weight_branch : $item->weight_branch }}
+                    {{ $item->weight_type == 'm' ? 'm' : 'kg' }}</td>
                 <td>{{ number_format($item->sale_price) }}</td>
                 <td>{{ number_format($item->shipping_fee ? $item->shipping_fee : 0) }}</td>
-                <td>{{ number_format($item->total_sale_price + ($item->shipping_fee ? $item->shipping_fee : 0)) }}</td>
+                <td>{{ number_format($item->sale_price * ($item->weight_branch ?? $item->weight) + ($item->shipping_fee ? $item->shipping_fee : 0)) }}
+                </td>
             </tr>
         @endforeach
     </table>

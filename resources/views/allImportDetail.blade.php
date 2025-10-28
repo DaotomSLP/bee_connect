@@ -69,7 +69,7 @@
                                             <input type="hidden" id="lot_item_id_in_weight" name="lot_item_id_in_weight">
                                             <input type="hidden" id="lot_id_in_weight" name="lot_id_in_weight">
                                             <input type="hidden" id="real_price_in_weight" name="real_price_in_weight">
-                                            <input type="hidden" id="base_price_in_weight" name="base_price_in_weight">
+                                            {{-- <input type="hidden" id="base_price_in_weight" name="base_price_in_weight"> --}}
                                             <input type="hidden" id="base_price_in_weight" name="old_weight_in_weight">
                                             <input type="number" id="weight_in_weight" step="0.001" class="form-control"
                                                 name="weight_in_weight" required>
@@ -106,7 +106,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ສະຖານະ</label>
-                                            <select class="form-control form-control-sm" id="select_status" name="status">
+                                            <select class="form-control form-control-sm" id="select_status"
+                                                name="status">
                                                 <option value="">
                                                     ເລືອກ
                                                 </option>
@@ -229,7 +230,7 @@
                                                     {{ number_format($import_product->total_real_price) }}
                                                 </td> --}}
                                                 <td>
-                                                    {{ number_format($import_product->total_sale_price) }}
+                                                    {{ number_format($import_product->sale_price * ($import_product->weight_branch ?? $import_product->weight)) }}
                                                 </td>
                                                 <td>
                                                     @if ($import_product->status != 'success' && Auth::user()->is_owner == 1)
@@ -291,7 +292,6 @@
                                     href="{{ Request::route()->getName() }}?id={{ Request::input('id') }}&status={{ Request::input('status') }}&receive_branch={{ Request::input('receive_branch') }}&send_date={{ Request::input('send_date') }}&page={{ $i }}">{{ $i }}</a>
                             </li>
                         @else
-
                         @endif
                     @endfor
                     @for ($j = $pagination['offset'] + 5; $j <= $pagination['offset'] + 20 && $j <= $pagination['offsets']; $j++)
@@ -332,7 +332,7 @@
         function change_weight(id, lot_id, base_price, real_price, old_weight) {
             $("#lot_item_id_in_weight").val(id);
             $("#lot_id_in_weight").val(lot_id);
-            $("#base_price_in_weight").val(base_price);
+            // $("#base_price_in_weight").val(base_price);
             $("#real_price_in_weight").val(real_price);
             $("#old_weight_in_weight").val(old_weight);
             $("#weight_in_weight").val(old_weight);

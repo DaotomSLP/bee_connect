@@ -89,7 +89,7 @@
             @foreach ($import_products as $key => $import_product)
                 @php
                     // Calculation for the sum
-                    $sumTotalPrice += $import_product->total_real_price;
+                    $sumTotalPrice += $import_product->real_price * $import_product->weight;
                     $sumTotalSize += $import_product->weight;
                 @endphp
                 <tr>
@@ -98,7 +98,9 @@
                     <td class="text-center">{{ $import_product->weight }}</td>
                     <td class="text-center">{{ $import_product->weight_type }}</td>
                     <td class="text-right">{{ number_format($import_product->real_price) }} ກີບ</td>
-                    <td class="text-right">{{ number_format($import_product->total_real_price) }} ກີບ</td>
+                    <td class="text-right">{{ number_format($import_product->real_price * $import_product->weight) }}
+                        ກີບ
+                    </td>
                 </tr>
             @endforeach
             <!-- Summation Row for Income -->

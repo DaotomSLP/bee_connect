@@ -337,7 +337,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    {{ number_format($import_product->total_sale_price) }}
+                                                    {{ number_format($import_product->sale_price * ($import_product->weight_branch ?? $import_product->weight)) }}
                                                 </td>
                                                 <td>
                                                     @if ($import_product->status != 'success' && Auth::user()->is_owner == 1)
