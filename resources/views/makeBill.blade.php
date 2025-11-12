@@ -213,7 +213,7 @@
                                                 @php
                                                     $sum_weight_kg += $normal_import_product->weight;
                                                     $grand_total +=
-                                                        $normal_import_product->lot_base_price_kg *
+                                                        $normal_import_product->lot_real_price_kg *
                                                         $normal_import_product->weight;
                                                 @endphp
                                                 <tr>
@@ -226,10 +226,10 @@
                                                     <td class="text-center">{{ $normal_import_product->weight }} kg</td>
                                                     <td class="text-center">-</td>
                                                     <td class="text-right">
-                                                        {{ number_format($normal_import_product->lot_base_price_kg) }}
+                                                        {{ number_format($normal_import_product->lot_real_price_kg) }}
                                                         ກີບ/kg</td>
                                                     <td class="text-right">
-                                                        {{ number_format($normal_import_product->lot_base_price_kg * $normal_import_product->weight) }}
+                                                        {{ number_format($normal_import_product->lot_real_price_kg * $normal_import_product->weight) }}
                                                         ກີບ
                                                     </td>
                                                 </tr>

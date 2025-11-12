@@ -483,19 +483,19 @@
                                                         </a>
                                                     @endif
                                                     @if (Auth::user()->is_admin == 1)
-                                                        <a href="/importpdf/{{ $lot->id }}" target="_blank">
+                                                        {{-- <a href="/importpdf/{{ $lot->id }}" target="_blank">
                                                             <i class="material-icons">print</i>
-                                                        </a>
+                                                        </a> --}}
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if ($lot->payment_status == 'not_paid' && Auth::user()->is_admin == 1)
                                                         {{-- <a href="/paidLot?id={{ $lot->id }}"> --}}
-                                                        <a type="button" class="btn btn-sm btn-info text-white"
+                                                        {{-- <a type="button" class="btn btn-sm btn-info text-white"
                                                             onclick="paidLot({{ $lot->id }})" data-toggle="modal"
                                                             data-target="#paid_lot_modal">
                                                             ຈ່າຍເງິນ
-                                                        </a>
+                                                        </a> --}}
                                                     @endif
                                                 </td>
                                                 {{-- <td>
