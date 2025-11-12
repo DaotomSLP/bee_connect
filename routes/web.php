@@ -9,6 +9,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\TestDesignController;
+use App\Http\Controllers\DeliveryRoundController;
 
 require('th_routes.php');
 require('ch_routes.php');
@@ -112,10 +113,15 @@ Route::post('/updateAdmin', [UsersController::class, 'updateAdmin'])->middleware
 
 Route::get('/api/import_products/{id}', [ImportProductApi::class, 'import_products'])->name('import_products_api');
 
+Route::get('/delivery_rounds', [DeliveryRoundController::class, 'index'])->middleware('auth')->name('delivery_rounds');
 
+Route::post('/addDeliveryRound', [DeliveryRoundController::class, 'insert'])->middleware('auth')->name('addDeliveryRound');
+
+Route::get('/editDeliveryRound/{id}', [DeliveryRoundController::class, 'edit'])->middleware('auth')->name('editDeliveryRound');
+
+Route::post('/updateDeliveryRound', [DeliveryRoundController::class, 'update'])->middleware('auth')->name('updateDeliveryRound');
 
 //test design
 Route::get('/testdesign/home', [TestDesignController::class, 'index'])->name('index');
 
 Route::get('/testdesign/detail', [TestDesignController::class, 'detail'])->name('detail');
-

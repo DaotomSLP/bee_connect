@@ -7,7 +7,7 @@
 
 
         @page {
-            margin: 40px;
+            margin: 20px;
         }
 
         body {
@@ -20,16 +20,17 @@
 
         .table {
             border-collapse: collapse;
+            border-color: #000;
             width: 100%;
-            font-size: 11pt;
             margin-bottom: 40px;
         }
 
         .table td,
         .table th {
-            border: 1px solid #ddd;
-            padding: 8px;
+            border: 1px solid #333;
+            padding: 3px;
             font-family: 'defago', sans-serif !important;
+            font-size: 9pt;
         }
 
         .table tr:nth-child(even) {
@@ -39,7 +40,6 @@
         .table th {
             padding-top: 12px;
             padding-bottom: 12px;
-            text-align: left;
             background-color: #333;
             color: white;
         }
@@ -64,21 +64,52 @@
 
 <body>
     <p style="text-align: center; font-weight: bold; font-size: 16pt;">ລາຍງານລວມລາຍຮັບ-ລາຍຈ່າຍ</p>
-    <p style="font-size: 12pt; text-align: right">ວັນທີ : {{ $date }} ຫາ {{ $to_date }}</p>
+    <p style="font-size: 12pt; text-align: right">ຖ້ຽວທີ່ {{ $delivery_round->round }} ເດືອນ {{ $delivery_round->month }}
+        ລົດວັນທີ
+        {{ $delivery_round->departure_time }}</p>
 
     <p style="font-size: 12pt; font-weight: bold; text-decoration: underline">ລາຍງານລາຍຮັບ :</p>
     <table class="table">
         <tr>
-            <th>ລ/ດ</th>
-            <th>ເລກບິນ</th>
-            <th>ຊື່ສາຂາ</th>
-            <th>ຕົ້ນທຶນ</th>
-            <th>ລວມຄ່າເຄື່ອງ</th>
-            <th>ກຳໄລ</th>
-            <th>ຄ່າຂົນສົ່ງ</th>
-            <th>ຄ່າເປົາ</th>
-            <th>ຄ່າບໍລິການອື່ນໆ</th>
-            <th>ບິນຈ່າຍເງິນ</th>
+            <th style="width: 5px">
+                ລ/ດ
+            </th>
+            <th>
+                ຊື່ສາຂາ
+            </th>
+            <th>
+                kg
+            </th>
+            <th>
+                m3
+            </th>
+            <th>
+                ຕົ້ນທຶນ
+            </th>
+            <th>
+                ລວມຄ່າເຄື່ອງ
+            </th>
+            <th>
+                ກຳໄລ
+            </th>
+            <th>
+                ຄ່າຂົນສົ່ງ
+            </th>
+            <th>
+                ຄ່າເປົາ
+            </th>
+            <th>
+                ບໍລິການອື່ນໆ
+            </th>
+            <th>
+                ລວມ
+            </th>
+            <th>
+                ບິນຈ່າຍເງິນ
+            </th>
+            <th style="width: 100px">
+                ໝາຍເຫດ
+            </th>
         </tr>
         <tbody>
             @php
@@ -87,41 +118,67 @@
                 $sumTotalFee = 0;
                 $sumTotalPack = 0;
                 $sumTotalService = 0;
+                $sumGrandTotal = 0;
+                $sumKg = 0;
+                $sumM3 = 0;
             @endphp
-            @foreach ($lots as $key => $lot)
+            @foreach ($bills as $key => $bill)
                 @php
                     // Calculation for the sum
-                    $sumTotalBase += $lot->total_base_price;
-                    $sumTotalPrice += $lot->total_price;
-                    $sumTotalFee += $lot->fee;
-                    $sumTotalPack += $lot->pack_price;
-                    $sumTotalService += $lot->service_charge;
+                    $sumTotalBase += $bill->total_base_price;
+                    $sumTotalPrice += $bill->total_price;
+                    $sumTotalFee += $bill->fee;
+                    $sumTotalPack += $bill->pack_price;
+                    $sumTotalService += $bill->service_charge;
 
                     // Calculate profit
-                    $profit = $lot->total_price - $lot->total_base_price;
+                    $profit = $bill->total_price - $bill->total_base_price;
+
+                    $total = $bill->total_price + $bill->fee + $bill->pack_price + $bill->service_charge;
+                    $sumGrandTotal += $total;
+                    $sumKg += $bill->weight_kg;
+                    $sumM3 += $bill->weight_m;
                 @endphp
-                <tr>
+                <tr class="table-body">
                     <td class="text-center">{{ $key + 1 }}</td>
-                    <td>#{{ $lot->id }}</td>
-                    <td>{{ $lot->branch_name }}</td>
-                    <td class="text-right">{{ number_format($lot->total_base_price) }} ກີບ</td>
-                    <td class="text-right">{{ number_format($lot->total_price) }} ກີບ</td>
-                    <td class="text-right">{{ number_format($profit) }} ກີບ</td>
-                    <td class="text-right">{{ number_format($lot->fee) }} ກີບ</td>
-                    <td class="text-right">{{ number_format($lot->pack_price) }} ກີບ</td>
-                    <td class="text-right">{{ number_format($lot->service_charge) }} ກີບ</td>
+                    <td>{{ $bill->branch_name }}</td>
                     <td class="text-center">
-                        @if (!empty($lot->image_base64))
-                            <img src="{{ $lot->image_base64 }}" alt="Receipt" class="receipt-image">
+                        {{ $bill->weight_kg }}kg
+                    </td>
+                    <td class="text-center">
+                        {{ $bill->weight_m }}m
+                    </td>
+                    <td class="text-right">{{ number_format($bill->total_base_price) }} ກີບ</td>
+                    <td class="text-right">{{ number_format($bill->total_price) }} ກີບ</td>
+                    <td class="text-right">{{ number_format($profit) }} ກີບ</td>
+                    <td class="text-right">{{ number_format($bill->fee) }} ກີບ</td>
+                    <td class="text-right">{{ number_format($bill->pack_price) }} ກີບ</td>
+                    <td class="text-right">{{ number_format($bill->service_charge) }} ກີບ</td>
+                    <td class="text-right">
+                        {{ number_format($total) }}
+                        ກີບ
+                    </td>
+                    <td class="text-center">
+                        @if (!empty($bill->image_base64))
+                            <img src="{{ $bill->image_base64 }}" alt="Receipt" class="receipt-image">
                         @else
                             <span style="color: #999;">-</span>
                         @endif
                     </td>
+                    <td>
+
+                    </td>
                 </tr>
             @endforeach
             <!-- Summation Row for Income -->
-            <tr>
-                <td colspan="3" style="text-align: right; font-weight: bold;">ລວມທັງໝົດ (ລາຍຮັບ)</td>
+            <tr class="grand-total">
+                <td colspan="2" style="text-align: right; font-weight: bold;">ລວມທັງໝົດ (ລາຍຮັບ)</td>
+                <td style="font-weight: bold;">
+                    {{ $sumKg }}kg
+                </td>
+                <td style="font-weight: bold;">
+                    {{ $sumM3 }}m
+                </td>
                 <td class="text-right" style="font-weight: bold;">{{ number_format($sumTotalBase) }} ກີບ</td>
                 <td class="text-right" style="font-weight: bold;">{{ number_format($sumTotalPrice) }} ກີບ</td>
                 <td class="text-right" style="font-weight: bold;">{{ number_format($sumTotalPrice - $sumTotalBase) }}
@@ -129,6 +186,8 @@
                 <td class="text-right" style="font-weight: bold;">{{ number_format($sumTotalFee) }} ກີບ</td>
                 <td class="text-right" style="font-weight: bold;">{{ number_format($sumTotalPack) }} ກີບ</td>
                 <td class="text-right" style="font-weight: bold;">{{ number_format($sumTotalService) }} ກີບ</td>
+                <td class="text-right" style="font-weight: bold;">{{ number_format($sumGrandTotal) }} ກີບ</td>
+                <td></td>
                 <td></td>
             </tr>
         </tbody>
@@ -137,7 +196,7 @@
     <p style="font-size: 12pt; font-weight: bold; text-decoration: underline">ລາຍການລາຍຈ່າຍ :</p>
     <table class="table">
         <tr>
-            <th>ລ/ດ</th>
+            <th style="width: 5px">ລ/ດ</th>
             <th>ຫົວຂໍ້</th>
             <th>ວັນທີ</th>
             <th>ຈຳນວນເງິນ</th>
@@ -150,7 +209,7 @@
                 <tr>
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $exp->detail }}</td>
-                    <td>{{ date('d-m-Y', strtotime($exp->created_at)) }}</td>
+                    <td class="text-center">{{ date('d-m-Y', strtotime($exp->created_at)) }}</td>
                     <td class="text-right">{{ number_format($exp->price) }} ກີບ</td>
                     <td>
                         @if (!empty($exp->image_base64))

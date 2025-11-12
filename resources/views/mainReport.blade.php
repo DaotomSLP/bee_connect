@@ -17,24 +17,29 @@
                         <h5>ປະຈຳວັນທີ :</h5>
                         <form method="GET" action="mainReport">
                             <div class="row">
-                                <div class="col-lg-4 col-md-4 col-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <input class="form-control" type="date" value="{{ $date_now }}"
-                                            name="date" id="date">
+                                        <label class="bmd-label-floating">ຖ້ຽວລົດ</label>
+                                        <select class="form-control" id="select_delivery_round" name="delivery_round_id"
+                                            required>
+                                            <option value="">
+                                                ເລືອກ
+                                            </option>
+                                            @foreach ($delivery_rounds as $delivery_round)
+                                                <option
+                                                    {{ Request::input('delivery_round_id') == $delivery_round->id ? 'selected' : '' }}
+                                                    value="{{ $delivery_round->id }}">
+                                                    ຖ້ຽວທີ່ {{ $delivery_round->round }} ເດືອນ
+                                                    {{ $delivery_round->month }} ລົດວັນທີ່
+                                                    {{ $delivery_round->departure_time }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
-                                <p class="h5">ຫາ</p>
-                                <div class="col-lg-4 col-md-4 col-12">
-                                    <div class="form-group">
-                                        <input class="form-control" type="date" value="{{ $to_date_now }}"
-                                            name="to_date" id="to_date">
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-md-3 col-12">
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary pull-right px-5">ຄົ້ນຫາ</button>
-                                    </div>
-                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary px-5">ຄົ້ນຫາ</button>
                             </div>
                         </form>
                     </div>
@@ -55,10 +60,13 @@
                                                 ລ/ດ
                                             </th>
                                             <th>
-                                                ເລກບິນ
+                                                ຊື່ສາຂາ
                                             </th>
                                             <th>
-                                                ຊື່ສາຂາ
+                                                kg
+                                            </th>
+                                            <th>
+                                                m3
                                             </th>
                                             <th>
                                                 ຕົ້ນທຶນ
@@ -79,6 +87,9 @@
                                                 ຄ່າບໍລິການອື່ນໆ
                                             </th>
                                             <th>
+                                                ລວມ
+                                            </th>
+                                            <th>
                                                 ບິນຈ່າຍເງິນ
                                             </th>
                                         </thead>
@@ -90,53 +101,71 @@
                                                 $sumTotalFee = 0;
                                                 $sumTotalPack = 0;
                                                 $sumTotalService = 0;
+                                                $sumGrandTotal = 0;
+                                                $sumKg = 0;
+                                                $sumM3 = 0;
                                             @endphp
-                                            @foreach ($lots as $key => $lot)
+                                            @foreach ($bills as $key => $bill)
                                                 @php
-                                                    $sumTotalBase += $lot->total_base_price;
-                                                    $sumTotalPrice += $lot->total_price;
-                                                    $sumTotalProfit += $lot->total_price - $lot->total_base_price;
-                                                    $sumTotalFee += $lot->fee;
-                                                    $sumTotalPack += $lot->pack_price;
-                                                    $sumTotalService += $lot->service_charge;
+                                                    $sumTotalBase += $bill->total_base_price;
+                                                    $sumTotalPrice += $bill->total_price;
+                                                    $sumTotalProfit += $bill->total_price - $bill->total_base_price;
+                                                    $sumTotalFee += $bill->fee;
+                                                    $sumTotalPack += $bill->pack_price;
+                                                    $sumTotalService += $bill->service_charge;
+                                                    $total =
+                                                        $bill->total_price +
+                                                        $bill->fee +
+                                                        $bill->pack_price +
+                                                        $bill->service_charge;
+                                                    $sumGrandTotal += $total;
+                                                    $sumKg += $bill->weight_kg;
+                                                    $sumM3 += $bill->weight_m;
                                                 @endphp
                                                 <tr>
                                                     <td>
                                                         {{ $key + 1 }}
                                                     </td>
                                                     <td>
-                                                        #{{ $lot->id }}
+                                                        {{ $bill->branch_name }}
                                                     </td>
                                                     <td>
-                                                        {{ $lot->branch_name }}
+                                                        {{ $bill->weight_kg }}kg
                                                     </td>
                                                     <td>
-                                                        {{ number_format($lot->total_base_price) }}
+                                                        {{ $bill->weight_m }}m
+                                                    </td>
+                                                    <td>
+                                                        {{ number_format($bill->total_base_price) }}
                                                         ກີບ
                                                     </td>
                                                     <td>
-                                                        {{ number_format($lot->total_price) }}
+                                                        {{ number_format($bill->total_price) }}
                                                         ກີບ
                                                     </td>
                                                     <td>
-                                                        {{ number_format($lot->total_price - $lot->total_base_price) }}
+                                                        {{ number_format($bill->total_price - $bill->total_base_price) }}
                                                         ກີບ
                                                     </td>
                                                     <td>
-                                                        {{ number_format($lot->fee) }}
+                                                        {{ number_format($bill->fee) }}
                                                         ກີບ
                                                     </td>
                                                     <td>
-                                                        {{ number_format($lot->pack_price) }}
+                                                        {{ number_format($bill->pack_price) }}
                                                         ກີບ
                                                     </td>
                                                     <td>
-                                                        {{ number_format($lot->service_charge) }}
+                                                        {{ number_format($bill->service_charge) }}
                                                         ກີບ
                                                     </td>
                                                     <td>
-                                                        @if ($lot->receipt_image)
-                                                            <img src="{{ '/img/receipts/' . $lot->receipt_image }}"
+                                                        {{ number_format($total) }}
+                                                        ກີບ
+                                                    </td>
+                                                    <td>
+                                                        @if ($bill->receipt_image)
+                                                            <img src="{{ '/img/receipts/' . $bill->receipt_image }}"
                                                                 alt="Receipt Image"
                                                                 style="max-width: 100px; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.2);">
                                                         @endif
@@ -144,9 +173,19 @@
                                                 </tr>
                                             @endforeach
                                             <tr>
-                                                <td colspan="3">
+                                                <td colspan="2">
                                                     <p class="text-center h6 font-weight-bold">
                                                         ລວມ :
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p class="h6 font-weight-bold">
+                                                        {{ $sumKg }}kg
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p class="h6 font-weight-bold">
+                                                        {{ $sumM3 }}m
                                                     </p>
                                                 </td>
                                                 <td>
@@ -182,6 +221,12 @@
                                                 <td>
                                                     <p class="h6 font-weight-bold">
                                                         {{ number_format($sumTotalService) }}
+                                                        ກີບ
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p class="h6 font-weight-bold">
+                                                        {{ number_format($sumGrandTotal) }}
                                                         ກີບ
                                                     </p>
                                                 </td>
@@ -323,7 +368,7 @@
                         <div class="x_panel">
                             <div class="x_content">
                                 <div>
-                                    <a href="{{ url('mainReportPrint?date=' . $date_now . '&to_date=' . $to_date_now) }}"
+                                    <a href="{{ url('mainReportPrint?delivery_round_id=' . $delivery_round_id) }}"
                                         target="_blank" class="btn btn-primary text-white px-5">
                                         ພິມລາຍງານ
                                     </a>

@@ -98,6 +98,17 @@ Route::post('/addWithDrawCh', [ImportProductsController::class, 'addWithDrawCh']
 
 Route::get('/tracking',[HomeController::class,'tracking'])->name('tracking');
 
+Route::get('/mainReportPrint', [ImportProductsController::class, 'mainReportPrint'])->middleware('auth')->name('mainReportPrint');
+
+Route::post('/insertBill', [ImportProductsController::class, 'insertBill'])->middleware('auth')->name('insertBill');
+
+Route::get('/makeBill', [ImportProductsController::class, 'makeBill'])->middleware('auth')->name('makeBill');
+
+Route::get('/printBill', [ImportProductsController::class, 'printBill'])->middleware('auth')->name('printBill');
+
+Route::post('/payBill', [ImportProductsController::class, 'payBill'])->middleware('auth')->name('payBill');
+
 Route::get('/mainReport', [ImportProductsController::class, 'mainReport'])->middleware('auth')->name('mainReport');
 
-Route::get('/mainReportPrint', [ImportProductsController::class, 'mainReportPrint'])->middleware('auth')->name('mainReportPrint');
+
+

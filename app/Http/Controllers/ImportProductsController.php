@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bills;
 use App\Models\Branchs;
+use App\Models\Delivery_rounds;
 use App\Models\Districts;
 use App\Models\Expenditure;
 use App\Models\Import_products;
@@ -32,6 +34,7 @@ class ImportProductsController extends Controller
         $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)
             ->where('branchs.enabled', '1')
             ->get();
+        $delivery_rounds = Delivery_rounds::orderBy('id', 'desc')->get();
 
         // $lots = Lots::all();
 
@@ -41,7 +44,7 @@ class ImportProductsController extends Controller
         // }
 
         if (Auth::user()->is_admin == 1) {
-            return view('import', compact('provinces', 'districts', 'branchs'));
+            return view('import', compact('provinces', 'districts', 'branchs', 'delivery_rounds'));
         } else {
             return view('importForUser', compact('provinces', 'districts', 'branchs'));
         }
@@ -440,6 +443,7 @@ class ImportProductsController extends Controller
             $lot->money_rate = $request->money_rate;
             $lot->real_price_m_yuan = $request->real_price_m_yuan;
             $lot->parcel_size = $request->parcel_size;
+            $lot->delivery_round_id = $request->delivery_round_id;
 
             if ($lot->save()) {
                 $count = 0;
@@ -1397,71 +1401,33 @@ class ImportProductsController extends Controller
         return redirect('withdraw_ch');
     }
 
-    public function mainReport(Request $request)
-    {
-        $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
-
-        if ($request->date != '') {
-            $date = $request->date;
-            $to_date = $request->to_date;
-            $date_now = date('Y-m-d', strtotime($request->date));
-            $to_date_now = date('Y-m-d', strtotime($request->to_date));
-        } else {
-            $date = [Carbon::today()->toDateString()];
-            $to_date = [Carbon::today()->toDateString()];
-            $date_now = date('Y-m-d', strtotime(Carbon::now()));
-        }
-
-        $lot_query = DB::table('lot')
-            ->select(DB::raw('branchs.branch_name as branch_name, income_ch.receipt_image, lot.*'))
-            ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
-            ->leftJoin('income_ch', 'lot.id', 'income_ch.lot_id')
-            ->whereBetween('lot.created_at', [$date, $to_date])
-            ->orderBy('lot.id', 'desc');
-        $lots = $lot_query->get();
-
-        $expenditure_query = Expenditure::query();
-        $expenditure_query->select('expenditure.*', 'users.name')
-            ->join('users', 'expenditure.user_id', 'users.id')
-            ->whereBetween('expenditure.created_at', [$date, $to_date])
-            ->orderBy('expenditure.id', 'desc');
-        $expenditures = $expenditure_query->get();
-        // print_r($import_product_count);
-        // exit;
-
-        return view('mainReport', compact('date_now', 'lots', 'to_date_now', 'expenditures'));
-    }
-
     public function mainReportPrint(Request $request)
     {
         // Set higher limits for large reports
         ini_set('max_execution_time', '300');
         ini_set('memory_limit', '1024M');
 
-        // --- 1. Define Date Range ---
-        if ($request->date && $request->to_date) {
-            $date = date('Y-m-d', strtotime($request->date));
-            $to_date = date('Y-m-d', strtotime($request->to_date));
-        } else {
-            $date = Carbon::today()->toDateString();
-            $to_date = Carbon::today()->toDateString();
-        }
+        $delivery_round_id = $request->delivery_round_id;
 
-        // --- 2. Fetch Lot Data (Income) ---
-        $lots = DB::table('lot')
-            ->select('lot.*', 'branchs.branch_name', 'income_ch.receipt_image')
-            ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
-            ->leftJoin('income_ch', 'lot.id', 'income_ch.lot_id')
-            ->whereBetween('lot.created_at', [$date, $to_date])
-            ->orderBy('lot.id', 'desc')
-            ->get();
+        $bill_query = DB::table('bills')
+            ->select(DB::raw('branchs.branch_name as branch_name, income_ch.receipt_image,
+                SUM(lot.total_base_price) AS total_base_price, SUM(lot.total_price) AS total_price,
+                SUM(lot.fee) AS fee, SUM(lot.pack_price) AS pack_price, SUM(lot.service_charge) AS service_charge,
+                SUM(lot.weight_kg) AS weight_kg, SUM(lot.weight_m) AS weight_m'))
+            ->join('branchs', 'bills.branch_id', 'branchs.id')
+            ->leftJoin('lot', 'bills.id', 'lot.bill_id')
+            ->leftJoin('income_ch', 'bills.id', 'income_ch.bill_id')
+            ->where('lot.delivery_round_id', $delivery_round_id)
+            ->groupBy('branch_name')
+            ->groupBy('income_ch.receipt_image')
+            ->orderBy('bills.id', 'desc');
+        $bills = $bill_query->get();
 
-        // --- 3. Process Images and Encode for PDF ---
-        $lots = $lots->map(function ($lot) {
-            $lot->image_base64 = null;
+        $bills = $bills->map(function ($bill) {
+            $bill->image_base64 = null;
 
-            if (!empty($lot->receipt_image)) {
-                $filePath = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $lot->receipt_image;
+            if (!empty($bill->receipt_image)) {
+                $filePath = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $bill->receipt_image;
 
                 if (file_exists($filePath)) {
                     try {
@@ -1472,24 +1438,26 @@ class ImportProductsController extends Controller
                         $mimeType = mime_content_type($filePath);
 
                         // Use Base64 Data URI for images
-                        $lot->image_base64 = 'data:' . $mimeType . ';base64,' . $base64;
+                        $bill->image_base64 = 'data:' . $mimeType . ';base64,' . $base64;
                     } catch (\Exception $e) {
-                        Log::error('Image processing error for lot ID ' . $lot->id . ': ' . $e->getMessage());
+                        Log::error('Image processing error for lot ID ' . $bill->id . ': ' . $e->getMessage());
                     }
                 }
             }
 
-            return $lot;
+            return $bill;
         });
 
-        // --- 4. Fetch Expenditure Data ---
-        $expenditures = Expenditure::select('expenditure.*', 'users.name')
+        $expenditure_query = Expenditure::query();
+        $expenditure_query->select('expenditure.*', 'users.name')
             ->join('users', 'expenditure.user_id', 'users.id')
-            ->whereBetween('expenditure.created_at', [$date, $to_date])
-            ->orderBy('expenditure.id', 'desc')
-            ->get();
+            ->where('expenditure.delivery_round_id', $delivery_round_id)
+            ->orderBy('expenditure.id', 'desc');
+        $expenditures = $expenditure_query->get();
 
-        // --- 3. Process Images and Encode for PDF ---
+        $delivery_round = Delivery_rounds::where('id', $delivery_round_id)
+            ->first();
+
         $expenditures = $expenditures->map(function ($expenditure) {
             $expenditure->image_base64 = null;
 
@@ -1515,11 +1483,9 @@ class ImportProductsController extends Controller
             return $expenditure;
         });
 
-        // --- 5. Prepare Data for View ---
         $data = [
-            'date' => $date,
-            'to_date' => $to_date,
-            'lots' => $lots,
+            'delivery_round' => $delivery_round,
+            'bills' => $bills,
             'expenditures' => $expenditures,
         ];
 
@@ -1545,5 +1511,328 @@ class ImportProductsController extends Controller
         );
 
         return $pdf->stream('main_report.pdf');
+    }
+
+    public function mainReport(Request $request)
+    {
+        $delivery_round_id = null;
+        $bills = collect();
+        $expenditures = collect();
+
+        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)
+            ->where('branchs.enabled', '1')
+            ->get();
+
+        $delivery_rounds = Delivery_rounds::orderBy('id', 'desc')->get();
+
+        if ($request->delivery_round_id != '') {
+            $delivery_round_id = $request->delivery_round_id;
+
+            $bill_query = DB::table('bills')
+                ->select(DB::raw('branchs.branch_name as branch_name, income_ch.receipt_image,
+                SUM(lot.total_base_price) AS total_base_price, SUM(lot.total_price) AS total_price,
+                SUM(lot.fee) AS fee, SUM(lot.pack_price) AS pack_price, SUM(lot.service_charge) AS service_charge,
+                SUM(lot.weight_kg) AS weight_kg, SUM(lot.weight_m) AS weight_m'))
+                ->join('branchs', 'bills.branch_id', 'branchs.id')
+                ->leftJoin('lot', 'bills.id', 'lot.bill_id')
+                ->leftJoin('income_ch', 'bills.id', 'income_ch.bill_id')
+                ->where('lot.delivery_round_id', $delivery_round_id)
+                ->groupBy('branch_name')
+                ->groupBy('income_ch.receipt_image')
+                ->orderBy('bills.id', 'desc');
+            $bills = $bill_query->get();
+
+            $expenditure_query = Expenditure::query();
+            $expenditure_query->select('expenditure.*', 'users.name')
+                ->join('users', 'expenditure.user_id', 'users.id')
+                ->where('expenditure.delivery_round_id', $delivery_round_id)
+                ->orderBy('expenditure.id', 'desc');
+            $expenditures = $expenditure_query->get();
+        }
+
+        return view('mainReport', compact('branchs', 'delivery_rounds', 'delivery_round_id', 'bills', 'expenditures'));
+    }
+
+    public function insertBill(Request $request)
+    {
+        // Validation
+        $request->validate([
+            'lot_ids' => 'required|array|min:1',
+            'lot_ids.*' => 'exists:lot,id', // ถ้าชื่อตารางจริงเป็น 'lots' ให้เปลี่ยนเป็น exists:lots,id
+            'delivery_round' => 'required',
+            'month' => 'required',
+            'departure_time' => 'required',
+            'branch_id' => 'required|exists:branchs,id',
+        ], [
+            'lot_ids.required' => 'กรุณาเลือกอย่างน้อย 1 ล็อต',
+            'lot_ids.min' => 'กรุณาเลือกอย่างน้อย 1 ล็อต',
+            'lot_ids.*.exists' => 'รายการที่เลือกไม่ถูกต้อง',
+            'branch_id.exists' => 'สาขาที่เลือกไม่ถูกต้อง',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $bill = new Bills();
+            $bill->delivery_round = $request->delivery_round;
+            $bill->month = $request->month;
+            $bill->departure_time = $request->departure_time;
+            $bill->branch_id = $request->branch_id;
+
+            $bill->save();
+
+            // อัปเดตล็อตทั้งหมด
+            Lots::whereIn('id', $request->lot_ids)->update(['bill_id' => $bill->id]);
+
+            DB::commit();
+
+            return redirect('bills')->with('error', 'insert_success');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('insertBill error: ' . $e->getMessage());
+            return redirect('bills')->with('error', 'not_insert');
+        }
+    }
+
+    public function makeBill(Request $request)
+    {
+        if (Auth::user()->is_admin != 1) {
+            return redirect('access_denied');
+        }
+
+        $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)
+            ->where('branchs.enabled', '1')
+            ->get();
+
+        $delivery_rounds = Delivery_rounds::orderBy('id', 'desc')->get();
+
+        $large_import_products = collect();
+        $normal_import_products = collect();
+        $sum_delivery_fee = null;
+        $sum_pack_fee = null;
+        $sum_service_charge = null;
+        $receive_branch_id = null;
+        $delivery_round_id = null;
+        $bill = null;
+
+        if ($request->receive_branch_id != '' && $request->delivery_round_id != '') {
+            $receive_branch_id = $request->receive_branch_id;
+            $delivery_round_id = $request->delivery_round_id;
+            // สร้าง query พื้นฐานร่วมกัน
+            $baseQuery = Import_products::query()
+                ->join('lot', 'import_products.lot_id', '=', 'lot.id');
+
+            $baseQueryLot = Lots::query();
+
+            $baseQuery->where('lot.receiver_branch_id', $request->receive_branch_id);
+            $baseQueryLot->where('lot.receiver_branch_id', $request->receive_branch_id);
+
+            $baseQuery->where('lot.delivery_round_id', $request->delivery_round_id);
+            $baseQueryLot->where('lot.delivery_round_id', $request->delivery_round_id);
+
+            // ดึง large
+            $large_import_products = (clone $baseQuery)
+                ->where('lot.parcel_size', 'large')
+                ->select('import_products.*')
+                ->orderBy('import_products.id', 'desc')
+                ->get();
+
+            // ดึง normal แบบ SUM weight
+            $normal_import_products = (clone $baseQueryLot)
+                ->where('lot.parcel_size', 'normal')
+                ->selectRaw("COALESCE(SUM(lot.weight_kg), 0) as weight, lot_base_price_kg, lot_real_price_kg")
+                ->groupBy('lot_base_price_kg')
+                ->groupBy('lot_real_price_kg')
+                ->get();
+
+            $sum_delivery_fee = (clone $baseQueryLot)
+                ->selectRaw("COALESCE(SUM(lot.fee), 0) as fee")
+                ->first();
+
+            $sum_pack_fee = (clone $baseQueryLot)
+                ->selectRaw("COALESCE(SUM(lot.pack_price), 0) as pack_price")
+                ->first();
+
+            $sum_service_charge = (clone $baseQueryLot)
+                ->selectRaw("COALESCE(SUM(lot.service_charge), 0) as service_charge")
+                ->first();
+
+            $bill = Bills::where('branch_id', $request->receive_branch_id)
+                ->where('delivery_round_id', $request->delivery_round_id)
+                ->first();
+        }
+
+        return view('makeBill', compact(
+            'branchs',
+            'delivery_rounds',
+            'large_import_products',
+            'normal_import_products',
+            'sum_delivery_fee',
+            'sum_pack_fee',
+            'sum_service_charge',
+            'receive_branch_id',
+            'delivery_round_id',
+            'bill'
+        ));
+    }
+
+    public function printBill(Request $request)
+    {
+        if (Auth::user()->is_admin != 1) {
+            return redirect('access_denied');
+        }
+
+        if ($request->receive_branch_id === '' || $request->delivery_round_id === '') {
+            return redirect('makeBill');
+        } else {
+            $branch = Branchs::where('id', $request->receive_branch_id)
+                ->where('branchs.enabled', '1')
+                ->first();
+
+            $delivery_round = Delivery_rounds::where('id', $request->delivery_round_id)
+                ->first();
+
+            // print_r($delivery_round);
+
+            // สร้าง query พื้นฐานร่วมกัน
+            $baseQuery = Import_products::query()
+                ->join('lot', 'import_products.lot_id', '=', 'lot.id');
+
+            $baseQueryLot = Lots::query();
+
+            $baseQuery->where('lot.receiver_branch_id', $request->receive_branch_id);
+            $baseQueryLot->where('lot.receiver_branch_id', $request->receive_branch_id);
+
+            $baseQuery->where('lot.delivery_round_id', $request->delivery_round_id);
+            $baseQueryLot->where('lot.delivery_round_id', $request->delivery_round_id);
+
+            // ดึง large
+            $large_import_products = (clone $baseQuery)
+                ->where('lot.parcel_size', 'large')
+                ->select('import_products.*')
+                ->orderBy('import_products.id', 'desc')
+                ->get();
+
+            // ดึง normal แบบ SUM weight
+            $normal_import_products = (clone $baseQueryLot)
+                ->where('lot.parcel_size', 'normal')
+                ->selectRaw("COALESCE(SUM(lot.weight_kg), 0) as weight, lot_base_price_kg, lot_real_price_kg")
+                ->groupBy('lot_base_price_kg')
+                ->groupBy('lot_real_price_kg')
+                ->get();
+
+            $sum_delivery_fee = (clone $baseQueryLot)
+                ->selectRaw("COALESCE(SUM(lot.fee), 0) as fee")
+                ->first();
+
+            $sum_pack_fee = (clone $baseQueryLot)
+                ->selectRaw("COALESCE(SUM(lot.pack_price), 0) as pack_price")
+                ->first();
+
+            $sum_service_charge = (clone $baseQueryLot)
+                ->selectRaw("COALESCE(SUM(lot.service_charge), 0) as service_charge")
+                ->first();
+
+            $data = [
+                'branch' => $branch,
+                'delivery_round' => $delivery_round,
+                'large_import_products' => $large_import_products,
+                'normal_import_products' => $normal_import_products,
+                'sum_delivery_fee' => $sum_delivery_fee,
+                'sum_pack_fee' => $sum_pack_fee,
+                'sum_service_charge' => $sum_service_charge,
+            ];
+
+            $pdf = PDF::loadView(
+                'pdf.printBill',
+                $data,
+                [],
+                [
+                    'format' => 'A4',
+                    // 'orientation' => 'landscape',
+                    'custom_font_dir' => base_path('resources/fonts/'),
+                    'custom_font_data' => [
+                        'defago' => [ // must be lowercase and snake_case
+                            'R'  => 'defago-noto-sans-lao.ttf',    // regular font
+                            'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+                        ]
+                        // ...add as many as you want.
+                    ]
+                ]
+            );
+
+            return $pdf->stream('document.pdf');
+        }
+    }
+
+    public function payBill(Request $request)
+    {
+        if (Auth::user()->is_admin != 1) {
+            return redirect('access_denied');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $receiptPath = null;
+            if ($request->hasFile('receipt')) {
+                $file = $request->file('receipt');
+
+                // ตรวจสอบว่าเป็นรูปภาพ
+                $request->validate([
+                    'receipt' => 'image|mimes:jpeg,png,jpg|max:5120', // 5MB
+                ]);
+
+                $fileName = 'receipt_' . time() . '.jpg';
+                $path = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $fileName;
+
+                $image = new Image();
+                $image->load($file)
+                    ->resizeToWidth(300) // ปรับขนาดตามความกว้าง
+                    ->save($path);
+
+                $receiptPath = $fileName;
+            }
+
+            $bill = new Bills();
+            $bill->delivery_round_id = $request->delivery_round_id;
+            $bill->branch_id = $request->branch_id;
+            $bill->save();
+            Lots::where('receiver_branch_id', $request->branch_id)
+                ->where('delivery_round_id', $request->delivery_round_id)
+                ->update([
+                    'payment_status' => 'paid',
+                    'bill_id' => $bill->id
+                ]);
+
+            $sum_price = Lots::where('id', $request->id)->sum('total_main_price')
+                - Lots::where('id', $request->id)->sum('total_base_price');
+
+            $income_ch = new IncomeCh();
+            $income_ch->price = $sum_price;
+            $income_ch->bill_id = $bill->id;
+            if ($receiptPath) {
+                $income_ch->receipt_image = $receiptPath;
+            }
+            $income_ch->save();
+
+            DB::commit();
+
+            return redirect()->back()->with('error', 'insert_success');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            // ถ้ามีรูปถูกสร้างแล้วแต่ไม่สำเร็จ — ลบไฟล์ทิ้ง
+            if (!empty($receiptFileName) && file_exists(public_path('img/receipts/' . $receiptFileName))) {
+                unlink(public_path('img/receipts/' . $receiptFileName));
+            }
+
+            \Log::error('payBill error: ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'delivery_round_id' => $request->delivery_round_id,
+                'branch_id' => $request->branch_id,
+            ]);
+
+            return redirect()->back()->with('error', 'not_insert');
+        }
     }
 }

@@ -5,27 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class IncomeCh extends Model
+class Delivery_rounds extends Model
 {
     use HasFactory;
-
-
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'income_ch';
+    protected $table = 'delivery_rounds';
 
     protected $fillable = [
         'id',
         'created_at',
         'updated_at',
-        'price',
-        'receipt_image',
-        'lot_id',
-        'bill_id',
+        'round',
+        'month',
+        'departure_time'
     ];
 
     /**

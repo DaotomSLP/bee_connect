@@ -1,5 +1,5 @@
 {{-- in-house --}}
-<li><a><i class="fa fa-home"></i> ພາຍໃນ <span class="fa fa-chevron-down"></span></a>
+{{-- <li><a><i class="fa fa-home"></i> ພາຍໃນ <span class="fa fa-chevron-down"></span></a>
     <ul class="nav child_menu">
         <li class="{{ Request::is('send') || Request::is('send/*') ? 'current-page' : '' }}">
             <a href="/send">ການສົ່ງສິນຄ້າ</a>
@@ -9,7 +9,7 @@
             <a href="/price">ຕັ້ງຄ່າລາຄາສົ່ງ</a>
         </li>
     </ul>
-</li>
+</li> --}}
 
 {{-- china --}}
 <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ <span class="fa fa-chevron-down"></span></a>
@@ -21,12 +21,13 @@
             class="{{ Request::is('importView') || Request::is('importView/*') || Request::is('serviceChargeDetail*') || Request::is('importDetail*') ? 'current-page' : '' }}">
             <a href="/importView">ລາຍການນຳເຂົ້າສິນຄ້າ</a>
         </li>
-        <li
-            class="{{ Request::is('importProductTrack') || Request::is('importProductTrack/*') ? 'current-page' : '' }}">
+        <li class="{{ Request::is('importProductTrack') || Request::is('importProductTrack/*') ? 'current-page' : '' }}">
             <a href="/importProductTrack">ຕິດຕາມສິນຄ້າ</a>
         </li>
-        <li
-            class="{{ Request::is('mainReport') || Request::is('mainReport/*') ? 'current-page' : '' }}">
+        <li class="{{ Request::is('makeBill') || Request::is('makeBill/*') ? 'current-page' : '' }}">
+            <a href="/makeBill">ສ້າງບິນ</a>
+        </li>
+        <li class="{{ Request::is('mainReport') || Request::is('mainReport/*') ? 'current-page' : '' }}">
             <a href="/mainReport">ລາຍງານລາຍຮັບ-ລາຍຈ່າຍ</a>
         </li>
         <li class="{{ Request::is('dailyImport') ? 'current-page' : '' }}"><a href="/dailyImport">ລາຍງານປະຈຳວັນ</a>
@@ -50,11 +51,8 @@
 </li>
 
 {{-- Thai --}}
-<li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span class="fa fa-chevron-down"></span></a>
+{{-- <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span class="fa fa-chevron-down"></span></a>
     <ul class="nav child_menu">
-        {{-- <li class="{{ Request::is('addImportTh') || Request::is('addImportTh/*') ? 'current-page' : '' }}">
-            <a href="/addImportTh">ຮັບສິນຄ້າ(ສາງໄທ)</a>
-        </li> --}}
         <li class="{{ Request::is('importTh') || Request::is('importTh/*') ? 'current-page' : '' }}">
             <a href="/importTh">ນຳເຂົ້າສິນຄ້າ</a>
         </li>
@@ -76,11 +74,17 @@
             <a href="/withdraw_th">ຖອນເງິນ</a>
         </li>
     </ul>
-</li>
+</li> --}}
 
 {{-- setting --}}
 <li><a><i class="fa fa-desktop"></i> ຕັ້ງຄ່າລະບົບ <span class="fa fa-chevron-down"></span></a>
     <ul class="nav child_menu">
+        <li
+            {{ Request::is('delivery_rounds') || Request::is('delivery_rounds/*') || Request::is('editDeliveryRounds/*')
+                ? 'current-page'
+                : '' }}>
+            <a href="/delivery_rounds">ເພີ່ມຖ້ຽວລົດ</a>
+        </li>
         <li
             {{ Request::is('expenditure') || Request::is('expenditure/*') || Request::is('editBranch/*')
                 ? 'current-page'

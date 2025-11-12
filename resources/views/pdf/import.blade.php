@@ -106,7 +106,7 @@
             <!-- Summation Row for Income -->
             <tr>
                 <td colspan="2"></td>
-                <td class="text-center" style="font-weight: bold;">{{ number_format($sumTotalSize) }}</td>
+                <td class="text-center" style="font-weight: bold;">{{ $sumTotalSize }}</td>
                 <td colspan="2" style="text-align: right; font-weight: bold;">ລວມຄ່າເຄື່ອງ</td>
                 <td class="text-right" style="font-weight: bold;">{{ number_format($sumTotalPrice) }} ກີບ</td>
             </tr>
