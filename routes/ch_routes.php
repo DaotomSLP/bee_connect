@@ -36,7 +36,7 @@ Route::get('/importProductTrack', [ImportProductsController::class, 'importProdu
 
 Route::get('/importProductTrackForUser', [ImportProductsController::class, 'importProductTrackForUser'])->middleware('auth')->name('importProductTrackForUser');
 
-Route::get('/importpdf/{id}', [ImportProductsController::class, 'report'])->middleware('auth')->name('importreport');
+// Route::get('/importpdf/{id}', [ImportProductsController::class, 'report'])->middleware('auth')->name('importreport');
 
 Route::post('/deleteImportItem', [ImportProductsController::class, 'deleteImportItem'])->middleware('auth')->name('deleteImportItem');
 
@@ -107,6 +107,8 @@ Route::get('/makeBill', [ImportProductsController::class, 'makeBill'])->middlewa
 Route::get('/printBill', [ImportProductsController::class, 'printBill'])->middleware('auth')->name('printBill');
 
 Route::post('/payBill', [ImportProductsController::class, 'payBill'])->middleware('auth')->name('payBill');
+
+Route::post('/addReceiveImage', [ImportProductsController::class, 'addReceiveImage'])->middleware('auth')->name('addReceiveImage');
 
 Route::get('/mainReport', [ImportProductsController::class, 'mainReport'])->middleware('auth')->name('mainReport');
 

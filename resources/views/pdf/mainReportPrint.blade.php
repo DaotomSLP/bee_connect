@@ -54,7 +54,7 @@
 
         /* Style for image receipt, ensuring it doesn't break layout */
         .receipt-image {
-            max-width: 100px;
+            max-width: 80px;
             height: auto;
             display: block;
             margin: auto;
@@ -74,7 +74,7 @@
             <th style="width: 5px">
                 ລ/ດ
             </th>
-            <th>
+            <th style="width: 150px">
                 ຊື່ສາຂາ
             </th>
             <th>
@@ -104,7 +104,7 @@
             <th>
                 ລວມ
             </th>
-            <th>
+            <th style="width: 190px">
                 ບິນຈ່າຍເງິນ
             </th>
             <th style="width: 100px">
@@ -159,11 +159,13 @@
                         ກີບ
                     </td>
                     <td class="text-center">
-                        @if (!empty($bill->image_base64))
-                            <img src="{{ $bill->image_base64 }}" alt="Receipt" class="receipt-image">
-                        @else
-                            <span style="color: #999;">-</span>
-                        @endif
+                        @foreach ($bill->receipt_images as $receipt_image)
+                            @if (!empty($receipt_image))
+                                <img src="{{ public_path('img/receipts/'.$receipt_image) }}" alt="Receipt" class="receipt-image">
+                            @else
+                                <span style="color: #999;">-</span>
+                            @endif
+                        @endforeach
                     </td>
                     <td>
 
@@ -212,8 +214,8 @@
                     <td class="text-center">{{ date('d-m-Y', strtotime($exp->created_at)) }}</td>
                     <td class="text-right">{{ number_format($exp->price) }} ກີບ</td>
                     <td>
-                        @if (!empty($exp->image_base64))
-                            <img src="{{ $exp->image_base64 }}" alt="Receipt" class="receipt-image">
+                        @if (!empty($exp->receipt_image))
+                            <img src="{{ public_path('img/receipts/'.$exp->receipt_image) }}" alt="Receipt" class="receipt-image">
                         @else
                             <span style="color: #999;">-</span>
                         @endif

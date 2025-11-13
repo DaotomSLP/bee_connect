@@ -13,6 +13,7 @@ use App\Models\Lost_products;
 use App\Models\Lots;
 use App\Models\Price_imports;
 use App\Models\Provinces;
+use App\Models\Receipt_images;
 use App\Models\Service_charge;
 use App\Models\User;
 use App\Models\WithdrawCh;
@@ -671,86 +672,86 @@ class ImportProductsController extends Controller
         return view('importView', compact('branchs', 'lots', 'pagination'));
     }
 
-    public function report($id)
-    {
-        // Set higher limits for large reports
-        ini_set('max_execution_time', '300');
-        ini_set('memory_limit', '1024M');
+    // public function report($id)
+    // {
+    //     // Set higher limits for large reports
+    //     ini_set('max_execution_time', '300');
+    //     ini_set('memory_limit', '1024M');
 
-        $lot = DB::table('lot')
-            ->select('lot.*', 'branchs.branch_name')
-            ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
-            ->where('lot.id', $id)
-            ->first();
+    //     $lot = DB::table('lot')
+    //         ->select('lot.*', 'branchs.branch_name')
+    //         ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+    //         ->where('lot.id', $id)
+    //         ->first();
 
-        $service_charges = Service_charge::where('lot_id', $id)->get();
+    //     $service_charges = Service_charge::where('lot_id', $id)->get();
 
-        ini_set("pcre.backtrack_limit", "5000000");
-        ini_set("pcre.recursion_limit", "5000000");
+    //     ini_set("pcre.backtrack_limit", "5000000");
+    //     ini_set("pcre.recursion_limit", "5000000");
 
-        if ($lot->parcel_size === 'large') {
-            // --- 5. Prepare Data for View ---
+    //     if ($lot->parcel_size === 'large') {
+    //         // --- 5. Prepare Data for View ---
 
-            $import_products = DB::table('import_products')
-                ->select('import_products.*', 'branchs.branch_name')
-                ->join('lot', 'lot.id', 'import_products.lot_id')
-                ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
-                ->where('lot.id', $id)
-                ->orderBy('import_products.id', 'desc')
-                ->get();
+    //         $import_products = DB::table('import_products')
+    //             ->select('import_products.*', 'branchs.branch_name')
+    //             ->join('lot', 'lot.id', 'import_products.lot_id')
+    //             ->join('branchs', 'lot.receiver_branch_id', 'branchs.id')
+    //             ->where('lot.id', $id)
+    //             ->orderBy('import_products.id', 'desc')
+    //             ->get();
 
-            $data = [
-                'lot' => $lot,
-                'service_charges' => $service_charges,
-                'import_products' => $import_products
-            ];
+    //         $data = [
+    //             'lot' => $lot,
+    //             'service_charges' => $service_charges,
+    //             'import_products' => $import_products
+    //         ];
 
-            $pdf = PDF::loadView(
-                'pdf.import',
-                $data,
-                [],
-                [
-                    'format' => 'A4',
-                    'orientation' => 'landscape',
-                    'custom_font_dir' => base_path('resources/fonts/'),
-                    'custom_font_data' => [
-                        'defago' => [ // must be lowercase and snake_case
-                            'R'  => 'defago-noto-sans-lao.ttf',    // regular font
-                            'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
-                        ]
-                        // ...add as many as you want.
-                    ]
-                ]
-            );
+    //         $pdf = PDF::loadView(
+    //             'pdf.import',
+    //             $data,
+    //             [],
+    //             [
+    //                 'format' => 'A4',
+    //                 'orientation' => 'landscape',
+    //                 'custom_font_dir' => base_path('resources/fonts/'),
+    //                 'custom_font_data' => [
+    //                     'defago' => [ // must be lowercase and snake_case
+    //                         'R'  => 'defago-noto-sans-lao.ttf',    // regular font
+    //                         'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+    //                     ]
+    //                     // ...add as many as you want.
+    //                 ]
+    //             ]
+    //         );
 
-            return $pdf->stream('document.pdf');
-        } else {
-            $data = [
-                'lot' => $lot,
-                'service_charges' => $service_charges,
-            ];
+    //         return $pdf->stream('document.pdf');
+    //     } else {
+    //         $data = [
+    //             'lot' => $lot,
+    //             'service_charges' => $service_charges,
+    //         ];
 
-            $pdf = PDF::loadView(
-                'pdf.importKg',
-                $data,
-                [],
-                [
-                    'format' => 'A4',
-                    'orientation' => 'landscape',
-                    'custom_font_dir' => base_path('resources/fonts/'),
-                    'custom_font_data' => [
-                        'defago' => [ // must be lowercase and snake_case
-                            'R'  => 'defago-noto-sans-lao.ttf',    // regular font
-                            'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
-                        ]
-                        // ...add as many as you want.
-                    ]
-                ]
-            );
+    //         $pdf = PDF::loadView(
+    //             'pdf.importKg',
+    //             $data,
+    //             [],
+    //             [
+    //                 'format' => 'A4',
+    //                 'orientation' => 'landscape',
+    //                 'custom_font_dir' => base_path('resources/fonts/'),
+    //                 'custom_font_data' => [
+    //                     'defago' => [ // must be lowercase and snake_case
+    //                         'R'  => 'defago-noto-sans-lao.ttf',    // regular font
+    //                         'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+    //                     ]
+    //                     // ...add as many as you want.
+    //                 ]
+    //             ]
+    //         );
 
-            return $pdf->stream('document.pdf');
-        }
-    }
+    //         return $pdf->stream('document.pdf');
+    //     }
+    // }
 
     public function importDetail(Request $request)
     {
@@ -763,7 +764,6 @@ class ImportProductsController extends Controller
             ->get();
 
         $lot = Lots::join('branchs As receive', 'lot.receiver_branch_id', 'receive.id')
-            ->leftJoin('income_ch', 'lot.id', 'income_ch.lot_id')
             ->where('lot.id', $request->id)
             ->get();
 
@@ -804,7 +804,7 @@ class ImportProductsController extends Controller
             'all' => $all_import_products,
         ];
 
-        // echo ($lot);
+        // dd ($lot);
         // exit;
 
         return view('importDetail', compact('branchs', 'import_products', 'pagination', 'lot'));
@@ -1140,40 +1140,9 @@ class ImportProductsController extends Controller
             return redirect('access_denied');
         }
 
-        $receiptPath = null;
-        if ($request->hasFile('receipt')) {
-            $file = $request->file('receipt');
-
-            // ตรวจสอบว่าเป็นรูปภาพ
-            $request->validate([
-                'receipt' => 'image|mimes:jpeg,png,jpg|max:5120', // 5MB
-            ]);
-
-            $fileName = 'receipt_' . time() . '.jpg';
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $fileName;
-
-            $image = new Image();
-            $image->load($file)
-                ->resizeToWidth(300) // ปรับขนาดตามความกว้าง
-                ->save($path);
-
-            $receiptPath = $fileName;
-        }
-
         Lots::where('id', $request->id)->update([
             'payment_status' => 'paid',
         ]);
-
-        $sum_price = Lots::where('id', $request->id)->sum('total_main_price')
-            - Lots::where('id', $request->id)->sum('total_base_price');
-
-        $income_ch = new IncomeCh();
-        $income_ch->price = $sum_price;
-        $income_ch->lot_id = $request->id;
-        if ($receiptPath) {
-            $income_ch->receipt_image = $receiptPath;
-        }
-        $income_ch->save();
 
         return redirect()->back()->with(['error' => 'insert_success']);
     }
@@ -1404,49 +1373,49 @@ class ImportProductsController extends Controller
     public function mainReportPrint(Request $request)
     {
         // Set higher limits for large reports
-        ini_set('max_execution_time', '300');
-        ini_set('memory_limit', '1024M');
+        // ini_set('max_execution_time', '300');
+        // ini_set('memory_limit', '1024M');
 
         $delivery_round_id = $request->delivery_round_id;
 
+        $imagesSub = DB::table('receipt_images')
+            ->select(DB::raw('bill_id, GROUP_CONCAT(receipt_image SEPARATOR \',\') AS imgs'))
+            ->groupBy('bill_id');
+
         $bill_query = DB::table('bills')
-            ->select(DB::raw('branchs.branch_name as branch_name, income_ch.receipt_image,
-                SUM(lot.total_base_price) AS total_base_price, SUM(lot.total_price) AS total_price,
-                SUM(lot.fee) AS fee, SUM(lot.pack_price) AS pack_price, SUM(lot.service_charge) AS service_charge,
-                SUM(lot.weight_kg) AS weight_kg, SUM(lot.weight_m) AS weight_m'))
-            ->join('branchs', 'bills.branch_id', 'branchs.id')
-            ->leftJoin('lot', 'bills.id', 'lot.bill_id')
-            ->leftJoin('income_ch', 'bills.id', 'income_ch.bill_id')
+            ->select(DB::raw("
+                    bills.id AS bill_id,
+                    branchs.branch_name AS branch_name,
+                    IFNULL(images.imgs, '') AS receipt_images,
+                    SUM(lot.total_base_price) AS total_base_price,
+                    SUM(lot.total_price) AS total_price,
+                    SUM(lot.fee) AS fee,
+                    SUM(lot.pack_price) AS pack_price,
+                    SUM(lot.service_charge) AS service_charge,
+                    SUM(lot.weight_kg) AS weight_kg,
+                    SUM(lot.weight_m) AS weight_m
+                "))
+            ->join('branchs', 'bills.branch_id', '=', 'branchs.id')
+            ->leftJoin('lot', 'bills.id', '=', 'lot.bill_id')
+            ->leftJoinSub($imagesSub, 'images', function ($join) {
+                $join->on('bills.id', '=', 'images.bill_id');
+            })
             ->where('lot.delivery_round_id', $delivery_round_id)
-            ->groupBy('branch_name')
-            ->groupBy('income_ch.receipt_image')
+            ->groupBy('bills.id', 'branchs.branch_name', 'images.imgs')
             ->orderBy('bills.id', 'desc');
+
         $bills = $bill_query->get();
 
         $bills = $bills->map(function ($bill) {
-            $bill->image_base64 = null;
-
-            if (!empty($bill->receipt_image)) {
-                $filePath = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $bill->receipt_image;
-
-                if (file_exists($filePath)) {
-                    try {
-                        $imageData = file_get_contents($filePath);
-                        $base64 = base64_encode($imageData);
-
-                        // Determine MIME type
-                        $mimeType = mime_content_type($filePath);
-
-                        // Use Base64 Data URI for images
-                        $bill->image_base64 = 'data:' . $mimeType . ';base64,' . $base64;
-                    } catch (\Exception $e) {
-                        Log::error('Image processing error for lot ID ' . $bill->id . ': ' . $e->getMessage());
-                    }
-                }
-            }
-
+            // แปลง receipt_images จาก string เป็น array
+            $receiptImages = $bill->receipt_images
+                ? explode(',', $bill->receipt_images)
+                : [];
+            $bill->receipt_images = $receiptImages;
             return $bill;
         });
+
+        // dd($bills);
 
         $expenditure_query = Expenditure::query();
         $expenditure_query->select('expenditure.*', 'users.name')
@@ -1458,39 +1427,11 @@ class ImportProductsController extends Controller
         $delivery_round = Delivery_rounds::where('id', $delivery_round_id)
             ->first();
 
-        $expenditures = $expenditures->map(function ($expenditure) {
-            $expenditure->image_base64 = null;
-
-            if (!empty($expenditure->receipt_image)) {
-                $filePath = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $expenditure->receipt_image;
-
-                if (file_exists($filePath)) {
-                    try {
-                        $imageData = file_get_contents($filePath);
-                        $base64 = base64_encode($imageData);
-
-                        // Determine MIME type
-                        $mimeType = mime_content_type($filePath);
-
-                        // Use Base64 Data URI for images
-                        $expenditure->image_base64 = 'data:' . $mimeType . ';base64,' . $base64;
-                    } catch (\Exception $e) {
-                        Log::error('Image processing error for expenditure ID ' . $expenditure->id . ': ' . $e->getMessage());
-                    }
-                }
-            }
-
-            return $expenditure;
-        });
-
         $data = [
             'delivery_round' => $delivery_round,
             'bills' => $bills,
             'expenditures' => $expenditures,
         ];
-
-        ini_set("pcre.backtrack_limit", "5000000");
-        ini_set("pcre.recursion_limit", "5000000");
 
         $pdf = PDF::loadView(
             'pdf.mainReportPrint',
@@ -1528,19 +1469,39 @@ class ImportProductsController extends Controller
         if ($request->delivery_round_id != '') {
             $delivery_round_id = $request->delivery_round_id;
 
+            $imagesSub = DB::table('receipt_images')
+                ->select(DB::raw('bill_id, GROUP_CONCAT(receipt_image SEPARATOR \',\') AS imgs'))
+                ->groupBy('bill_id');
+
             $bill_query = DB::table('bills')
-                ->select(DB::raw('branchs.branch_name as branch_name, income_ch.receipt_image,
-                SUM(lot.total_base_price) AS total_base_price, SUM(lot.total_price) AS total_price,
-                SUM(lot.fee) AS fee, SUM(lot.pack_price) AS pack_price, SUM(lot.service_charge) AS service_charge,
-                SUM(lot.weight_kg) AS weight_kg, SUM(lot.weight_m) AS weight_m'))
-                ->join('branchs', 'bills.branch_id', 'branchs.id')
-                ->leftJoin('lot', 'bills.id', 'lot.bill_id')
-                ->leftJoin('income_ch', 'bills.id', 'income_ch.bill_id')
+                ->select(DB::raw("
+                    bills.id AS bill_id,
+                    branchs.branch_name AS branch_name,
+                    IFNULL(images.imgs, '') AS receipt_images,
+                    SUM(lot.total_base_price) AS total_base_price,
+                    SUM(lot.total_price) AS total_price,
+                    SUM(lot.fee) AS fee,
+                    SUM(lot.pack_price) AS pack_price,
+                    SUM(lot.service_charge) AS service_charge,
+                    SUM(lot.weight_kg) AS weight_kg,
+                    SUM(lot.weight_m) AS weight_m
+                "))
+                ->join('branchs', 'bills.branch_id', '=', 'branchs.id')
+                ->leftJoin('lot', 'bills.id', '=', 'lot.bill_id')
+                ->leftJoinSub($imagesSub, 'images', function ($join) {
+                    $join->on('bills.id', '=', 'images.bill_id');
+                })
                 ->where('lot.delivery_round_id', $delivery_round_id)
-                ->groupBy('branch_name')
-                ->groupBy('income_ch.receipt_image')
+                ->groupBy('bills.id', 'branchs.branch_name', 'images.imgs')
                 ->orderBy('bills.id', 'desc');
+
             $bills = $bill_query->get();
+
+            foreach ($bills as $bill) {
+                $bill->receipt_images = $bill->receipt_images
+                    ? explode(',', $bill->receipt_images)
+                    : [];
+            }
 
             $expenditure_query = Expenditure::query();
             $expenditure_query->select('expenditure.*', 'users.name')
@@ -1656,9 +1617,25 @@ class ImportProductsController extends Controller
                 ->selectRaw("COALESCE(SUM(lot.service_charge), 0) as service_charge")
                 ->first();
 
-            $bill = Bills::where('branch_id', $request->receive_branch_id)
-                ->where('delivery_round_id', $request->delivery_round_id)
+            $imagesSub = DB::table('receipt_images')
+                ->select(DB::raw('bill_id, GROUP_CONCAT(DISTINCT receipt_image SEPARATOR \',\') AS imgs'))
+                ->groupBy('bill_id');
+
+            $bill = Bills::select('bills.*', DB::raw("IFNULL(images.imgs, '') AS receipt_images"))
+                ->leftJoinSub($imagesSub, 'images', function ($join) {
+                    $join->on('bills.id', '=', 'images.bill_id');
+                })
+                ->where('bills.branch_id', $request->receive_branch_id)
+                ->where('bills.delivery_round_id', $request->delivery_round_id)
+                ->orderBy('bills.id', 'desc')
                 ->first();
+
+            // แปลงเป็น array (ถ้าต้องการ)
+            if ($bill) {
+                $bill->receipt_images = $bill->receipt_images !== ''
+                    ? array_map('trim', explode(',', $bill->receipt_images))
+                    : [];
+            }
         }
 
         return view('makeBill', compact(
@@ -1804,19 +1781,71 @@ class ImportProductsController extends Controller
                     'bill_id' => $bill->id
                 ]);
 
-            $sum_price = Lots::where('id', $request->id)->sum('total_main_price')
-                - Lots::where('id', $request->id)->sum('total_base_price');
-
-            $income_ch = new IncomeCh();
-            $income_ch->price = $sum_price;
-            $income_ch->bill_id = $bill->id;
+            $receipt_image = new Receipt_images();
+            $receipt_image->bill_id = $bill->id;
             if ($receiptPath) {
-                $income_ch->receipt_image = $receiptPath;
+                $receipt_image->receipt_image = $receiptPath;
             }
-            $income_ch->save();
+            $receipt_image->save();
 
             DB::commit();
 
+            return redirect()->back()->with('error', 'insert_success');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            // ถ้ามีรูปถูกสร้างแล้วแต่ไม่สำเร็จ — ลบไฟล์ทิ้ง
+            if (!empty($receiptFileName) && file_exists(public_path('img/receipts/' . $receiptFileName))) {
+                unlink(public_path('img/receipts/' . $receiptFileName));
+            }
+
+            \Log::error('payBill error: ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'delivery_round_id' => $request->delivery_round_id,
+                'branch_id' => $request->branch_id,
+            ]);
+
+            return redirect()->back()->with('error', 'not_insert');
+        }
+    }
+
+    public function addReceiveImage(Request $request)
+    {
+        if (Auth::user()->is_admin != 1) {
+            return redirect('access_denied');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $receiptPath = null;
+            if ($request->hasFile('receipt')) {
+                $file = $request->file('receipt');
+
+                // ตรวจสอบว่าเป็นรูปภาพ
+                $request->validate([
+                    'receipt' => 'image|mimes:jpeg,png,jpg|max:5120', // 5MB
+                ]);
+
+                $fileName = 'receipt_' . time() . '.jpg';
+                $path = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $fileName;
+
+                $image = new Image();
+                $image->load($file)
+                    ->resizeToWidth(300) // ปรับขนาดตามความกว้าง
+                    ->save($path);
+
+                $receiptPath = $fileName;
+            }
+
+            $receipt_image = new Receipt_images();
+            $receipt_image->bill_id = $request->bill_id;
+            if ($receiptPath) {
+                $receipt_image->receipt_image = $receiptPath;
+            }
+            $receipt_image->save();
+            DB::commit();
+            // dd($receipt_image->id);
             return redirect()->back()->with('error', 'insert_success');
         } catch (\Throwable $e) {
             DB::rollBack();

@@ -308,14 +308,97 @@
                                     @endif
                                 @endif
                                 <div class="clearfix"></div>
+                                <hr />
+                                @if ($bill !== null)
+                                    <div>
+                                        <h5>
+                                            ຮູບບິນຈ່າຍເງິນ :
+                                        </h5>
+
+                                        @foreach ($bill->receipt_images as $receipt_image)
+                                            <img src="{{ '/img/receipts/' . $receipt_image }}" alt="Receipt Image"
+                                                style="max-width: 150px; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.2);">
+                                        @endforeach
+
+                                        <a type="button" class="btn btn-lg btn-info text-white"
+                                            onclick="addReceiveImage({{ $bill->id }})" data-toggle="modal"
+                                            data-target="#add_receive_modal">
+                                            ເພີ່ມຮູບບິນຈ່າຍເງິນ
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
             </form>
-
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="add_receive_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form method="POST" action="/addReceiveImage" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <h2 class="mb-3">
+                            <i class="material-icons h1">paid</i><br>
+                            ເພີ່ມຮູບບິນຈ່າຍເງິນ ?
+                        </h2>
+                        <!-- อัปโหลดใบเสร็จ -->
+                        <div class="custom-file mt-3 mb-3">
+                            <input type="file" class="custom-file-input" name="receipt" id="thumbnailInput2"
+                                accept="image/*" onchange="previewReceipt2(event)">
+                            <label class="custom-file-label" for="thumbnailInput2" id="fileLabel2">Choose
+                                file</label>
+                        </div>
+
+                        <!-- แสดงรูป preview -->
+                        <div class="text-center">
+                            <img id="receiptPreview2" src="" alt=""
+                                style="display:none; max-width:100%; border-radius:10px; margin-top:10px;">
+                        </div>
+
+                        <input type="hidden" id="bill_id_input" name="bill_id">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">ຕົກລົງ</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"
+                            aria-label="Close">ຍົກເລີກ</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ✅ Script แสดงชื่อไฟล์ + preview รูป -->
+    <script>
+        function previewReceipt2(event) {
+            const input = event.target;
+            const file = input.files[0];
+            const label = document.getElementById('fileLabel2');
+            const preview = document.getElementById('receiptPreview2');
+
+            if (file) {
+                // แสดงชื่อไฟล์
+                label.textContent = file.name;
+
+                // แสดง preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                label.textContent = 'Choose file';
+                preview.style.display = 'none';
+                preview.src = '';
+            }
+        }
+    </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
@@ -335,6 +418,10 @@
         function paidLot(branch_id, delivery_round_id) {
             $("#branch_id").val(branch_id);
             $("#delivery_round_id").val(delivery_round_id);
+        }
+
+        function addReceiveImage(bill_id) {
+            $("#bill_id_input").val(bill_id);
         }
     </script>
 

@@ -101,7 +101,7 @@
             <!-- Modal -->
             <div class="modal fade" id="paid_lot_modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
-                    <form method="POST" action="/paidLot" enctype="multipart/form-data">
+                    <form method="POST" action="/paidLot">
                         @csrf
                         <div class="modal-content">
                             <div class="modal-body text-center">
@@ -109,20 +109,6 @@
                                     <i class="material-icons h1">paid</i><br>
                                     ຕ້ອງການຈ່າຍເງິນໃຫ້ກັບລາຍການນີ້ ຫຼືບໍ່?
                                 </h2>
-
-                                <!-- อัปโหลดใบเสร็จ -->
-                                <div class="custom-file mt-3 mb-3">
-                                    <input type="file" class="custom-file-input" name="receipt" id="thumbnailInput"
-                                        accept="image/*" onchange="previewReceipt(event)">
-                                    <label class="custom-file-label" for="thumbnailInput" id="fileLabel">Choose
-                                        file</label>
-                                </div>
-
-                                <!-- แสดงรูป preview -->
-                                <div class="text-center">
-                                    <img id="receiptPreview" src="" alt=""
-                                        style="display:none; max-width:100%; border-radius:10px; margin-top:10px;">
-                                </div>
 
                                 <input type="hidden" id="paid_lot_id_input" name="id">
                             </div>
@@ -491,11 +477,11 @@
                                                 <td>
                                                     @if ($lot->payment_status == 'not_paid' && Auth::user()->is_admin == 1)
                                                         {{-- <a href="/paidLot?id={{ $lot->id }}"> --}}
-                                                        {{-- <a type="button" class="btn btn-sm btn-info text-white"
+                                                        <a type="button" class="btn btn-sm btn-info text-white"
                                                             onclick="paidLot({{ $lot->id }})" data-toggle="modal"
                                                             data-target="#paid_lot_modal">
                                                             ຈ່າຍເງິນ
-                                                        </a> --}}
+                                                        </a>
                                                     @endif
                                                 </td>
                                                 {{-- <td>

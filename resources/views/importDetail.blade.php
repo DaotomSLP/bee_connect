@@ -205,11 +205,11 @@
                                         @endif
                                     </p>
 
-                                    @if ($lot[0]['payment_status'] == 'paid')
+                                    {{-- @if ($lot[0]['payment_status'] == 'paid')
                                         <a type="button" class="btn btn-sm btn-info text-white" data-toggle="modal"
                                             data-target="#show_receipt_dialog">
                                             ສະແດງຮູບບິນຈ່າຍເງິນ</a>
-                                    @endif
+                                    @endif --}}
                                 </div>
                             </div>
                         </div>

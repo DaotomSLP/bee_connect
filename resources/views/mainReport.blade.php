@@ -163,12 +163,14 @@
                                                         {{ number_format($total) }}
                                                         ກີບ
                                                     </td>
-                                                    <td>
-                                                        @if ($bill->receipt_image)
-                                                            <img src="{{ '/img/receipts/' . $bill->receipt_image }}"
-                                                                alt="Receipt Image"
-                                                                style="max-width: 100px; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.2);">
-                                                        @endif
+                                                    <td style="width: 190px">
+                                                        @foreach ($bill->receipt_images as $receipt_image)
+                                                            @if ($receipt_image)
+                                                                <img src="{{ '/img/receipts/' . $receipt_image }}"
+                                                                    alt="Receipt Image"
+                                                                    style="max-width: 80px; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.2);">
+                                                            @endif
+                                                        @endforeach
                                                     </td>
                                                 </tr>
                                             @endforeach
