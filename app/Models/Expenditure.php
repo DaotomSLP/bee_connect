@@ -23,6 +23,7 @@ class Expenditure extends Model
         'price',
         'detail',
         'user_id',
+        'delivery_round_id'
     ];
 
     /**

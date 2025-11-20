@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Branchs;
+use App\Models\Delivery_rounds;
 use App\Models\Expenditure;
 use App\Models\ExpenditureImages;
 use App\Models\Lots;
@@ -27,7 +28,7 @@ class ExpenditureController extends Controller
         if (Auth::user()->is_admin != 1) {
             return redirect('access_denied');
         }
-
+        $delivery_rounds = Delivery_rounds::orderBy('id', 'desc')->get();
         $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
 
         if ($request->date != '') {
@@ -43,8 +44,9 @@ class ExpenditureController extends Controller
 
         $result = Expenditure::query();
 
-        $result->select('expenditure.*', 'users.name')
+        $result->select('expenditure.*', 'users.name', 'delivery_rounds.round', 'delivery_rounds.month', 'delivery_rounds.departure_time')
             ->join('users', 'expenditure.user_id', 'users.id')
+            ->leftJoin('delivery_rounds', 'expenditure.delivery_round_id', 'delivery_rounds.id')
             ->whereBetween('expenditure.created_at', [$date, $to_date]);
 
         if ($request->date_search != '') {
@@ -67,7 +69,7 @@ class ExpenditureController extends Controller
             'all' => sizeof($all_expenditure),
         ];
 
-        return view('expenditure', compact('expenditure', 'pagination', 'date_now', 'to_date_now'));
+        return view('expenditure', compact('expenditure', 'pagination', 'date_now', 'to_date_now', 'delivery_rounds'));
     }
 
     public function insert(Request $request)
@@ -77,6 +79,7 @@ class ExpenditureController extends Controller
         $expenditure->price = $request->price;
         $expenditure->user_id = Auth::user()->id;
         $expenditure->detail = $request->detail;
+        $expenditure->delivery_round_id = $request->delivery_round_id;
 
         $receiptPath = null;
         if ($request->hasFile('receipt')) {
@@ -114,9 +117,11 @@ class ExpenditureController extends Controller
             return redirect('access_denied');
         }
 
+        $delivery_rounds = Delivery_rounds::orderBy('id', 'desc')->get();
+
         $expenditure = Expenditure::where('id', $id)->first();
 
-        return view('editExpenditure', compact('expenditure'));
+        return view('editExpenditure', compact('expenditure', 'delivery_rounds'));
     }
 
     public function updateExpenditure(Request $request)
@@ -129,7 +134,31 @@ class ExpenditureController extends Controller
             'created_at' => $request->date,
             'price' => $request->price,
             'detail' => $request->detail,
+            'delivery_round_id' => $request->delivery_round_id,
         ];
+
+        $receiptPath = null;
+        if ($request->hasFile('receipt')) {
+            $file = $request->file('receipt');
+
+            // ตรวจสอบว่าเป็นรูปภาพ
+            $request->validate([
+                'receipt' => 'image|mimes:jpeg,png,jpg|max:5120', // 5MB
+            ]);
+
+            $fileName = 'receipt_' . time() . '.jpg';
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $fileName;
+            $image = new Image();
+            $image->load($file)
+                ->resizeToWidth(300) // ปรับขนาดตามความกว้าง
+                ->save($path);
+
+            $receiptPath = $fileName;
+        }
+
+        if ($receiptPath) {
+            $expenditure['receipt_image'] = $receiptPath;
+        }
 
         try {
             // Attempt to update the record

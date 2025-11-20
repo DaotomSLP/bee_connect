@@ -60,7 +60,25 @@
                                                 <textarea class="form-control" name="detail"></textarea>
                                             </div>
                                         </div>
-
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ເລືອກຖ້ຽວລົດ</label>
+                                                <select class="form-control form-control-sm" id="select_delivery_round"
+                                                    name="delivery_round_id" required>
+                                                    <option value="">
+                                                        ເລືອກ
+                                                    </option>
+                                                    @foreach ($delivery_rounds as $key => $delivery_round)
+                                                        <option value="{{ $delivery_round->id }}"
+                                                            {{ $key == '0' ? 'selected' : '' }}>
+                                                            ຖ້ຽວທີ່ {{ $delivery_round->round }} ເດືອນ
+                                                            {{ $delivery_round->month }} ລົດວັນທີ່
+                                                            {{ $delivery_round->departure_time }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="col-md-4">
                                             <!-- อัปโหลดใบเสร็จ -->
                                             <div class="custom-file mt-3 mb-3">
@@ -147,6 +165,9 @@
                                             ວັນທີ
                                         </th>
                                         <th>
+                                            ຖ້ຽວລົດ
+                                        </th>
+                                        <th>
                                             ຈຳນວນເງິນ
                                         </th>
                                         <th>
@@ -171,6 +192,11 @@
                                                     {{ date('d-m-Y', strtotime($expen->created_at)) }}
                                                 </td>
                                                 <td>
+                                                    ຖ້ຽວທີ່ {{ $expen->round }} ເດືອນ
+                                                    {{ $expen->month }} ລົດວັນທີ່
+                                                    {{ $expen->departure_time }}
+                                                </td>
+                                                <td>
                                                     {{ number_format($expen->price) }} ກີບ
                                                 </td>
                                                 <td>
@@ -180,9 +206,11 @@
                                                     {{ $expen->name }}
                                                 </td>
                                                 <td>
-                                                    <a href="/expenditureImages/{{ $expen->id }}">
-                                                        <i class="material-icons">image</i>
-                                                    </a>
+                                                    @if ($expen->receipt_image)
+                                                        <img src="{{ '/img/receipts/' . $expen->receipt_image }}"
+                                                            alt="Receipt Image"
+                                                            style="max-width: 100px; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.2);">
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     <a href="/editExpenditure/{{ $expen->id }}">
