@@ -139,7 +139,11 @@
                                                 </td>
                                                 <td>
                                                     {{ $import_product->weight_branch }}
-                                                    {{ $import_product->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກິໂລກຼາມ' }}
+                                                    @if ($import_product->weight_type == 'm')
+                                                        ແມັດກ້ອນ
+                                                    @else
+                                                        ກິໂລກຼາມ
+                                                    @endif
                                                     <a type="button"
                                                         onclick="change_weight({{ $import_product->id . ',' . $import_product->sale_price . ',' . ($import_product->status == 'success' ? $import_product->weight_branch : $import_product->weight) . ',' . $import_product->sale_id }})"
                                                         data-toggle="modal" data-target="#new_weight_modal">

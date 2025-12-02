@@ -214,7 +214,13 @@
                                                     {{ $product->cust_receiver_tel }}
                                                 </td>
                                                 <td>
-                                                    {{ $product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
+                                                    @if ($product->status == 'sending')
+                                                        ກຳລັງສົ່ງ
+                                                    @elseif ($product->status == 'received')
+                                                        ຮອດແລ້ວ
+                                                    @else
+                                                        ສຳເລັດ
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     {{ $product->price }} ກີບ
@@ -223,14 +229,26 @@
                                                     {{ ($product->price / 5) * 2 }} ກີບ
                                                 </td>
                                                 <td>
-                                                    {{ $product->payment_type == 'normal' ? 'ທົ່ວໄປ' : 'ຈ່າຍປາຍທາງ' }}
+                                                    @if ($product->payment_type == 'normal')
+                                                        ທົ່ວໄປ
+                                                    @else
+                                                        ຈ່າຍປາຍທາງ
+                                                    @endif
                                                 </td>
                                                 <td>
 
                                                     @if ($product->payment_type == 'normal')
-                                                        {{ $product->second_branch_payment_status == 'paid' ? 'ຈ່າຍແລ້ວ' : 'ຍັງບໍ່ຈ່າຍ' }}
+                                                        @if ($product->second_branch_payment_status == 'paid')
+                                                            ຈ່າຍແລ້ວ
+                                                        @else
+                                                            ຍັງບໍ່ຈ່າຍ
+                                                        @endif
                                                     @else
-                                                        {{ $product->payment_status == 'paid' ? 'ຈ່າຍແລ້ວ' : 'ຍັງບໍ່ຈ່າຍ' }}
+                                                        @if ($product->payment_status == 'paid')
+                                                            ຈ່າຍແລ້ວ
+                                                        @else
+                                                            ຍັງບໍ່ຈ່າຍ
+                                                        @endif
                                                     @endif
 
                                                 </td>

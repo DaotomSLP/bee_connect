@@ -145,11 +145,25 @@
                                                     {{ $import_product->success_at ? date('d-m-Y', strtotime($import_product->success_at)) : '' }}
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($import_product->status == 'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
+                                                    @if ($import_product->status == 'sending')
+                                                        ກຳລັງສົ່ງ
+                                                    @elseif ($import_product->status == 'received')
+                                                        ຮອດແລ້ວ
+                                                    @else
+                                                        ສຳເລັດ
+                                                    @endif
                                                 </td>
                                                 <td>
-                                                    {{ $import_product->status == 'success' ? $import_product->weight_branch : $import_product->weight }}
-                                                    {{ $import_product->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກິໂລກຼາມ' }}
+                                                    @if ($import_product->status == 'success')
+                                                        {{ $import_product->weight_branch }}
+                                                    @else
+                                                        {{ $import_product->weight }}
+                                                    @endif
+                                                    @if ($import_product->weight_type == 'm')
+                                                        ແມັດກ້ອນ
+                                                    @else
+                                                        ກິໂລກຼາມ
+                                                    @endif
                                                 </td>
                                                 {{-- <td>
                                                     {{ number_format($import_product->total_real_price) }}

@@ -132,7 +132,11 @@
                                                     {{ $lost_product->weight }}
                                                 </td>
                                                 <td>
-                                                    {{ $lost_product->status == 'success' ? 'ປ່ອຍອອກ' : 'ຄ້າງ' }}
+                                                    @if ($lost_product->status == 'success')
+                                                        ປ່ອຍອອກ
+                                                    @else
+                                                        ຄ້າງ
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     @if ($lost_product->status == 'receive' && Auth::user()->is_admin == 1)

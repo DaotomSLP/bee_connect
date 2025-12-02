@@ -4,8 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <style>
+        body {
+            font-family: 'defago', sans-serif;
+        }
+
         #itemtable {
-            font-family: Arial, Helvetica, sans-serif;
             border-collapse: collapse;
             width: 100%;
         }
@@ -26,7 +29,7 @@
         }
 
         body {
-            font-size: 7pt;
+            font-size: 6pt;
             font-family: 'Saysettha OT';
         }
 
@@ -38,7 +41,7 @@
 
 <body>
     <p style="text-align: center;font-weight: bold;font-size: 12pt;margin: 1px">ໃບນຳສົ່ງສິນຄ້າ</p>
-    <p style="font-size: 12pt;margin: 5px">ເລກບິນ :
+    <p style="font-size: 12pt;margin-bottom: 1px">ເລກບິນ :
         {{ $id }}
     </p>
     <p style="font-size: 10pt;margin: 0px">ວັນທີ :
@@ -52,7 +55,6 @@
             <th>ລະຫັດເຄື່ອງ</th>
             <th>ນ້ຳໜັກ</th>
             <th>ລາຄາ</th>
-            <th>ຄ່າສົ່ງ</th>
             <th>ລວມ</th>
         </tr>
         @foreach ($items as $item)
@@ -61,7 +63,6 @@
                 <td>{{ $item->weight_branch ? $item->weight_branch : $item->weight_branch }}
                     {{ $item->weight_type == 'm' ? 'm' : 'kg' }}</td>
                 <td>{{ number_format($item->sale_price) }}</td>
-                <td>{{ number_format($item->shipping_fee ? $item->shipping_fee : 0) }}</td>
                 <td>{{ number_format($item->sale_price * ($item->weight_branch ?? $item->weight) + ($item->shipping_fee ? $item->shipping_fee : 0)) }}
                 </td>
             </tr>

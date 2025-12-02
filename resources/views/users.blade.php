@@ -220,7 +220,11 @@
                                                 </td>
                                                 <td>
                                                     <a href="/deleteUser/{{ $user->id }}">
-                                                        {{ $user->enabled == '1' ? 'ປິດໃຊ້ງານ' : 'ເປີດໃຊ້ງານ' }}
+                                                        @if ($user->enabled == '1')
+                                                            ປິດໃຊ້ງານ
+                                                        @else
+                                                            ເປີດໃຊ້ງານ
+                                                        @endif
                                                     </a>
                                                 </td>
                                             </tr>

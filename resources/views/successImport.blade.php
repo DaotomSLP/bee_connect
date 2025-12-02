@@ -190,8 +190,13 @@
                                             {{ $product->cust_receiver_tel }}
                                         </td>
                                         <td>
-                                            {{ $product->status == 'sending' ? 'ກຳລັງສົ່ງ' : ($product->status ==
-                                            'received' ? 'ຮອດແລ້ວ' : 'ສຳເລັດ') }}
+                                            @if ($product->status == 'sending')
+                                                ກຳລັງສົ່ງ
+                                            @elseif ($product->status == 'received')
+                                                ຮອດແລ້ວ
+                                            @else
+                                                ສຳເລັດ
+                                            @endif
                                         </td>
                                         <td>
                                             {{ $product->price }} ກີບ

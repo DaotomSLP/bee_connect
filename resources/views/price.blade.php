@@ -142,7 +142,11 @@
                                                     {{ $price->price }}
                                                 </td>
                                                 <td>
-                                                    {{ $price->weight_type == 'm' ? 'ແມັດກ້ອນ' : 'ກຼາມ' }}
+                                                    @if ($price->weight_type == 'm')
+                                                        ແມັດກ້ອນ
+                                                    @else
+                                                        ກຼາມ
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach

@@ -193,7 +193,26 @@ class SaleImportProductsController extends Controller
             'discount' => $sale->discount,
             'items' => $items
         ];
-        $pdf = PDF::loadView('pdf.sale', $data);
+
+        $pdf = PDF::loadView(
+            'pdf.sale',
+            $data,
+            [],
+            [
+                // 'format' => 'A4',
+                // 'orientation' => 'landscape',
+                'custom_font_dir' => base_path('resources/fonts/'),
+                'custom_font_data' => [
+                    'defago' => [ // must be lowercase and snake_case
+                        'R'  => 'defago-noto-sans-lao.ttf',    // regular font
+                        'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+                    ]
+                    // ...add as many as you want.
+                ]
+            ]
+        );
+
+        // $pdf = PDF::loadView('pdf.sale', $data);
         return $pdf->stream('document.pdf');
     }
 
