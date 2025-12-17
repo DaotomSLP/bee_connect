@@ -1183,6 +1183,13 @@ class ImportProductsController extends Controller
                 // 'total_real_price' => $real_price_kg,
             ]);
 
+        Import_products::where('lot_id', $request->lot_id_in_weight)
+            ->where('weight_type', 'm')
+            ->update([
+                'base_price' => $base_price_m,
+                'real_price' => $real_price_m,
+            ]);
+
         return redirect('importView')->with(['error' => 'insert_success']);
     }
 
