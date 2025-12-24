@@ -1108,6 +1108,7 @@ class ImportProductsController extends Controller
             'total_base_price' => $lot->total_base_price - ($import_product->base_price * $import_product->weight) + ($import_product->base_price * $request->weight_in_weight),
             'total_price' => $lot->total_price - ($import_product->real_price * $import_product->weight) + ($import_product->real_price * $request->weight_in_weight),
             'total_main_price' => $lot->total_price - ($import_product->real_price * $import_product->weight) + ($import_product->real_price * $request->weight_in_weight) + ($lot->fee ? $lot->fee : 0) + ($lot->pack_price ? $lot->pack_price : 0),
+            'weight_m' => $lot->weight_m - ($import_product->weight_type == 'm' ? $import_product->weight : 0) + ($import_product->weight_type == 'm' ? $request->weight_in_weight : 0),
         ]);
 
         $import_product = Import_products::where('id', $request->lot_item_id_in_weight)->update([
