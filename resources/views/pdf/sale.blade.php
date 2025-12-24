@@ -29,22 +29,33 @@
         }
 
         body {
-            font-size: 6pt;
+            font-size: 12pt;
             font-family: 'Saysettha OT';
         }
 
         @page {
             margin: 20px;
         }
+
+        .logo-image {
+            width: 70px;
+            display: block;
+            margin: auto;
+        }
     </style>
 </head>
 
 <body>
-    <p style="text-align: center;font-weight: bold;font-size: 12pt;margin: 1px">ໃບນຳສົ່ງສິນຄ້າ</p>
-    <p style="font-size: 12pt;margin-bottom: 1px">ເລກບິນ :
+    @if (!empty($branch->logo_image))
+        <div style="text-align: center; margin-bottom: 10px;">
+            <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/img/logos/' . $branch->logo_image }}" alt="Logo" class="logo-image">
+        </div>
+    @endif
+    <p style="text-align: center;font-weight: bold;font-size: 14pt;margin: 0px">ໃບນຳສົ່ງສິນຄ້າ</p>
+    <p style="font-size: 14pt;margin-bottom: 0px; font-weight: bold;">ເລກບິນ :
         {{ $id }}
     </p>
-    <p style="font-size: 10pt;margin: 0px">ວັນທີ :
+    <p style="font-size: 12pt;margin: 0px">ວັນທີ :
         {{ date('d-m-Y', strtotime($date)) }}
     </p>
 
@@ -70,11 +81,11 @@
     </table>
     <hr>
     @if ($discount > 0)
-        <p style="font-size: 10pt;margin: 0px; margin-bottom:10px; ">ສ່ວນຫຼຸດ :
+        <p style="font-size: 12pt;margin: 0px; margin-bottom:10px; ">ສ່ວນຫຼຸດ :
             {{ number_format($discount) }} ກີບ
         </p>
     @endif
-    <p style="font-size: 12pt;margin-top:5px:">ລວມເປັນເງິນ :
+    <p style="font-size: 14pt;margin-top:5px;font-weight: bold;">ລວມເປັນເງິນ :
         {{ number_format($price) }} ກີບ
     </p>
 

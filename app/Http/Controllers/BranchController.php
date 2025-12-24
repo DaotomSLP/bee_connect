@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Branchs;
 use App\Models\Districts;
 use App\Models\Provinces;
+use GImage\Image;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class BranchController extends Controller
 {
@@ -20,7 +23,7 @@ class BranchController extends Controller
     public function index()
     {
 
-        if(Auth::user()->is_admin != 1){
+        if (Auth::user()->is_admin != 1) {
             return redirect('access_denied');
         }
 
@@ -99,7 +102,7 @@ class BranchController extends Controller
     {
         $provinces = Provinces::all();
         $districts = Districts::all();
-        $branch = Branchs::select('branchs.*', 'provinces.id as prov_id','districts.id as dist_id')
+        $branch = Branchs::select('branchs.*', 'provinces.id as prov_id', 'districts.id as dist_id')
             ->where('branchs.id', $id)
             ->join('districts', 'districts.id', 'branchs.district_id')
             ->join('provinces', 'provinces.id', 'districts.prov_id')
@@ -136,6 +139,66 @@ class BranchController extends Controller
             return redirect('branchs')->with(['error' => 'delete_success']);
         } else {
             return redirect('branchs')->with(['error' => 'not_insert']);
+        }
+    }
+
+    public function editBranchLogo()
+    {
+        if (Auth::user()->is_branch != 1) {
+            return redirect('access_denied');
+        }
+
+        $branch = Branchs::select('branchs.*')
+            ->where('branchs.id', Auth::user()->branch_id)
+            ->first();
+
+        return view('editBranchLogo', compact('branch'));
+    }
+
+    public function updateBranchLogo(Request $request)
+    {
+        if (Auth::user()->is_branch != 1) {
+            return redirect('access_denied');
+        }
+
+        // validate รูป
+        $request->validate([
+            'logo' => 'required|image|mimes:jpeg,png,jpg|max:5120', // 5MB
+        ]);
+
+        // ดึงข้อมูล branch ปัจจุบัน
+        $branch = Branchs::where('id', Auth::user()->branch_id)->first();
+
+        if (!$branch) {
+            return redirect('editBranchLogo')->with(['error' => 'not_found']);
+        }
+
+        // ===== ลบรูปเก่า =====
+        if (!empty($branch->logo_image)) {
+            $oldPath = $_SERVER['DOCUMENT_ROOT'] . '/img/logos/' . $branch->logo_image;
+            if (File::exists($oldPath)) {
+                File::delete($oldPath);
+            }
+        }
+
+        // ===== บันทึกรูปใหม่ =====
+        $file = $request->file('logo');
+        $fileName = 'logo_' . time() . '.jpg';
+        $path = $_SERVER['DOCUMENT_ROOT'] . '/img/logos/' . $fileName;
+
+        $image = new Image();
+        $image->load($file)
+            ->resizeToWidth(300)
+            ->save($path);
+
+        try {
+            Branchs::where('id', $branch->id)->update([
+                'logo_image' => $fileName
+            ]);
+
+            return redirect('editBranchLogo')->with(['success' => 'insert_success']);
+        } catch (\Exception $e) {
+            return redirect('editBranchLogo')->with(['error' => 'not_insert']);
         }
     }
 }

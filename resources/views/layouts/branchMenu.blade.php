@@ -1,6 +1,6 @@
 {{-- for Branchs --}}
 {{-- in-house --}}
-<li><a><i class="fa fa-home"></i> ພາຍໃນ <span class="fa fa-chevron-down"></span></a>
+{{-- <li><a><i class="fa fa-home"></i> ພາຍໃນ <span class="fa fa-chevron-down"></span></a>
     <ul class="nav child_menu">
         <li class="{{ Request::is('send') || Request::is('send/*') ? 'current-page' : '' }}">
             <a href="/send">ການສົ່ງສິນຄ້າ</a>
@@ -20,7 +20,7 @@
             <a href="/success">ສ່ົງສິນຄ້າໃຫ້ລູກຄ້າ</a>
         </li>
     </ul>
-</li>
+</li> --}}
 
 {{-- china --}}
 <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ <span class="fa fa-chevron-down"></span></a>
@@ -29,8 +29,7 @@
             class="{{ Request::is('addChinaProduct') || Request::is('addChinaProduct/*') ? 'current-page' : '' }}">
     <a href="/addChinaProduct">ສັ່ງນຳເຂົ້າສິນຄ້າ</a>
 </li> --}}
-        <li
-            class="{{ Request::is('import') || Request::is('import/*') ? 'current-page' : '' }}">
+        <li class="{{ Request::is('import') || Request::is('import/*') ? 'current-page' : '' }}">
             <a href="/import">ນຳເຂົ້າສິນຄ້າ</a>
         </li>
         <li
@@ -42,26 +41,26 @@
             <a href="/importProductTrackForUser">ຕິດຕາມສິນຄ້າ</a>
         </li>
 
-        <li
-            class="{{ Request::is('saleImport') || Request::is('saleImport/*') ? 'current-page' : '' }}">
+        <li class="{{ Request::is('saleImport') || Request::is('saleImport/*') ? 'current-page' : '' }}">
             <a href="/saleImport">ຂາຍສິນຄ້າ</a>
         </li>
         <li
             class="{{ Request::is('saleView') || Request::is('saleView/*') || Request::is('saleDetail') || Request::is('saleDetail/*') ? 'current-page' : '' }}">
             <a href="/saleView">ປະຫວັດການຂາຍ</a>
         </li>
-        <li
-            class="{{ Request::is('saleImportPrice') || Request::is('saleImportPrice/*') ? 'current-page' : '' }}">
+        <li class="{{ Request::is('saleImportPrice') || Request::is('saleImportPrice/*') ? 'current-page' : '' }}">
             <a href="/saleImportPrice">ຕັ້ງຄ່າລາຄາຂາຍ</a>
         </li>
+        <li class="{{ Request::is('editBranchLogo') || Request::is('editBranchLogo/*') ? 'current-page' : '' }}">
+            <a href="/editBranchLogo">ຕັ້ງຄ່າໂລໂກ້</a>
+        </li>
 
-        <li class="{{ Request::is('dailyImport') ? 'current-page' : '' }}"><a
-                href="/dailyImport">ລາຍງານປະຈຳວັນ</a></li>
+        <li class="{{ Request::is('dailyImport') ? 'current-page' : '' }}"><a href="/dailyImport">ລາຍງານປະຈຳວັນ</a></li>
     </ul>
 </li>
 
 {{-- thai --}}
-<li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span class="fa fa-chevron-down"></span></a>
+{{-- <li><a><i class="fa fa-edit"></i> ຕ່າງປະເທດ (Thai) <span class="fa fa-chevron-down"></span></a>
     <ul class="nav child_menu">
         <li
             class="{{ Request::is('importTh') || Request::is('importTh/*') ? 'current-page' : '' }}">
@@ -84,12 +83,8 @@
             class="{{ Request::is('saleViewTh') || Request::is('saleViewTh/*') || Request::is('saleDetail') || Request::is('saleDetail/*') ? 'current-page' : '' }}">
             <a href="/saleViewTh">ປະຫວັດການຂາຍ</a>
         </li>
-        {{-- <li
-            class="{{ Request::is('saleImportPriceTh') || Request::is('saleImportPriceTh/*') ? 'current-page' : '' }}">
-            <a href="/saleImportPriceTh">ຕັ້ງຄ່າລາຄາຂາຍ</a>
-        </li> --}}
 
         <li class="{{ Request::is('dailyImportTh') ? 'current-page' : '' }}"><a
                 href="/dailyImportTh">ລາຍງານປະຈຳວັນ</a></li>
     </ul>
-</li>
+</li> --}}

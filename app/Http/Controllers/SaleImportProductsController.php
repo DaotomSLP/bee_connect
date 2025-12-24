@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branchs;
 use App\Models\Import_products;
 use App\Models\Lots;
 use App\Models\Sale_import;
@@ -10,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PDF;
+use GImage\Image;
 
 class SaleImportProductsController extends Controller
 {
@@ -186,12 +188,15 @@ class SaleImportProductsController extends Controller
         $sale = Sale_import::find($id);
         $items = Import_products::where('sale_id', $id)->get();
 
+        $branch = Branchs::find(Auth::user()->branch_id);
+
         $data = [
             'id' => $sale->id,
             'date' => date('d-m-Y', strtotime($sale->created_at)),
             'price' => $sale->total,
             'discount' => $sale->discount,
-            'items' => $items
+            'items' => $items,
+            'branch' => $branch,
         ];
 
         $pdf = PDF::loadView(
@@ -199,7 +204,7 @@ class SaleImportProductsController extends Controller
             $data,
             [],
             [
-                // 'format' => 'A4',
+                'format' => 'A5',
                 // 'orientation' => 'landscape',
                 'custom_font_dir' => base_path('resources/fonts/'),
                 'custom_font_data' => [

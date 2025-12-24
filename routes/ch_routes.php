@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImportProductsController;
 use App\Http\Controllers\PriceImportController;
@@ -113,4 +114,6 @@ Route::post('/addReceiveImage', [ImportProductsController::class, 'addReceiveIma
 Route::get('/mainReport', [ImportProductsController::class, 'mainReport'])->middleware('auth')->name('mainReport');
 
 
+Route::get('/editBranchLogo', [BranchController::class, 'editBranchLogo'])->middleware('auth')->name('editBranchLogo');
 
+Route::post('/updateBranchLogo', [BranchController::class, 'updateBranchLogo'])->middleware('auth')->name('updateBranchLogo');

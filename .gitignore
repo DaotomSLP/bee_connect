@@ -2,6 +2,7 @@
 /public/hot
 /public/storage
 /public/img/receipts
+/public/img/logos
 /storage/*.key
 /vendor
 .env

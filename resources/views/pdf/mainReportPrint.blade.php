@@ -161,7 +161,8 @@
                     <td class="text-center">
                         @foreach ($bill->receipt_images as $receipt_image)
                             @if (!empty($receipt_image))
-                                <img src="{{ public_path('img/receipts/'.$receipt_image) }}" alt="Receipt" class="receipt-image">
+                                <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $receipt_image }}"
+                                    alt="Receipt" class="receipt-image">
                             @else
                                 <span style="color: #999;">-</span>
                             @endif
@@ -215,7 +216,8 @@
                     <td class="text-right">{{ number_format($exp->price) }} ກີບ</td>
                     <td>
                         @if (!empty($exp->receipt_image))
-                            <img src="{{ public_path('img/receipts/'.$exp->receipt_image) }}" alt="Receipt" class="receipt-image">
+                            <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $exp->receipt_image }}" alt="Receipt"
+                                class="receipt-image">
                         @else
                             <span style="color: #999;">-</span>
                         @endif
