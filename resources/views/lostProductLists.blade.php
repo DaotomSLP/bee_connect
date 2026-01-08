@@ -20,7 +20,8 @@
                         <div class="modal-content">
                             <div>
                                 <h2 class="text-center" id="exampleModalLabel"><i
-                                        class="material-icons h1">done_outline</i><br>ຕ້ອງການປ່ອຍເຄື່ອງລາຍການນີ້ ຫຼືບໍ່?</h2>
+                                        class="material-icons h1">done_outline</i><br>ຕ້ອງການປ່ອຍເຄື່ອງລາຍການນີ້ ຫຼືບໍ່?
+                                </h2>
                             </div>
 
                             <input type="hidden" id="paid_lot_id_input" name="id">
@@ -44,7 +45,6 @@
                         <div class="card-body">
                             <form method="GET" action="/lostProductLists">
                                 {{-- @csrf --}}
-                                <input type="hidden" value="{{ Request::input('id') }}" name="id">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
@@ -71,11 +71,24 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="bmd-label-floating">ວັນທີຮັບ</label>
-                                            <input class="form-control form-control-sm" type="date"
-                                                value="{{ Request::input('send_date') }}" name="send_date">
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <p>ວັນທີຮັບ :</p>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-4 col-12">
+                                                <div class="form-group">
+                                                    <input class="form-control" type="date" value="{{ $date_now }}"
+                                                        name="date" id="date">
+                                                </div>
+                                            </div>
+                                            <p class="h5">ຫາ</p>
+                                            <div class="col-lg-4 col-md-4 col-12">
+                                                <div class="form-group">
+                                                    <input class="form-control" type="date" value="{{ $to_date_now }}"
+                                                        name="to_date" id="to_date">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -141,8 +154,8 @@
                                                 <td>
                                                     @if ($lost_product->status == 'receive' && Auth::user()->is_admin == 1)
                                                         <a type="button" class="btn btn-sm btn-info text-white"
-                                                            onclick="sendLostProduct({{ $lost_product->id }})" data-toggle="modal"
-                                                            data-target="#send_product_modal">
+                                                            onclick="sendLostProduct({{ $lost_product->id }})"
+                                                            data-toggle="modal" data-target="#send_product_modal">
                                                             ປ່ອຍອອກ
                                                         </a>
                                                     @endif
@@ -212,6 +225,22 @@
                     </li>
                 </ul>
             </nav>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="x_panel">
+                        <div class="x_content">
+                            <div>
+                                <a href="{{ url('printLostProductLists?product_id=' . Request::input('product_id') . '&status=' . $status . '&date=' . $date_now . '&to_date=' . $to_date_now) }}"
+                                    target="_blank"
+                                    class="btn btn-primary px-5 {{ count($lost_products) == 0 ? 'disabled-link' : '' }}">
+                                    ພິມລາຍງານ
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

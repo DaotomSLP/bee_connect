@@ -371,7 +371,8 @@
                             <div class="x_content">
                                 <div>
                                     <a href="{{ url('mainReportPrint?delivery_round_id=' . $delivery_round_id) }}"
-                                        target="_blank" class="btn btn-primary text-white px-5">
+                                        target="_blank" class="btn btn-primary px-5 {{ isset($delivery_round_id) ? '' : 'disabled-link' }}"
+                                        >
                                         ພິມລາຍງານ
                                     </a>
                                 </div>

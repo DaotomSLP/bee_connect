@@ -92,13 +92,27 @@ class ImportProductsController extends Controller
             return redirect('access_denied');
         }
 
+        $status = $request->status;
+
         $result = Lost_products::query();
 
         $result->select('lost_products.*');
 
-        if ($request->send_date != '') {
-            $result->whereDate('lost_products.created_at', '=', $request->send_date);
+
+        $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
+
+        if ($request->date != '') {
+            $date = $request->date;
+            $to_date = $request->to_date;
+            $date_now = date('Y-m-d', strtotime($request->date));
+            $to_date_now = date('Y-m-d', strtotime($request->to_date));
+        } else {
+            $date = [Carbon::today()->toDateString()];
+            $to_date = [Carbon::today()->toDateString()];
+            $date_now = date('Y-m-d', strtotime(Carbon::now()));
         }
+
+        $result->whereBetween('lost_products.created_at', [$date, $to_date]);
 
         if ($request->product_id != '') {
             $result->where('lost_products.code', $request->product_id);
@@ -125,7 +139,73 @@ class ImportProductsController extends Controller
             'all' => $all_lost_products,
         ];
 
-        return view('lostProductLists', compact('lost_products', 'pagination'));
+        return view('lostProductLists', compact('lost_products', 'pagination', 'status', 'date_now', 'to_date_now'));
+    }
+
+    public function printLostProductLists(Request $request)
+    {
+        if (Auth::user()->is_admin != 1) {
+            return redirect('access_denied');
+        }
+
+        $result = Lost_products::query();
+
+        $result->select('lost_products.*');
+
+        if ($request->date != '') {
+            $date = $request->date;
+            $to_date = $request->to_date;
+        } else {
+            $date = [Carbon::today()->toDateString()];
+            $to_date = [Carbon::today()->toDateString()];
+        }
+
+        $result->whereBetween('lost_products.created_at', [$date, $to_date]);
+
+        if ($request->send_date != '') {
+            $result->whereDate('lost_products.created_at', '=', $request->send_date);
+        }
+
+        if ($request->product_id != '') {
+            $result->where('lost_products.code', $request->product_id);
+        }
+
+        if ($request->status != '') {
+            $result->where('lost_products.status', $request->status);
+        }
+
+        if ($request->page != '') {
+            $result->offset(($request->page - 1) * 25);
+        }
+
+        $lost_products = $result
+            ->orderBy('lost_products.id', 'desc')
+            ->get();
+
+
+        $data = [
+            'lost_products' => $lost_products,
+        ];
+
+        $pdf = PDF::loadView(
+            'pdf.lostProductListsPrint',
+            $data,
+            [],
+            [
+                'format' => 'A4',
+                // 'orientation' => 'landscape',
+                'custom_font_dir' => base_path('resources/fonts/'),
+                'custom_font_data' => [
+                    'defago' => [ // must be lowercase and snake_case
+                        'R'  => 'defago-noto-sans-lao.ttf',    // regular font
+                        'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+                    ]
+                    // ...add as many as you want.
+                ]
+            ]
+        );
+
+        return $pdf->stream('document.pdf');
     }
 
     public function sendLostProduct(Request $request)
@@ -574,7 +654,15 @@ class ImportProductsController extends Controller
             ->get();
         $result = Lots::query();
 
-        $result->select('lot.*', 'receive.branch_name as receiver_branch_name')->join('branchs As receive', 'lot.receiver_branch_id', 'receive.id');
+        $result->select(
+            'lot.*',
+            'receive.branch_name as receiver_branch_name',
+            'delivery_rounds.round',
+            'delivery_rounds.month',
+            'delivery_rounds.departure_time'
+        )
+            ->join('delivery_rounds', 'lot.delivery_round_id', 'delivery_rounds.id')
+            ->join('branchs As receive', 'lot.receiver_branch_id', 'receive.id');
 
         // if (Auth::user()->is_admin != '1') {
         //   $result->where('import_products.sender_branch_id', Auth::user()->branch_id);
@@ -630,7 +718,10 @@ class ImportProductsController extends Controller
         $result = Lots::query();
 
         $result
-            ->select('lot.*', 'receive.branch_name as receiver_branch_name')
+            ->select(
+                'lot.*',
+                'receive.branch_name as receiver_branch_name',
+            )
             ->join('branchs As receive', 'lot.receiver_branch_id', 'receive.id')
             ->where('receiver_branch_id', Auth::user()->branch_id);
 

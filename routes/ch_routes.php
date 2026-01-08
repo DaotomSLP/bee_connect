@@ -19,6 +19,8 @@ Route::post('/lostProduct', [ImportProductsController::class, 'insertLostProduct
 
 Route::get('/lostProductLists', [ImportProductsController::class, 'lostProductLists'])->middleware('auth')->name('lostProductLists');
 
+Route::get('/printLostProductLists', [ImportProductsController::class, 'printLostProductLists'])->middleware('auth')->name('printLostProductLists');
+
 Route::get('/sendLostProduct', [ImportProductsController::class, 'sendLostProduct'])->middleware('auth')->name('sendLostProduct');
 
 Route::get('/dailyImport', [ImportProductsController::class, 'dailyImport'])->middleware('auth')->name('dailyImport');

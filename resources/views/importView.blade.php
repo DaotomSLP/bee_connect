@@ -295,6 +295,9 @@
                                             </th>
                                         @endif
                                         <th>
+                                            ຖ້ຽວລົດ
+                                        </th>
+                                        <th>
                                             ເລດເງິນ
                                         </th>
                                         <th>
@@ -375,6 +378,11 @@
                                                         {{ $lot->receiver_branch_name }}
                                                     </td>
                                                 @endif
+                                                <td>
+                                                    ຖ້ຽວທີ່ {{ $lot->round }} ເດືອນ
+                                                    {{ $lot->month }} ລົດວັນທີ່
+                                                    {{ $lot->departure_time }}
+                                                </td>
                                                 <td>
                                                     {{ $lot->money_rate }}
                                                 </td>
