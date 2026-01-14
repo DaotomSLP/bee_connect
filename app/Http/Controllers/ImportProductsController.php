@@ -661,8 +661,8 @@ class ImportProductsController extends Controller
             'delivery_rounds.month',
             'delivery_rounds.departure_time'
         )
-            ->join('delivery_rounds', 'lot.delivery_round_id', 'delivery_rounds.id')
-            ->join('branchs As receive', 'lot.receiver_branch_id', 'receive.id');
+            ->join('branchs As receive', 'lot.receiver_branch_id', 'receive.id')
+            ->leftJoin('delivery_rounds', 'lot.delivery_round_id', 'delivery_rounds.id');
 
         // if (Auth::user()->is_admin != '1') {
         //   $result->where('import_products.sender_branch_id', Auth::user()->branch_id);

@@ -379,9 +379,11 @@
                                                     </td>
                                                 @endif
                                                 <td>
+                                                    @if ($lot->round)
                                                     ຖ້ຽວທີ່ {{ $lot->round }} ເດືອນ
                                                     {{ $lot->month }} ລົດວັນທີ່
                                                     {{ $lot->departure_time }}
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     {{ $lot->money_rate }}
