@@ -856,7 +856,7 @@ class ImportProductsController extends Controller
 
         $lot = Lots::join('branchs As receive', 'lot.receiver_branch_id', 'receive.id')
             ->where('lot.id', $request->id)
-            ->get();
+            ->first();
 
         $result = Import_products::query();
 
@@ -1200,6 +1200,7 @@ class ImportProductsController extends Controller
             'total_price' => $lot->total_price - ($import_product->real_price * $import_product->weight) + ($import_product->real_price * $request->weight_in_weight),
             'total_main_price' => $lot->total_price - ($import_product->real_price * $import_product->weight) + ($import_product->real_price * $request->weight_in_weight) + ($lot->fee ? $lot->fee : 0) + ($lot->pack_price ? $lot->pack_price : 0),
             'weight_m' => $lot->weight_m - ($import_product->weight_type == 'm' ? $import_product->weight : 0) + ($import_product->weight_type == 'm' ? $request->weight_in_weight : 0),
+            'weight_kg' => $lot->weight_kg - ($import_product->weight_type == 'kg' ? $import_product->weight : 0) + ($import_product->weight_type == 'kg' ? $request->weight_in_weight : 0),
         ]);
 
         $import_product = Import_products::where('id', $request->lot_item_id_in_weight)->update([

@@ -95,7 +95,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="text-center">
-                                <img src="{{ asset('storage/' . $lot[0]['receipt_image']) }}" alt="Receipt Image"
+                                <img src="{{ asset('storage/' . $lot->receipt_image) }}" alt="Receipt Image"
                                     style="max-width: 350px; border-radius: 10px; box-shadow: 0 0 8px rgba(0,0,0,0.2);">
                             </div>
                         </div>
@@ -131,64 +131,64 @@
                             <div class="row">
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ສົ່ງໄປສາຂາ :</label>
-                                    <p class="font-weight-bold">{{ $lot[0]['branch_name'] }}</p>
+                                    <p class="font-weight-bold">{{ $lot->branch_name }}</p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ຮັບມາວັນທີ່ :</label>
-                                    <p class="font-weight-bold">{{ date('d-m-Y', strtotime($lot[0]['created_at'])) }}</p>
+                                    <p class="font-weight-bold">{{ date('d-m-Y', strtotime($lot->created_at)) }}</p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ນ້ຳໜັກ :</label>
-                                    <p class="font-weight-bold">{{ $lot[0]['weight_kg'] }} kg</p>
+                                    <p class="font-weight-bold">{{ $lot->weight_kg }} kg</p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ຂະໜາດ :</label>
-                                    <p class="font-weight-bold">{{ $lot[0]['weight_m'] }} ແມັດກ້ອນ</p>
+                                    <p class="font-weight-bold">{{ $lot->weight_m }} ແມັດກ້ອນ</p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ລວມຕົ້ນທຶນ :</label>
-                                    <p class="font-weight-bold">{{ number_format($lot[0]['total_base_price']) }} ກີບ</p>
+                                    <p class="font-weight-bold">{{ number_format($lot->total_base_price) }} ກີບ</p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ລວມລາຄາເຄື່ອງ :</label>
-                                    <p class="font-weight-bold">{{ number_format($lot[0]['total_price']) }} ກີບ</p>
+                                    <p class="font-weight-bold">{{ number_format($lot->total_price) }} ກີບ</p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ຄ່າຂົນສົ່ງ :</label>
-                                    <p class="font-weight-bold">{{ number_format($lot[0]['fee']) }} ກີບ</p>
+                                    <p class="font-weight-bold">{{ number_format($lot->fee) }} ກີບ</p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ຄ່າເປົາ :</label>
-                                    <p class="font-weight-bold">{{ number_format($lot[0]['pack_price']) }} ກີບ</p>
+                                    <p class="font-weight-bold">{{ number_format($lot->pack_price) }} ກີບ</p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ຄ່າບໍລິການເພີ່ມເຕີມ :</label>
                                     <p class="font-weight-bold">
-                                        <a href="/serviceChargeDetail?id={{ $lot[0]['id'] }}">
-                                            {{ number_format($lot[0]['service_charge']) }} ກີບ
+                                        <a href="/serviceChargeDetail?id={{ $lot->id }}">
+                                            {{ number_format($lot->service_charge) }} ກີບ
                                         </a>
                                     </p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ລວມເປັນເງິນທັງໝົດ :</label>
                                     <p class="font-weight-bold h6 text-danger">
-                                        {{ number_format($lot[0]['total_main_price']) }} ກີບ
+                                        {{ number_format($lot->total_main_price) }} ກີບ
                                     </p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ກຳໄລ :</label>
                                     <p class="font-weight-bold h6 text-success">
-                                        {{ number_format($lot[0]['total_price'] - $lot[0]['total_base_price']) }} ກີບ
+                                        {{ number_format($lot->total_price - $lot->total_base_price) }} ກີບ
                                     </p>
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ສະຖານະ :</label>
                                     <p class="font-weight-bold">
-                                        @if ($lot[0]['status'] == 'sending')
+                                        @if ($lot->status == 'sending')
                                             ກຳລັງສົ່ງ
-                                        @elseif($lot[0]['status'] == 'received')
+                                        @elseif($lot->status == 'received')
                                             ຄົບແລ້ວ
-                                        @elseif($lot[0]['status'] == 'not_full')
+                                        @elseif($lot->status == 'not_full')
                                             ຍັງບໍ່ຄົບ
                                         @else
                                             ສຳເລັດ
@@ -198,14 +198,14 @@
                                 <div class="col-lg-2 col-md-3 col-xl-2 col-6">
                                     <label>ສະຖານະຈ່າຍເງິນ :</label>
                                     <p class="font-weight-bold">
-                                        @if ($lot[0]['payment_status'] == 'not_paid')
+                                        @if ($lot->payment_status == 'not_paid')
                                             ຍັງບໍ່ຈ່າຍ
                                         @else
                                             ຈ່າຍແລ້ວ
                                         @endif
                                     </p>
 
-                                    {{-- @if ($lot[0]['payment_status'] == 'paid')
+                                    {{-- @if ($lot->payment_status == 'paid')
                                         <a type="button" class="btn btn-sm btn-info text-white" data-toggle="modal"
                                             data-target="#show_receipt_dialog">
                                             ສະແດງຮູບບິນຈ່າຍເງິນ</a>
@@ -348,7 +348,8 @@
                                                                 <i class="material-icons">delete_forever</i>
                                                             </a>
                                                         @endif
-                                                        @if ($import_product->weight_type == 'm' && $import_product->status != 'success')
+
+                                                        @if (($lot->parcel_size == 'large' || $import_product->weight_type == 'm') && $import_product->status != 'success')
                                                             <a type="button"
                                                                 onclick="change_weight({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->base_price . ',' . $import_product->real_price . ',' . $import_product->weight }})"
                                                                 data-toggle="modal" data-target="#new_weight_modal">
