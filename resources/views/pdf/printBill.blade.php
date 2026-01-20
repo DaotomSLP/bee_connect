@@ -55,10 +55,14 @@
 
         /* Style for image receipt, ensuring it doesn't break layout */
         .receipt-image {
-            max-width: 100px;
+            max-width: 150px;
             height: auto;
             display: block;
             margin: auto;
+        }
+
+        .no-page-break {
+            page-break-inside: avoid;
         }
     </style>
 </head>
@@ -232,7 +236,6 @@
             </tr>
         </tbody>
     </table>
-
     <table style="width: 100%">
         <tbody>
             <tr>
@@ -246,6 +249,26 @@
             </tr>
         </tbody>
     </table>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <hr>
+
+    @if (sizeof($bill->receipt_images) > 0)
+        <div class="no-page-break">
+            <p style="font-size: 12pt; font-weight: bold; text-decoration: underline">
+                ຮູບບິນຈ່າຍເງິນ :
+            </p>
+            @foreach ($bill->receipt_images as $receipt_image)
+                @if (!empty($receipt_image))
+                    <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $receipt_image }}" alt="Receipt"
+                        class="receipt-image">
+                @endif
+            @endforeach
+        </div>
+    @endif
 </body>
 
 </html>

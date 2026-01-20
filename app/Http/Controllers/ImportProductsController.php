@@ -1809,6 +1809,26 @@ class ImportProductsController extends Controller
                 ->selectRaw("COALESCE(SUM(lot.service_charge), 0) as service_charge")
                 ->first();
 
+            $imagesSub = DB::table('receipt_images')
+                ->select(DB::raw('bill_id, GROUP_CONCAT(DISTINCT receipt_image SEPARATOR \',\') AS imgs'))
+                ->groupBy('bill_id');
+
+            $bill = Bills::select('bills.*', DB::raw("IFNULL(images.imgs, '') AS receipt_images"))
+                ->leftJoinSub($imagesSub, 'images', function ($join) {
+                    $join->on('bills.id', '=', 'images.bill_id');
+                })
+                ->where('bills.branch_id', $request->receive_branch_id)
+                ->where('bills.delivery_round_id', $request->delivery_round_id)
+                ->orderBy('bills.id', 'desc')
+                ->first();
+
+            // แปลงเป็น array (ถ้าต้องการ)
+            if ($bill) {
+                $bill->receipt_images = $bill->receipt_images !== ''
+                    ? array_map('trim', explode(',', $bill->receipt_images))
+                    : [];
+            }
+
             $data = [
                 'branch' => $branch,
                 'delivery_round' => $delivery_round,
@@ -1817,6 +1837,7 @@ class ImportProductsController extends Controller
                 'sum_delivery_fee' => $sum_delivery_fee,
                 'sum_pack_fee' => $sum_pack_fee,
                 'sum_service_charge' => $sum_service_charge,
+                'bill' => $bill,
             ];
 
             $pdf = PDF::loadView(
