@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Bee Connect</title>
 
     <!-- Scripts -->
     {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
@@ -53,7 +53,10 @@
     <link href="{{ URL::asset('/build/css/custom.min.css') }}" rel="stylesheet">
 
     <meta name="csrf-token" content="{{ Session::token() }}">
-
+    <link rel="icon" href="/img/logos/bee_connect_logo.jpg" />
+    <meta property="og:title" content="Bee Connect Logistic" />
+    <meta property="og:image" content="/img/logos/bee_connect_logo.jpg" />
+    <link rel="apple-touch-icon" href="/img/logos/bee_connect_logo.jpg" />
 </head>
 
 <body class="nav-md">
