@@ -256,7 +256,7 @@
     <br>
     <hr>
 
-    @if (sizeof($bill->receipt_images) > 0)
+    @if ($bill && $bill->receipt_images && sizeof($bill->receipt_images) > 0)
         <div class="no-page-break">
             <p style="font-size: 12pt; font-weight: bold; text-decoration: underline">
                 ຮູບບິນຈ່າຍເງິນ :
