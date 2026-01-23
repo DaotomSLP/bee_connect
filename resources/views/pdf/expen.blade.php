@@ -43,13 +43,21 @@
             background-color: #333;
             color: white;
         }
+
+        .receipt-image {
+            max-width: 80px;
+            height: auto;
+            display: block;
+            margin: auto;
+        }
     </style>
 </head>
 
 <body>
     <p style="text-align: center;font-weight: bold;font-size: 16pt;">ລາຍງານລາຍຈ່າຍ</p>
-    <p style="font-size: 12pt; text-align: right">ວັນທີ :
-        {{ $date }} ຫາ {{ $to_date }}
+    <p style="font-size: 12pt; text-align: right">ປະຈຳຖ້ຽວທີ
+        {{ $delivery_round->round }} ເດືອນ {{ $delivery_round->month }} ລົດວັນທີ
+        {{ date('d-m-Y', strtotime($delivery_round->departure_time)) }}
     </p>
     <p style="font-size: 12pt; text-align: right; margin-top: 0">ສ້າງລາຍງານໂດຍ :
         {{ auth()->user()->name }}
@@ -72,25 +80,36 @@
                 ລາຍລະອຽດ
             </th>
             <th>
+                ບິນຈ່າຍເງິນ
+            </th>
+            <th>
                 ເພີ່ມໂດຍ
             </th>
         </tr>
         <tbody>
             @foreach ($expenditure as $key => $expen)
                 <tr>
-                    <td>
+                    <td style="width: 5px">
                         {{ $key + 1 }}
                     </td>
-                    <td>
+                    <td style="width: 100px">
                         {{ date('d-m-Y', strtotime($expen->created_at)) }}
                     </td>
-                    <td>
+                    <td style="width: 140px; text-align: right;">
                         {{ number_format($expen->price) }} ກີບ
                     </td>
                     <td>
                         {{ $expen->detail }}
                     </td>
-                    <td>
+                    <td class="text-center" style="width: 100px">
+                        @if (!empty($expen->receipt_image))
+                            <img src="{{ $_SERVER['DOCUMENT_ROOT'] . '/img/receipts/' . $expen->receipt_image }}"
+                                alt="Receipt" class="receipt-image">
+                        @else
+                            <span style="color: #999;">-</span>
+                        @endif
+                    </td>
+                    <td style="width: 80px">
                         {{ $expen->name }}
                     </td>
                 </tr>
@@ -99,7 +118,7 @@
                 <td colspan="2" style="font-weight: bold">
                     ລວມເປັນເງິນ
                 </td>
-                <td colspan="3" style="font-weight: bold; text-align: center">
+                <td colspan="4" style="font-weight: bold; text-align: center">
                     {{ number_format($totalExpenditure) }} ກີບ
                 </td>
             </tr>

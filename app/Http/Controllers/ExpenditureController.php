@@ -29,28 +29,13 @@ class ExpenditureController extends Controller
             return redirect('access_denied');
         }
         $delivery_rounds = Delivery_rounds::orderBy('id', 'desc')->get();
-        $to_date_now = date('Y-m-d', strtotime(Carbon::now()));
-
-        if ($request->date != '') {
-            $date = $request->date;
-            $to_date = $request->to_date;
-            $date_now = date('Y-m-d', strtotime($request->date));
-            $to_date_now = date('Y-m-d', strtotime($request->to_date));
-        } else {
-            $date = [Carbon::today()->toDateString()];
-            $to_date = [Carbon::today()->toDateString()];
-            $date_now = date('Y-m-d', strtotime(Carbon::now()));
-        }
 
         $result = Expenditure::query();
 
         $result->select('expenditure.*', 'users.name', 'delivery_rounds.round', 'delivery_rounds.month', 'delivery_rounds.departure_time')
             ->join('users', 'expenditure.user_id', 'users.id')
             ->leftJoin('delivery_rounds', 'expenditure.delivery_round_id', 'delivery_rounds.id')
-            ->whereBetween('expenditure.created_at', [$date, $to_date]);
-
-        if ($request->date_search != '') {
-        }
+            ->where('expenditure.delivery_round_id', $request->delivery_round_id);
 
         $all_expenditure = $result->orderBy('expenditure.id', 'desc')->get();
 
@@ -69,7 +54,7 @@ class ExpenditureController extends Controller
             'all' => sizeof($all_expenditure),
         ];
 
-        return view('expenditure', compact('expenditure', 'pagination', 'date_now', 'to_date_now', 'delivery_rounds'));
+        return view('expenditure', compact('expenditure', 'pagination', 'delivery_rounds'));
     }
 
     public function insert(Request $request)
@@ -219,22 +204,13 @@ class ExpenditureController extends Controller
             return redirect('access_denied');
         }
 
-        if ($request->date != '') {
-            $date = $request->date;
-            $to_date = $request->to_date;
-        } else {
-            $date = [Carbon::today()->toDateString()];
-            $to_date = [Carbon::today()->toDateString()];
-        }
+        $delivery_round = Delivery_rounds::where('id', $request->delivery_round_id)->first();
 
         $result = Expenditure::query();
 
         $result->select('expenditure.*', 'users.name')
             ->join('users', 'expenditure.user_id', 'users.id')
-            ->whereBetween('expenditure.created_at', [$date, $to_date]);
-
-        if ($request->date_search != '') {
-        }
+          ->where('expenditure.delivery_round_id', $request->delivery_round_id);
 
         $expenditure = $result
             ->orderBy('expenditure.id', 'desc')
@@ -245,8 +221,7 @@ class ExpenditureController extends Controller
         });
 
         $data = [
-            'date' => $date,
-            'to_date' => $to_date,
+            'delivery_round' => $delivery_round,
             'expenditure' => $expenditure,
             'totalExpenditure' => $totalExpenditure
         ];

@@ -111,24 +111,23 @@
                     <form method="GET" action="/expenditure" class="mb-0">
                         {{-- @csrf --}}
                         <div class="row">
-                            <div class="col-8">
+                            <div class="col-md-8">
                                 <div class="form-group">
-                                    <label class="bmd-label-floating">ຄົ້ນຫາຕາມວັນທີ່</label>
-                                    <div class="row">
-                                        <div class="col-lg-4 col-md-4 col-12">
-                                            <div class="form-group">
-                                                <input class="form-control" type="date" value="{{ $date_now }}"
-                                                    name="date">
-                                            </div>
-                                        </div>
-                                        <p class="h5">ຫາ</p>
-                                        <div class="col-lg-4 col-md-4 col-12">
-                                            <div class="form-group">
-                                                <input class="form-control" type="date" value="{{ $to_date_now }}"
-                                                    name="to_date">
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <label class="bmd-label-floating">ເລືອກຖ້ຽວລົດ</label>
+                                    <select class="form-control form-control-md" id="select_delivery_round"
+                                        name="delivery_round_id" required>
+                                        <option value="">
+                                            ເລືອກ
+                                        </option>
+                                        @foreach ($delivery_rounds as $key => $delivery_round)
+                                            <option value="{{ $delivery_round->id }}"
+                                                {{ Request::input('delivery_round_id') == $delivery_round->id ? 'selected' : ($key == '0' ? 'selected' : '') }}>
+                                                ຖ້ຽວທີ່ {{ $delivery_round->round }} ເດືອນ
+                                                {{ $delivery_round->month }} ລົດວັນທີ່
+                                                {{ $delivery_round->departure_time }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-2">
@@ -149,9 +148,9 @@
                         <div>
                             <h2 class="card-title ">ລາຍການລາຍຈ່າຍ
                                 <button type="button"
-                                    onclick="window.open(`expenditureReport?date={{ Request::input('date') }}&to_date={{ Request::input('to_date') }}`);"
+                                    onclick="window.open(`expenditureReport?delivery_round_id={{ Request::input('delivery_round_id') }}`);"
                                     class="btn btn-primary ml-3 px-3"
-                                    {{ Request::input('date') ? '' : 'disabled' }}>ພິມລາຍງານ</button>
+                                    {{ Request::input('delivery_round_id') ? '' : 'disabled' }}>ພິມລາຍງານ</button>
                             </h2>
                         </div>
                         <div class="x_content">
