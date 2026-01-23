@@ -649,6 +649,8 @@ class ImportProductsController extends Controller
         //   }
         // }
 
+        $delivery_rounds = Delivery_rounds::orderBy('id', 'desc')->get();
+
         $branchs = Branchs::where('id', '<>', Auth::user()->branch_id)
             ->where('branchs.enabled', '1')
             ->get();
@@ -686,6 +688,10 @@ class ImportProductsController extends Controller
             $result->where('receiver_branch_id', $request->receive_branch);
         }
 
+        if ($request->delivery_round_id != '') {
+            $result->where('delivery_round_id', $request->delivery_round_id);
+        }
+
         $all_lots = $result->orderBy('lot.id', 'desc')->count();
 
         if ($request->page != '') {
@@ -703,7 +709,7 @@ class ImportProductsController extends Controller
             'all' => $all_lots,
         ];
 
-        return view('importView', compact('branchs', 'lots', 'pagination'));
+        return view('importView', compact('branchs', 'delivery_rounds', 'lots', 'pagination'));
     }
 
     public function importViewForUser(Request $request)

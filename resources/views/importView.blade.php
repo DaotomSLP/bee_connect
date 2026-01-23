@@ -253,6 +253,26 @@
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">ເລືອກຖ້ຽວລົດ</label>
+                                                <select class="form-control form-control-md" id="select_delivery_round"
+                                                    name="delivery_round_id" required>
+                                                    <option value="">
+                                                        ເລືອກ
+                                                    </option>
+                                                    @foreach ($delivery_rounds as $key => $delivery_round)
+                                                        <option value="{{ $delivery_round->id }}"
+                                                            {{ Request::input('delivery_round_id') == $delivery_round->id ? 'selected' : ($key == '0' ? 'selected' : '') }}>
+                                                            ຖ້ຽວທີ່ {{ $delivery_round->round }} ເດືອນ
+                                                            {{ $delivery_round->month }} ລົດວັນທີ່
+                                                            {{ $delivery_round->departure_time }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                     @endif
 
                                     <div class="col-md-3">
@@ -380,9 +400,9 @@
                                                 @endif
                                                 <td>
                                                     @if ($lot->round)
-                                                    ຖ້ຽວທີ່ {{ $lot->round }} ເດືອນ
-                                                    {{ $lot->month }} ລົດວັນທີ່
-                                                    {{ $lot->departure_time }}
+                                                        ຖ້ຽວທີ່ {{ $lot->round }} ເດືອນ
+                                                        {{ $lot->month }} ລົດວັນທີ່
+                                                        {{ $lot->departure_time }}
                                                     @endif
                                                 </td>
                                                 <td>
