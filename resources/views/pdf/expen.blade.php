@@ -57,7 +57,7 @@
     <p style="text-align: center;font-weight: bold;font-size: 16pt;">ລາຍງານລາຍຈ່າຍ</p>
     <p style="font-size: 12pt; text-align: right">ປະຈຳຖ້ຽວທີ
         {{ $delivery_round->round }} ເດືອນ {{ $delivery_round->month }} ລົດວັນທີ
-        {{ date('d-m-Y', strtotime($delivery_round->departure_time)) }}
+        {{ $delivery_round->departure_time }}
     </p>
     <p style="font-size: 12pt; text-align: right; margin-top: 0">ສ້າງລາຍງານໂດຍ :
         {{ auth()->user()->name }}
