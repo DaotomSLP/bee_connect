@@ -258,13 +258,13 @@
                                             <div class="form-group">
                                                 <label class="bmd-label-floating">ເລືອກຖ້ຽວລົດ</label>
                                                 <select class="form-control form-control-md" id="select_delivery_round"
-                                                    name="delivery_round_id" required>
+                                                    name="delivery_round_id">
                                                     <option value="">
                                                         ເລືອກ
                                                     </option>
                                                     @foreach ($delivery_rounds as $key => $delivery_round)
                                                         <option value="{{ $delivery_round->id }}"
-                                                            {{ Request::input('delivery_round_id') == $delivery_round->id ? 'selected' : ($key == '0' ? 'selected' : '') }}>
+                                                            {{ Request::input('delivery_round_id') == $delivery_round->id ? 'selected' : '' }}>
                                                             ຖ້ຽວທີ່ {{ $delivery_round->round }} ເດືອນ
                                                             {{ $delivery_round->month }} ລົດວັນທີ່
                                                             {{ $delivery_round->departure_time }}
