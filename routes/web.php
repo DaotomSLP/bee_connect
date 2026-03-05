@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\TestDesignController;
 use App\Http\Controllers\DeliveryRoundController;
+use App\Http\Controllers\ParcelIssueController;
 
 require('th_routes.php');
 require('ch_routes.php');
@@ -120,6 +121,24 @@ Route::post('/addDeliveryRound', [DeliveryRoundController::class, 'insert'])->mi
 Route::get('/editDeliveryRound/{id}', [DeliveryRoundController::class, 'edit'])->middleware('auth')->name('editDeliveryRound');
 
 Route::post('/updateDeliveryRound', [DeliveryRoundController::class, 'update'])->middleware('auth')->name('updateDeliveryRound');
+
+Route::get('/parcel-issues', [ParcelIssueController::class, 'index'])->middleware('auth')->name('parcel_issues');
+
+Route::post('/add-parcel-issue', [ParcelIssueController::class, 'insert'])->middleware('auth')->name('add_parcel_issue');
+
+Route::get('/edit-parcel-issue/{id}', [ParcelIssueController::class, 'edit'])->middleware('auth')->name('edit_parcel_issue');
+
+Route::post('/update-parcel-issue', [ParcelIssueController::class, 'update'])->middleware('auth')->name('update_parcel_issue');
+
+Route::get('/ship-parcel-issue/{id}', [ParcelIssueController::class, 'shipParcelIssue'])->middleware('auth')->name('ship_parcel_issue');
+
+Route::get('/refund-parcel-issue/{id}', [ParcelIssueController::class, 'refundParcelIssue'])->middleware('auth')->name('refund_parcel_issue');
+
+Route::post('/insert-refund', [ParcelIssueController::class, 'insertRefund'])->middleware('auth')->name('insert_refund');
+
+Route::get('/parcel-issue-images/{id}', [ParcelIssueController::class, 'parcelIssueImages'])->middleware('auth')->name('parcel_issue_images');
+
+Route::post('/add-parcel-issue-image', [ParcelIssueController::class, 'addParcelIssueImages'])->middleware('auth')->name('add_parcel_issue_image');
 
 //test design
 Route::get('/testdesign/home', [TestDesignController::class, 'index'])->name('index');

@@ -47,6 +47,9 @@
         <li class="{{ Request::is('lostProductLists') || Request::is('lostProductLists') ? 'current-page' : '' }}">
             <a href="/lostProductLists">ລາຍການເຄື່ອງບໍ່ມີຊື່</a>
         </li>
+        <li class="{{ Request::is('parcel-issues') || Request::is('parcel-issue/*') ? 'current-page' : '' }}">
+            <a href="/parcel-issues">ລາຍການເຄື່ອງເສຍ</a>
+        </li>
     </ul>
 </li>
 
