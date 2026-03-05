@@ -20,6 +20,7 @@ class Refund extends Model
     protected $fillable = [
         'id',
         'amount',
+        'detail',
         'receipt_image',
         'parcel_issue_id',
         'user_id',

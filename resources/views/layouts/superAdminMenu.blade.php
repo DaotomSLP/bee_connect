@@ -48,7 +48,10 @@
             <a href="/lostProductLists">ລາຍການເຄື່ອງບໍ່ມີຊື່</a>
         </li>
         <li class="{{ Request::is('parcel-issues') || Request::is('parcel-issue/*') ? 'current-page' : '' }}">
-            <a href="/parcel-issues">ລາຍການເຄື່ອງເສຍ</a>
+            <a href="/parcel-issues">ຂໍ້ມູນເຄື່ອງເສຍ</a>
+        </li>
+        <li class="{{ Request::is('refund-report') || Request::is('refund-report/*') ? 'current-page' : '' }}">
+            <a href="/refund-report">ລາຍງານການຈ່າຍຄ່າເຄື່ອງເສຍ</a>
         </li>
     </ul>
 </li>

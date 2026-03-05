@@ -10,6 +10,7 @@ use App\Models\Refund;
 use Carbon\Carbon;
 use GImage\Image;
 use Mpdf\Tag\A;
+use PDF;
 
 class ParcelIssueController extends Controller
 {
@@ -154,6 +155,7 @@ class ParcelIssueController extends Controller
     {
         $refund = new Refund;
         $refund->amount = $request->amount;
+        $refund->detail = $request->detail;
         $refund->parcel_issue_id = $request->parcel_issue_id;
         $refund->user_id = Auth()->user()->id;
         $receiptPath = null;
@@ -232,5 +234,76 @@ class ParcelIssueController extends Controller
         } else {
             return redirect('parcel-issue-images/' . $request->parcel_issue_id)->with(['error' => 'not_insert']);
         }
+    }
+
+    public function refundReport(Request $request)
+    {
+
+        $refunds = collect();
+        $startDate = null;
+        $endDate = null;
+
+        if ($request->startDate && $request->endDate) {
+            $startDate = Carbon::parse($request->startDate)->startOfDay();
+            $endDate = Carbon::parse($request->endDate)->endOfDay();
+
+            $refunds = Refund::query()
+                ->select('refunds.*', 'parcel_issues.parcel_code', 'parcel_issues.received_at', 'users.name as user_name', 'branchs.branch_name')
+                ->join('parcel_issues', 'parcel_issues.id', '=', 'refunds.parcel_issue_id')
+                ->join('users', 'users.id', '=', 'refunds.user_id')
+                ->join('branchs', 'branchs.id', '=', 'parcel_issues.receiver_branch_id')
+                ->whereBetween('refunds.created_at', [$startDate, $endDate])
+                ->orderByDesc('refunds.id')
+                ->get();
+        }
+
+        return view('parcel-issues.refund_report', compact('refunds', 'startDate', 'endDate'));
+    }
+
+    public function refundReportPrint(Request $request)
+    {
+        $refunds = collect();
+        $startDate = null;
+        $endDate = null;
+
+        if ($request->startDate && $request->endDate) {
+            $startDate = Carbon::parse($request->startDate)->startOfDay();
+            $endDate = Carbon::parse($request->endDate)->endOfDay();
+
+            $refunds = Refund::query()
+                ->select('refunds.*', 'parcel_issues.parcel_code', 'parcel_issues.received_at', 'users.name as user_name', 'branchs.branch_name')
+                ->join('parcel_issues', 'parcel_issues.id', '=', 'refunds.parcel_issue_id')
+                ->join('users', 'users.id', '=', 'refunds.user_id')
+                ->join('branchs', 'branchs.id', '=', 'parcel_issues.receiver_branch_id')
+                ->whereBetween('refunds.created_at', [$startDate, $endDate])
+                ->orderByDesc('refunds.id')
+                ->get();
+        }
+
+        $data = [
+            'refunds' => $refunds,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ];
+
+        $pdf = PDF::loadView(
+            'parcel-issues.refund_report_print',
+            $data,
+            [],
+            [
+                'format' => 'A4',
+                'orientation' => 'landscape',
+                'custom_font_dir' => base_path('resources/fonts/'),
+                'custom_font_data' => [
+                    'defago' => [ // must be lowercase and snake_case
+                        'R'  => 'defago-noto-sans-lao.ttf',    // regular font
+                        'B'  => 'DefagoNotoSansLaoBold.ttf',    // bold font
+                    ]
+                    // ...add as many as you want.
+                ]
+            ]
+        );
+
+        return $pdf->stream('main_report.pdf');
     }
 }

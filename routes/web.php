@@ -140,6 +140,10 @@ Route::get('/parcel-issue-images/{id}', [ParcelIssueController::class, 'parcelIs
 
 Route::post('/add-parcel-issue-image', [ParcelIssueController::class, 'addParcelIssueImages'])->middleware('auth')->name('add_parcel_issue_image');
 
+Route::get('/refund-report', [ParcelIssueController::class, 'refundReport'])->middleware('auth')->name('refund_report');
+
+Route::get('/refund-report-print', [ParcelIssueController::class, 'refundReportPrint'])->middleware('auth')->name('refund_report_print');
+
 //test design
 Route::get('/testdesign/home', [TestDesignController::class, 'index'])->name('index');
 

@@ -7,7 +7,7 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>ລາຍການເຄື່ອງເສຍ</h3>
+                    <h3>ຂໍ້ມູນເຄື່ອງເສຍ</h3>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -51,7 +51,7 @@
                     <div class="col">
                         <div class="x_panel">
                             <div>
-                                <h2 class="card-title">ເພິ່ມລາຍການເຄື່ອງເສຍ</h2>
+                                <h2 class="card-title">ເພິ່ມຂໍ້ມູນເຄື່ອງເສຍ</h2>
                             </div>
                             <div class="x_content">
                                 <form method="POST" action="/add-parcel-issue" enctype="multipart/form-data">
@@ -163,11 +163,7 @@
                 <div class="col-md-12">
                     <div class="x_panel">
                         <div>
-                            <h2 class="card-title ">ລາຍການເຄື່ອງເສຍ
-                                <button type="button"
-                                    onclick="window.open(`parcel_issuesReport?receiver_branch_id={{ Request::input('receiver_branch_id') }}`);"
-                                    class="btn btn-primary ml-3 px-3"
-                                    {{ Request::input('receiver_branch_id') ? '' : 'disabled' }}>ພິມລາຍງານ</button>
+                            <h2 class="card-title ">ຂໍ້ມູນເຄື່ອງເສຍ
                             </h2>
                         </div>
                         <div class="x_content">
@@ -235,11 +231,18 @@
                                                     {{ $parcel_issue->branch_name }}
                                                 </td>
                                                 <td>
-                                                    {{ $parcel_issue->status == 'pending' ? 'ກຳລັງກວດສອບ' : ($parcel_issue->status == 'success' ? 'ສົ່ງເຄື່ອງສຳເລັດ' : 'ຈ່າຍເງີນໃຫ້ລູກຄ້າ') }}
+                                                    @if ($parcel_issue->status == 'pending')
+                                                        ກຳລັງກວດສອບ
+                                                    @elseif ($parcel_issue->status == 'success')
+                                                        ສົ່ງເຄື່ອງສຳເລັດ
+                                                    @else
+                                                        ຈ່າຍເງີນໃຫ້ລູກຄ້າ
+                                                    @endif
+                                                </td>
+
                                                 </td>
                                                 <td>
-                                                    <a
-                                                        href="/parcel-issue-images/{{ $parcel_issue->id }}">
+                                                    <a href="/parcel-issue-images/{{ $parcel_issue->id }}">
                                                         <i class="material-icons">image</i>
                                                     </a>
                                                 </td>
@@ -257,10 +260,12 @@
                                                         <i class="material-icons">more_vert</i>
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item"
-                                                            href="/ship-parcel-issue/{{ $parcel_issue->id }}">
-                                                            ສົ່ງເຄື່ອງສຳເລັດ
-                                                        </a>
+                                                        @if ($parcel_issue->status == 'pending')
+                                                            <a class="dropdown-item"
+                                                                href="/ship-parcel-issue/{{ $parcel_issue->id }}">
+                                                                ສົ່ງເຄື່ອງສຳເລັດ
+                                                            </a>
+                                                        @endif
                                                         <a class="dropdown-item"
                                                             href="/refund-parcel-issue/{{ $parcel_issue->id }}">
                                                             ໃຊ້ເງີນໃຫ້ລູກຄ້າ

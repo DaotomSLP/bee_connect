@@ -65,6 +65,12 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="bmd-label-floating">ໝາຍເຫດ</label>
+                                                    <textarea class="form-control" name="detail"></textarea>
+                                                </div>
+                                            </div>
 
                                             <!-- แสดงรูป preview -->
                                             <div class="text-center">
@@ -86,11 +92,6 @@
                         <div class="x_panel">
                             <div>
                                 <h2 class="card-title ">ປະຫວັດການຈ່າຍເງິນໃຫ້ລູກຄ້າ</h2>
-                                <button type="button"
-                                    onclick="window.open(`expenditureReport?delivery_round_id={{ Request::input('delivery_round_id') }}`);"
-                                    class="btn btn-primary ml-3 px-3"
-                                    {{ Request::input('delivery_round_id') ? '' : 'disabled' }}>ພິມລາຍງານ</button>
-                                </h2>
                             </div>
                             <div class="x_content">
                                 <div class="table-responsive">
@@ -106,10 +107,13 @@
                                                 ຈຳນວນເງິນ
                                             </th>
                                             <th>
+                                                ໝາຍເຫດ
+                                            </th>
+                                            <th>
                                                 ເພີ່ມໂດຍ
                                             </th>
                                             <th>
-                                                ເອກະສານປະກອບ
+                                                ບິນຈ່າຍເງິນ
                                             </th>
                                             <th>
                                             </th>
@@ -125,6 +129,9 @@
                                                     </td>
                                                     <td>
                                                         {{ number_format($refund->amount) }} ກີບ
+                                                    </td>
+                                                    <td>
+                                                        {{ $refund->detail }}
                                                     </td>
                                                     <td>
                                                         {{ $refund->user_name }}
