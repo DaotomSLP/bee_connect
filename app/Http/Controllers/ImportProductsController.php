@@ -518,7 +518,7 @@ class ImportProductsController extends Controller
             $lot->lot_real_price_kg = ($request->real_price_kg == '' ? $default_price_kg->real_price : $request->real_price_kg);
             $lot->lot_base_price_kg = ($request->base_price_kg == '' ? $default_price_kg->base_price : $request->base_price_kg);
             $lot->lot_real_price_m = ($request->real_price_m == '' ? $default_price_m->real_price : $request->real_price_m);
-            $lot->lot_base_price_m = ($request->real_price_m == '' ? $default_price_m->real_price : $request->real_price_m);
+            $lot->lot_base_price_m = ($request->base_price_m == '' ? $default_price_m->base_price : $request->base_price_m);
             $lot->service_charge = $sum_service_charge;
             $lot->weight_m = $sum_m_weight;
             $lot->money_rate = $request->money_rate;
@@ -1160,7 +1160,7 @@ class ImportProductsController extends Controller
         return view('receiveimport', compact('products', 'pagination', 'branchs'));
     }
 
-    public function deleteImportItem(Request $request)
+    public function deleteImportItemKg(Request $request)
     {
         if (Auth::user()->is_owner != 1) {
             return redirect('access_denied');
@@ -1174,6 +1174,35 @@ class ImportProductsController extends Controller
             'total_base_price' => $lot->total_base_price - $request->base_price * $request->weight,
             'total_price' => $lot->total_price - $request->real_price * $request->weight,
             'weight_kg' => $lot->weight_kg - ($request->weight_type == 'm' ? 0 : $request->weight),
+        ]);
+
+        $import_product = Import_products::where('id', $request->lot_item_id);
+        $import_product->delete();
+
+        $count_import_product = Import_products::where('lot_id', $request->lot_id)->count();
+        if ($count_import_product < 1) {
+            $lot->delete();
+        }
+
+        return redirect()
+            ->back()
+            ->with(['error' => 'insert_success']);
+    }
+
+    public function deleteImportItemM(Request $request)
+    {
+        if (Auth::user()->is_owner != 1) {
+            return redirect('access_denied');
+        }
+
+        $lot = Lots::where('id', $request->lot_id)
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        Lots::where('id', $request->lot_id)->update([
+            'total_base_price' => $lot->total_base_price - ($lot->lot_base_price_m * $request->weight),
+            'total_price' => $lot->total_price - ($lot->lot_real_price_m * $request->weight),
+            'weight_m' => $lot->weight_m - $request->weight,
         ]);
 
         $import_product = Import_products::where('id', $request->lot_item_id);

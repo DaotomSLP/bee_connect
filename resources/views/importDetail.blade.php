@@ -15,7 +15,7 @@
             <!-- Modal -->
             <div class="modal fade" id="new_price_modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
-                    <form method="POST" action="/deleteImportItem">
+                    <form method="POST" action="/deleteImportItemKg">
                         @csrf
                         <div class="modal-content">
                             <div class="modal-header">
@@ -49,6 +49,36 @@
             </div>
 
             <!-- Modal -->
+            <div class="modal fade" id="confirm_delete_item_m" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <form method="POST" action="/deleteImportItemM">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" style="align-self: center">
+                                <h1 style="text-align: center">
+                                    <i class="material-icons" style="font-size: 50pt">delete_forever</i>
+                                </h1>
+                                <h2 class="modal-title" id="exampleModalLabel">ຕ້ອງການລຶບລາຍການ ຫຼືບໍ່!!!</h2>
+                            </div>
+                            <input type="hidden" id="item_id_m" name="lot_item_id">
+                            <input type="hidden" id="lot_id_m" name="lot_id">
+                            <input type="hidden" id="weight_m" name="weight">
+                            <div class="modal-footer" style="align-self: center">
+                                <button type="submit" class="btn btn-primary px-5">ຕົກລົງ</button>
+                                <button type="button" class="btn btn-warning px-5" data-dismiss="modal"
+                                    aria-label="Close">ຍົກເລີກ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal -->
             <div class="modal fade" id="new_weight_modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <form method="POST" action="/changeImportItemWeight">
@@ -65,13 +95,14 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label class="bmd-label-floating">ນ້ຳໜັກ</label>
-                                            <input type="hidden" id="lot_item_id_in_weight" name="lot_item_id_in_weight">
+                                            <input type="hidden" id="lot_item_id_in_weight"
+                                                name="lot_item_id_in_weight">
                                             <input type="hidden" id="lot_id_in_weight" name="lot_id_in_weight">
                                             <input type="hidden" id="real_price_in_weight" name="real_price_in_weight">
                                             <input type="hidden" id="base_price_in_weight" name="base_price_in_weight">
                                             <input type="hidden" id="base_price_in_weight" name="old_weight_in_weight">
-                                            <input type="number" id="weight_in_weight" step="0.001" class="form-control"
-                                                name="weight_in_weight" required>
+                                            <input type="number" id="weight_in_weight" step="0.001"
+                                                class="form-control" name="weight_in_weight" required>
                                         </div>
                                     </div>
                                 </div>
@@ -342,11 +373,20 @@
                                                 <td>
                                                     @if ($import_product->status != 'success' && Auth::user()->is_owner == 1)
                                                         @if ($import_product->status != 'success')
-                                                            <a type="button"
-                                                                onclick="change_price({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->base_price . ',' . $import_product->real_price . ',' . $import_product->weight . ',' }}'{{ $import_product->weight_type }}')"
-                                                                data-toggle="modal" data-target="#new_price_modal">
-                                                                <i class="material-icons">delete_forever</i>
-                                                            </a>
+                                                            @if ($lot->parcel_size == 'large')
+                                                                <a type="button"
+                                                                    onclick="changeDeleteImportItemMFormValue({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->weight }})"
+                                                                    data-toggle="modal"
+                                                                    data-target="#confirm_delete_item_m">
+                                                                    <i class="material-icons">delete_forever</i>
+                                                                </a>
+                                                            @else
+                                                                <a type="button"
+                                                                    onclick="change_price({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->base_price . ',' . $import_product->real_price . ',' . $import_product->weight . ',' }}'{{ $import_product->weight_type }}')"
+                                                                    data-toggle="modal" data-target="#new_price_modal">
+                                                                    <i class="material-icons">delete_forever</i>
+                                                                </a>
+                                                            @endif
                                                         @endif
 
                                                         @if (($lot->parcel_size == 'large' || $import_product->weight_type == 'm') && $import_product->status != 'success')
@@ -435,6 +475,12 @@
             $("#real_price").val(real_price);
             $("#weight").val(weight);
             $("#weight_type").val(weight_type);
+        }
+
+        function changeDeleteImportItemMFormValue(id, lot_id, weight) {
+            $("#item_id_m").val(id);
+            $("#lot_id_m").val(lot_id);
+            $("#weight_m").val(weight);
         }
 
         function change_weight(id, lot_id, base_price, real_price, old_weight) {

@@ -41,7 +41,9 @@ Route::get('/importProductTrackForUser', [ImportProductsController::class, 'impo
 
 // Route::get('/importpdf/{id}', [ImportProductsController::class, 'report'])->middleware('auth')->name('importreport');
 
-Route::post('/deleteImportItem', [ImportProductsController::class, 'deleteImportItem'])->middleware('auth')->name('deleteImportItem');
+Route::post('/deleteImportItemKg', [ImportProductsController::class, 'deleteImportItemKg'])->middleware('auth')->name('deleteImportItemKg');
+
+Route::post('/deleteImportItemM', [ImportProductsController::class, 'deleteImportItemM'])->middleware('auth')->name('deleteImportItemM');
 
 Route::post('/changeImportWeight', [ImportProductsController::class, 'changeImportWeight'])->middleware('auth')->name('changeImportWeight');
 
@@ -99,7 +101,7 @@ Route::get('/withdraw_detail_ch/{id}', [ImportProductsController::class, 'withdr
 
 Route::post('/addWithDrawCh', [ImportProductsController::class, 'addWithDrawCh'])->middleware('auth')->name('addWithDrawCh');
 
-Route::get('/tracking',[HomeController::class,'tracking'])->name('tracking');
+Route::get('/tracking', [HomeController::class, 'tracking'])->name('tracking');
 
 Route::get('/mainReportPrint', [ImportProductsController::class, 'mainReportPrint'])->middleware('auth')->name('mainReportPrint');
 
