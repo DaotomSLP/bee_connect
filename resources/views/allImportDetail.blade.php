@@ -275,7 +275,7 @@
                                                 <td>
                                                     @if ($import_product->status != 'success' && Auth::user()->is_owner == 1)
                                                         @if ($import_product->status != 'success')
-                                                            @if ($lot->parcel_size == 'large')
+                                                            @if ($import_product->weight_type == 'm')
                                                                 <a type="button"
                                                                     onclick="changeDeleteImportItemMFormValue({{ $import_product->id . ',' . $import_product->lot_id . ',' . $import_product->weight }})"
                                                                     data-toggle="modal"
